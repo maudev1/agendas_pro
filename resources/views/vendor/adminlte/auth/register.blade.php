@@ -13,6 +13,13 @@
 
 @section('auth_header', __('adminlte::adminlte.register_message'))
 
+@section('js')
+
+<script src="vendor/jquery/jquery.mask.js"></script>
+<script src="js/apply.masks.js"></script>
+
+@stop
+
 @section('auth_body')
     <form action="{{ $register_url }}" method="post">
         @csrf
@@ -57,7 +64,7 @@
 
         {{-- Document field --}}
         <div class="input-group mb-3">
-            <input type="text" name="document" class="form-control @error('document') is-invalid @enderror"
+            <input type="text" id="document" name="document" class="form-control @error('document') is-invalid @enderror"
                    placeholder="{{ __('adminlte::adminlte.document') }}">
 
             <div class="input-group-append">
@@ -76,7 +83,7 @@
 
         {{-- Phone field --}}
         <div class="input-group mb-3">
-            <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
+            <input id="phone" type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
                    placeholder="{{ __('adminlte::adminlte.phone') }}">
 
             <div class="input-group-append">
@@ -146,3 +153,4 @@
         </a>
     </p>
 @stop
+
