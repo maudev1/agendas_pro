@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Users;
+use App\Models\User;
 
 class UsersController extends Controller
 {
@@ -17,7 +17,7 @@ class UsersController extends Controller
         
         $data = array();
 
-        foreach(Users::all() as $user){
+        foreach(User::all() as $user){
 
             $data[] = array(
                 'name'   =>  $user->name,
