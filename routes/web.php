@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,13 +19,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/fotos', function (){
-    return view('photos', ['title' => 'Galeria de fotos']);
-});
-
 Auth::routes();
 
-Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
-Route::get('/admin/users', [App\Http\Controllers\UsersController::class, 'index'])->name('admin/users');
-Route::get('/admin/posts', [App\Http\Controllers\PostsController::class, 'index'])->name('admin/posts');
+//DASHBOARD
+Route::get('/admin/home', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
 
+
+Route::controller(UsersController::class)->group(function () {
+    Route::get('/admin/users', 'index');
+    Route::post('/admin/users', 'create');
+
+});
+
+
+Route::controller(CustomerController::class)->group(function () {
+    Route::get('/admin/customers', 'index');
+
+});

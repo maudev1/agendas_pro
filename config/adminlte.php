@@ -188,7 +188,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'admin/home',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -250,8 +250,8 @@ return [
             'label_color' => 'success',
         ],
         [
-            'text'        => 'Posts',
-            'url'         => 'admin/posts',
+            'text'        => 'Clientes',
+            'url'         => 'admin/customers',
             'icon'        => 'far fa-fw fa-envelope',
             'label'       => 0,
             'label_color' => 'success',

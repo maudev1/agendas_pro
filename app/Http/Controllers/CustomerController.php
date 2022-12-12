@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class PostsController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,9 +13,8 @@ class PostsController extends Controller
      */
     public function index()
     {
-        //
-        return view('admin/posts'); 
-       }
+        return view('/admin/customers');
+    }
 
     /**
      * Show the form for creating a new resource.
