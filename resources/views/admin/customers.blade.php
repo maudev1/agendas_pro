@@ -8,12 +8,19 @@
 
 @section('content')
 
+
+<x-datatables :data="$customers"></x-datatables>
+
 @stop
 
 @section('css')
-<link rel="stylesheet" href="/css/admin_custom.css">
+<link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
 @stop
 
 @section('js')
-
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.13.1/b-2.3.3/r-2.4.0/sb-1.4.0/datatables.min.js"></script>
+<script src="/js/datatables.config.js"></script>
 @stop
+
+ 
+ 
