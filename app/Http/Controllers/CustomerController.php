@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use Exception;
 
 class CustomerController extends Controller
 {
@@ -15,19 +16,32 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = Customer::all();
-       
+
         return view('/admin/customers')->with('customers', $customers);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function to_datatables()
     {
-        //
+
+        $customers = Customer::all();
+        
+        $data = array();
+
+        foreach ($customers as $customer) {
+            $data[] = array(
+                'name' => $customer['name'],
+                'phone' => $customer['phone']
+            );
+        }
+
+        $response = array(
+            "aaData" => $data
+        );
+
+        return json_encode($response);
+
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -37,7 +51,24 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $customer = new Customer;
+
+        if ($request) {
+            try {
+                $customer->name = $request->name;
+                $customer->cpf = $request->cpf;
+                $customer->mail = $request->mail;
+                $customer->phone = $request->phone;
+                $customer->password = $request->password;
+                $customer->save();
+            } catch (Exception $error) {
+
+                throw new Exception($error->getMessage());
+
+            }
+
+        }
     }
 
     /**
