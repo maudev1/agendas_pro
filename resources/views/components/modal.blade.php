@@ -13,7 +13,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <form id="modal">
+                    <form id="modal-form">
 
                         <div class="form-group">
                             <label>Nome</label>
@@ -38,9 +38,6 @@
                             <label>Senha</label>
                             <input type="password" id="password" class="form-control" name="password">
                         </div>
-
-
-
 
 
                     </form>

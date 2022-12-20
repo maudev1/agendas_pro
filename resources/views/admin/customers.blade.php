@@ -31,4 +31,5 @@
     src="https://cdn.datatables.net/v/bs4/dt-1.13.1/b-2.3.3/r-2.4.0/sb-1.4.0/datatables.min.js"></script>
 <script src="/js/datatables.config.js"></script>
 <script src="/js/customers.js"></script>
+
 @stop
