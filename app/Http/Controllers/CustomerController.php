@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use Exception;
+use App\Http\Classes\Helpers;
 
 class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response 
      */
     public function index()
     {
@@ -24,7 +25,7 @@ class CustomerController extends Controller
     {
 
         $customers = Customer::all();
-        
+
         $data = array();
 
         foreach ($customers as $customer) {
@@ -51,22 +52,44 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        $Helpers = new Helpers();
+
+
 
         $customer = new Customer;
-
+        $results = [];
         if ($request) {
-            try {
-                $customer->name = $request->name;
-                $customer->cpf = $request->cpf;
-                $customer->mail = $request->mail;
-                $customer->phone = $request->phone;
-                $customer->password = $request->password;
-                $customer->save();
-            } catch (Exception $error) {
 
-                throw new Exception($error->getMessage());
 
+            if ($Helpers->CPFisValid($request->cpf)) {
+
+                $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
+
+                try {
+                    $customer->name = $request->name;
+                    $customer->cpf = $doc;
+                    $customer->mail = $request->mail;
+                    $customer->phone = $request->phone;
+                    $customer->password = $request->password;
+                    $customer->save();
+
+                    $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200];
+
+                } catch (Exception $error) {
+
+                    $results = ['message' => 'Erro ao cadastrar cliente!', 'code' => 401];
+
+                    throw new Exception($error->getMessage());
+
+
+                }
+            } else {
+
+                $results = ['message' => 'CPF inválido!', 'code' => 400];
             }
+
+            return response($results, $results['code'])
+                ->header('Content-Type', 'text/json');
 
         }
     }
