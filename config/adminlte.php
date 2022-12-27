@@ -238,11 +238,6 @@ return [
 
         // Sidebar items:
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
-        ],
-        [
             'text'        => 'Usuarios',
             'url'         => 'admin/users',
             'icon'        => 'far fa-fw fa-user',
@@ -253,6 +248,13 @@ return [
             'text'        => 'Clientes',
             'url'         => 'admin/customers',
             'icon'        => 'far fa-fw fa-envelope',
+            'label'       => 0,
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Agenda',
+            'url'         => 'admin/schedule',
+            'icon'        => 'far fa-fw fa-calendar',
             'label'       => 0,
             'label_color' => 'success',
         ],

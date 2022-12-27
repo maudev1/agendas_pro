@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UsersController;
@@ -37,4 +38,8 @@ Route::controller(CustomerController::class)->group(function () {
     Route::get('/admin/customers/to_datatables', 'to_datatables');
     Route::post('/admin/customers', 'store');
 
+});
+
+Route::controller(ScheduleController::class)->group(function(){
+    Route::get('/admin/schedule', 'index');
 });
