@@ -25,28 +25,6 @@ async function Save() {
         password: $('#password').val()
     };
 
-    let form = $('#modal-form').serializeArray();
-
-    // form.forEach((item)=>{
-    //     user = {
-            
-    //     }
-    // });
-
-
-
-    // console.log(JSON.stringify(form))
-    // console.log(JSON.stringify(user))
-
-    // $('#modal-form :input').each(function(){
-    //     let field = $(this).attr('name');
-    //     let val  = $(this).val();
-        
-    // });
-
-    // throw('teste')
-    // let form = $('#modal-form').serializeArray();
-
     let response = await fetch('/admin/customers', {
         method: 'POST',
         headers: {
@@ -56,12 +34,23 @@ async function Save() {
         body: JSON.stringify(user)
     });
 
-    reaload_datatable();
+    if (response.status == 200) {
 
-    $('#modal-form :input').each(function(){
-        $(this).val('')
-    });
+        reaload_datatable();
 
-    $('#exampleModal').modal('toggle');
-    
+        $('#modal-form :input').each(function () {
+            $(this).val('')
+        });
+
+        $('#exampleModal').modal('toggle');
+
+    } else {
+
+        let data = await response.json();
+
+        $('.alert').addClass('alert-danger').text(data.message).show()
+
+    }
+
+
 }

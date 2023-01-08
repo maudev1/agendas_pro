@@ -13,7 +13,9 @@
                 </div>
                 <div class="modal-body">
 
-                    <form id="modal-form">
+                <div class="alert" role="alert"></div>
+
+                    <form id="modal-form" autocomplete="off">
 
                         <div class="form-group">
                             <label>Nome</label>
@@ -31,7 +33,7 @@
 
                         <div class="form-group">
                             <label>E-mail</label>
-                            <input id="mail" class="form-control" name="mail">
+                            <input id="mail" type="email" class="form-control"  name="mail">
                         </div>
 
                         <div class="form-group">
@@ -56,5 +58,14 @@
             }}</button>
 
     </div>
+
+    <script>
+        document.querySelectorAll('input').forEach(input => {
+
+            input.value = ''
+            
+        });
+
+    </script>
 
 </div>

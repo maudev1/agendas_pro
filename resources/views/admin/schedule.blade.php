@@ -25,7 +25,7 @@
 @stop
 
 @section('css')
-<link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+
 @stop
 
 @section('js')

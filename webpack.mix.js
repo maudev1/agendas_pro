@@ -14,3 +14,5 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css');
+
+    mix.js('node_modules/hello-week/dist/hello.week.js', 'public/hello.week.esm.js');

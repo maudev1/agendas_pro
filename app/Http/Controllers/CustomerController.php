@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use Exception;
 use App\Http\Classes\Helpers;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -52,12 +53,12 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+
         $Helpers = new Helpers();
-
-
 
         $customer = new Customer;
         $results = [];
+
         if ($request) {
 
 
@@ -71,6 +72,7 @@ class CustomerController extends Controller
                     $customer->mail = $request->mail;
                     $customer->phone = $request->phone;
                     $customer->password = $request->password;
+                    $customer->user_id = Auth::user()->id;
                     $customer->save();
 
                     $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200];
@@ -79,7 +81,7 @@ class CustomerController extends Controller
 
                     $results = ['message' => 'Erro ao cadastrar cliente!', 'code' => 401];
 
-                    throw new Exception($error->getMessage());
+                    // throw new Exception($error->getMessage());
 
 
                 }
