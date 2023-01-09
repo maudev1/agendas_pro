@@ -7,9 +7,15 @@
 @stop
 
 @section('content')
+
 <div class="row">
     <div class="col-md-12">
-        <x-datatables :data="$customers"></x-datatables>
+    @php 
+    
+        $headers = ['Nome', 'Telefone', 'Opções'] 
+    
+    @endphp
+        <x-datatables :headers="$headers" :data="$customers"></x-datatables>
     </div>
 </div>
 
@@ -27,6 +33,8 @@
 @stop
 
 @section('js')
+
+
 <script type="text/javascript"
     src="https://cdn.datatables.net/v/bs4/dt-1.13.1/b-2.3.3/r-2.4.0/sb-1.4.0/datatables.min.js"></script>
 <script src="/js/datatables.config.js"></script>

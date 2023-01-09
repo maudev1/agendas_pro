@@ -7,6 +7,7 @@ use App\Models\Customer;
 use Exception;
 use App\Http\Classes\Helpers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -25,14 +26,27 @@ class CustomerController extends Controller
     public function to_datatables()
     {
 
-        $customers = Customer::all();
+        // $customers = Customer::all();
+        $customers = DB::table('customers')->where('user_id', 1)->get();
 
         $data = array();
 
         foreach ($customers as $customer) {
+
+            $editButton = '<button 
+            class="btn btn-success edit-button" 
+            data-target="#exampleModal"
+            onclick="Fetch('.$customer->id.')"
+            data-customer-id="'.$customer->id.'" 
+            data-toggle="modal" 
+            type="button"
+            >
+            <i  class="fas fa-edit"></i></button>';
+
             $data[] = array(
-                'name' => $customer['name'],
-                'phone' => $customer['phone']
+                'name' => $customer->name,
+                'phone' => $customer->phone,
+                'options' => $editButton
             );
         }
 
@@ -115,7 +129,9 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        //
+        return response(Customer::findOrfail($id), 200)
+        ->header('Content-type', 'text/json');
+        
     }
 
     /**
@@ -127,7 +143,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $id;
     }
 
     /**

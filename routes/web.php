@@ -36,7 +36,9 @@ Route::controller(UsersController::class)->group(function () {
 Route::controller(CustomerController::class)->group(function () {
     Route::get('/admin/customers', 'index');
     Route::get('/admin/customers/to_datatables', 'to_datatables');
+    Route::get('/admin/customers/edit/{id}', 'edit');
     Route::post('/admin/customers', 'store');
+    Route::post('/admin/customers/update/{id}', 'update');
 
 });
 

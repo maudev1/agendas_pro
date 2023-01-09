@@ -2,8 +2,9 @@
     <table id="myTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>Telefone</th>
+                @foreach($headers as $item)
+                    <th>{{ $item }}</th>
+                @endforeach
             </tr>
         </thead>
 

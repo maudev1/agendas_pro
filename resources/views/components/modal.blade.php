@@ -17,6 +17,8 @@
 
                     <form id="modal-form" autocomplete="off">
 
+                        <input id="id" name="id" type="hidden">
+
                         <div class="form-group">
                             <label>Nome</label>
                             <input id="name" class="form-control" name="name">
@@ -61,6 +63,8 @@
 
     <script>
         document.querySelectorAll('input').forEach(input => {
+
+            console.log()
 
             input.value = ''
             
