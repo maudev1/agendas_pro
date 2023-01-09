@@ -15,6 +15,11 @@ jQuery(($) => {
         Save();
     });
 
+    $('button[data-toggle=modal]').on('click', function(){
+        ClearForm();
+    })
+
+
 });
 
 
@@ -63,6 +68,8 @@ async function Save() {
 
 async function Fetch(customerId)
 {
+    ClearForm();
+
     let response = await fetch(`/admin/customers/edit/${customerId}`,{
         method:'GET',
         headers: {
@@ -84,3 +91,10 @@ async function Fetch(customerId)
 
 }
 
+function ClearForm()
+{
+    document.querySelectorAll('input').forEach(input => {
+        input.value = ''
+        
+    });
+}

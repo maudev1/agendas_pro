@@ -143,7 +143,19 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $id;
+        $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
+
+        $customer = Customer::find($id);
+        $customer->name = $request->name;
+        $customer->cpf = $doc;
+        $customer->mail = $request->mail;
+        $customer->phone = $request->phone;
+
+        if($request->password){   
+            $customer->password = $request->password;
+        }
+        
+        $customer->save();
     }
 
     /**

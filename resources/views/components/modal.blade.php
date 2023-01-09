@@ -61,15 +61,4 @@
 
     </div>
 
-    <script>
-        document.querySelectorAll('input').forEach(input => {
-
-            console.log()
-
-            input.value = ''
-            
-        });
-
-    </script>
-
 </div>
