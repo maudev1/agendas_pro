@@ -44,4 +44,7 @@ Route::controller(CustomerController::class)->group(function () {
 
 Route::controller(ScheduleController::class)->group(function(){
     Route::get('/admin/schedule', 'index');
+    Route::get('/admin/schedule/all', 'getAll');
+    Route::post('/admin/schedule', 'store');
+    
 });

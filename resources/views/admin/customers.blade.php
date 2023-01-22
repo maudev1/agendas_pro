@@ -21,7 +21,19 @@
 
 <div class="row">
     <div class="col-md-12">
-        <x-modal :text="$txt='Adicionar Cliente'"></x-modal>
+        @php
+
+            $fields = [
+                ['label' => 'Nome', 'field' => 'name'],
+                ['label' => 'CPF', 'field' => 'cpf'],
+                ['label' => 'Telefone', 'field' => 'phone'],
+                ['label' => 'E-mail', 'field' => 'mail'],
+                ['label' => 'Senha', 'field' => 'password'],
+            ]
+            
+        @endphp
+
+        <x-modal :fields="$fields" :text="$txt='Adicionar Cliente'"></x-modal>
     </div>
 
 </div>

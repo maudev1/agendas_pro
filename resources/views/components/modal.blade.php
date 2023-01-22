@@ -6,7 +6,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{ $title }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -19,31 +19,15 @@
 
                         <input id="id" name="id" type="hidden">
 
-                        <div class="form-group">
-                            <label>Nome</label>
-                            <input id="name" class="form-control" name="name">
-                        </div>
+
+                        @foreach($fields as $field)
 
                         <div class="form-group">
-                            <label>CPF</label>
-                            <input id="cpf" class="form-control" name="cpf">
+                            <label>{{ $field['label'] }} </label>
+                            <input id="{{ $field['field'] }}" class="form-control" name="{{ $field['field'] }}">
                         </div>
-                        <div class="form-group">
-                            <label>Telefone</label>
-                            <input id="phone" class="form-control" name="phone">
-                        </div>
-
-                        <div class="form-group">
-                            <label>E-mail</label>
-                            <input id="mail" type="email" class="form-control"  name="mail">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Senha</label>
-                            <input type="password" id="password" class="form-control" name="password">
-                        </div>
-
-
+                        
+                        @endforeach
                     </form>
 
                 </div>
@@ -53,12 +37,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-success">{{ $text
-            }}</button>
-
     </div>
 
 </div>
