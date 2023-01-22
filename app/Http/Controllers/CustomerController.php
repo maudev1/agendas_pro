@@ -69,16 +69,19 @@ class CustomerController extends Controller
     {
 
         $Helpers = new Helpers();
-
         $customer = new Customer;
+
         $results = [];
 
         if ($request) {
 
-
             if ($Helpers->CPFisValid($request->cpf)) {
 
                 $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
+
+                if(Auth::check()){
+                    echo 'teste';
+                }
 
                 try {
                     $customer->name = $request->name;
@@ -93,9 +96,9 @@ class CustomerController extends Controller
 
                 } catch (Exception $error) {
 
-                    $results = ['message' => 'Erro ao cadastrar cliente!', 'code' => 401];
+                    // $results = ['message' => 'Erro ao cadastrar cliente!', 'code' => 401];
 
-                    // throw new Exception($error->getMessage());
+                    return response($error->getMessage());
 
 
                 }

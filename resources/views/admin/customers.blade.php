@@ -33,7 +33,7 @@
             
         @endphp
 
-        <x-modal :fields="$fields" :text="$txt='Adicionar Cliente'"></x-modal>
+        <x-modal :fields="$fields" :title="$title='Adicionar Cliente'" :text="$txt='Adicionar Cliente'"></x-modal>
     </div>
 
 </div>

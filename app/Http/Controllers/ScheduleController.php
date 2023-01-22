@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Customer;
 
 class ScheduleController extends Controller
 {
@@ -12,8 +13,11 @@ class ScheduleController extends Controller
     {
 
         $title = 'Agenda';
+        $customers = Customer::all();
 
-        return view('admin/schedule')->with('title', $title);
+        return view('admin/schedule')
+        ->with('title', $title)
+        ->with('customers', $customers);
     }
 
     public function getAll()

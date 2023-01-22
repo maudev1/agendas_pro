@@ -62,9 +62,10 @@
                               <label for="customer">Cliente</label>
                               <select class="form-control" id="customer">
                                 <option value="">Escolha o cliente</option>
-                                <option value="1">Ana</option>
-                                <option value="2">Maria</option>
-                                <option value="3">Gessica</option>
+
+                                @foreach ($customers as $customer)
+                                  <option value="{{$customer->id}}">{{$customer->name}}</option>
+                                @endforeach
                             </select>
                         </div>
                         
@@ -87,6 +88,8 @@
                     </form>
 
                     <hr>
+
+                    <div id="preview"></div>
 
                 </div>
                 <div class="modal-footer">
@@ -132,12 +135,14 @@ document.addEventListener('DOMContentLoaded', function() {
     editable: true,
     dateClick:function(info){
 
-      $('#start').val('')
-      $('#start').val(info.dateStr) 
-      $('.modal-body').append(`<p>${info.date}</p>`);
-      $('#exampleModal').modal('toggle');
-      
+      formDefault();
 
+      $('#start').val(info.dateStr) 
+      $('#title').val('Agendamento Esporádico') 
+      $('#preview').html(``);
+      $('#preview').append(`<p>${info.date}</p>`);
+      $('#exampleModal').modal('toggle');
+  
     },
     events:[
 
@@ -188,9 +193,7 @@ async function Schedules(){
 
 }
 
-function SaveEnvent()
-{
-
+function SaveEnvent(){
  
   let data = [
     {
@@ -227,8 +230,12 @@ function SaveEnvent()
 
 }
 
-
-
+function formDefault(){
+  let form = document.querySelectorAll('#modal-form input');
+  form.forEach(element => {
+    element.value = null
+  });
+}
 
 
 </script>
