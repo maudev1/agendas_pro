@@ -67,15 +67,17 @@
                                   <option value="{{$customer->id}}">{{$customer->name}}</option>
                                 @endforeach
                             </select>
+                            
                         </div>
                         
                         <div class="form-group ">
                           <label for="hour">Horário</label>
                           <input id="hour" class="form-control" name="hour">
                           <input id="start" class="form-control" type="hidden" name="start">
+                          <input id="eventId" class="form-control" type="hidden" name="eventId">
 
                         </div>
-                      
+                       
                         
                         <div class="form-check-inline">
                           <label class="form-check-label">
@@ -134,13 +136,11 @@ document.addEventListener('DOMContentLoaded', function() {
     selectable: true,
     dateClick:function(info){
 
+      console.log(info);
+
       // info.dayEl.style.backgroundColor = 'red'
 
       let date = new Date('d:m:y');
-
-      // if(info.dateStr < )
-
-      console.log(date);
 
       formDefault();
 
@@ -150,6 +150,27 @@ document.addEventListener('DOMContentLoaded', function() {
       $('#preview').append(`<p>${info.date}</p>`);
       $('#exampleModal').modal('toggle');
   
+    },
+
+    eventClick: function (info){
+
+      console.log(info)
+      let eventId = info.event._def.publicId;
+      let title  =  info.event._def.title;
+      let hour  =   info.event._def.extendedProps.hour;
+      let customer_id = info.event._def.extendedProps.customer_id; 
+
+      $('#eventId').val(eventId);
+      $('#title').val(title);
+      $('#hour').val(hour);
+      document.querySelectorAll('#customer option').forEach((element)=>{
+        if(element.value == customer_id){
+          $(element).attr('selected', 'selected')
+        }
+      })
+
+      $('#exampleModal').modal('toggle');
+
     },
     
     events:'/admin/schedule/all',
@@ -200,7 +221,7 @@ async function SaveEnvent(calendar){
   ];
 
 
-  let response = await fetch('/admin/schedule',{
+  let response = await fetch(`/admin/schedule/${$('#eventId').val()}`,{
     method:'POST',
     body:JSON.stringify(data),
     headers: {

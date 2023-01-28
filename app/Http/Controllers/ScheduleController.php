@@ -53,8 +53,6 @@ class ScheduleController extends Controller
                         return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
 
                     } catch (Exception $error) {
-
-
                         return response($error->getMessage(), 400)->header('Content-Type', 'text/json');
 
                     }
@@ -71,13 +69,39 @@ class ScheduleController extends Controller
 
     }
 
+    public function update(Request $request, $id){
+
+        if($request){
+            $requestJson = $request->json()->all();
+            if(empty($this->validation($requestJson))){
+                try {
+                    $date = new \DateTime;
+
+                    DB::table('schedule')->where('id', $id)->update([
+                        'title' => $requestJson[0]['title'],
+                        'hour' => $requestJson[0]['hour'],
+                        'notify' => (isset($requestJson[0]['notify']) ? 1 : 0),
+                        'updated_at' => $date,
+                    ]);
+
+                    return response()->json(['message' => 'Agendamento atualizado com sucesso!'], 200);
+
+                } catch (Exception $error) {
+                    return response($error->getMessage(), 400)->header('Content-Type', 'text/json');
+
+                }
+
+            }
+
+        }
+
+    }
+
     public function validation($data)
     {
         $errors = [];
 
-
         if (!$data[0]['title']) {
-
             $errors[] = ['message' => 'Preecha o titulo!', 'code' => 400];
 
         }
