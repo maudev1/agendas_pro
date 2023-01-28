@@ -70,7 +70,6 @@ class CustomerController extends Controller
 
         $Helpers = new Helpers();
         $customer = new Customer;
-
         $results = [];
 
         if ($request) {
@@ -96,9 +95,9 @@ class CustomerController extends Controller
 
                 } catch (Exception $error) {
 
-                    // $results = ['message' => 'Erro ao cadastrar cliente!', 'code' => 401];
+                    $results = ['message' => $error->getMessage(), 'code' => 401];
 
-                    return response($error->getMessage());
+                    // return response($error->getMessage());
 
 
                 }

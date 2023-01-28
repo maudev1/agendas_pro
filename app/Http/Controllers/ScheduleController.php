@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
+use TheSeer\Tokenizer\Exception;
 
 class ScheduleController extends Controller
 {
@@ -16,8 +17,8 @@ class ScheduleController extends Controller
         $customers = Customer::all();
 
         return view('admin/schedule')
-        ->with('title', $title)
-        ->with('customers', $customers);
+            ->with('title', $title)
+            ->with('customers', $customers);
     }
 
     public function getAll()
@@ -29,33 +30,42 @@ class ScheduleController extends Controller
 
     public function store(Request $request)
     {
+        $results = [];
+        if ($request) {
+            $requestJson = $request->json()->all();
+            if (empty($this->validation($requestJson))) {
+                foreach ($requestJson as $event) {
+                    try {
 
-        foreach ($request->json()->all() as $event) {
+                        $date = new \DateTime;
 
-            $errors = $this->validation($event);
+                        DB::table('schedule')->insert([
+                            'title' => $event['title'],
+                            'customer_id' => $event['customer_id'],
+                            'start' => $event['start'],
+                            'end' => $event['start'],
+                            'hour' => $event['hour'],
+                            'created_at' => $date,
+                            'notify' => (isset($event['notify']) ? 1 : 0),
+                            'user_id' => '2',
+                        ]);
 
-            if (empty($errors)) {
+                        return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
 
-                $date = new \DateTime;
+                    } catch (Exception $error) {
 
-                DB::table('schedule')->insert([
-                    'title' => $event['title'],
-                    'customer_id' => $event['customer_id'],
-                    'start' => $event['start'],
-                    'end' => $event['start'],
-                    'hour' => $event['hour'],
-                    'created_at' => $date,
-                    'notify' => (isset($event['notify']) ? 1 : 0),
-                    'user_id' => '2',
-                ]);
 
-                return response()->json(['message'=>'Agendamento realizado com sucesso'], 200);
+                        return response($error->getMessage(), 400)->header('Content-Type', 'text/json');
 
-            }else{
+                    }
 
-                return response()->json($errors, 401);
+                }
+            } else {
+                $results = array_merge($this->validation($requestJson), $results);
 
+                return response($results, 400)->header('Content-Type', 'text/json');
             }
+
 
         }
 
@@ -63,15 +73,22 @@ class ScheduleController extends Controller
 
     public function validation($data)
     {
-
         $errors = [];
 
-        if (!$data['title']) {
-            $errors[] = ['error' => 'Preecha o titulo!'];
+
+        if (!$data[0]['title']) {
+
+            $errors[] = ['message' => 'Preecha o titulo!', 'code' => 400];
+
         }
 
-        if (!$data['hour']) {
-            $errors[] = ['error' => 'Preecha o horário!'];
+        if(!$data[0]['hour']){
+            $errors[] = ['message' => 'Preecha o horário!', 'code' => 400];
+
+        }
+
+        if (!$data[0]['customer_id']) {
+            $errors[] = ['message' => 'Escolha um cliente!', 'code' => 400];
 
         }
 

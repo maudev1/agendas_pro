@@ -37,7 +37,6 @@ async function Save() {
     });
 
     $('.alert').addClass('alert-primary')
-    $('.alert').text('Porra bicho')
     $('.alert').show()
 
     reaload_datatable();

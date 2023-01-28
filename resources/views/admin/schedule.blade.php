@@ -127,13 +127,20 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  getAllSchedules();
-
   var calendarEl = document.getElementById('calendar');
   var calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     editable: true,
+    selectable: true,
     dateClick:function(info){
+
+      // info.dayEl.style.backgroundColor = 'red'
+
+      let date = new Date('d:m:y');
+
+      // if(info.dateStr < )
+
+      console.log(date);
 
       formDefault();
 
@@ -144,34 +151,21 @@ document.addEventListener('DOMContentLoaded', function() {
       $('#exampleModal').modal('toggle');
   
     },
-    events:[
-
-    ],
+    
+    events:'/admin/schedule/all',
   });
 
-  async function getAllSchedules(){
-
-    let schedules = await Schedules();
-
-    schedules.forEach(event => {
-      calendar.addEvent(event);
-      
-    });
-
-  }
-
-  calendar.render();
 
   document.querySelector('#save').addEventListener('click', function(){
   
     SaveEnvent();
 
-    getAllSchedules();
-  
     calendar.refetchEvents()
-  
+
 
   });
+
+  calendar.render();
 });
 
 async function Schedules(){
@@ -193,7 +187,7 @@ async function Schedules(){
 
 }
 
-function SaveEnvent(){
+async function SaveEnvent(calendar){
  
   let data = [
     {
@@ -206,27 +200,31 @@ function SaveEnvent(){
   ];
 
 
-  let results = fetch('/admin/schedule',{
+  let response = await fetch('/admin/schedule',{
     method:'POST',
     body:JSON.stringify(data),
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   })
-  .then((response)=>{
-    if(response.status == 200){
-      
-      
 
-      $('#exampleModal').modal('toggle');
+  if(response.status == 200){
+    $('#exampleModal').modal('toggle');
+    $('.alert').html('').hide();
+  }else{
 
-      return true;
-    }
+  let results = await response.json()
 
-  })
-  .catch((err)=>{
-    console.log(err)
-  })
+  if(Array.isArray(results)){
+    results.forEach((result)=>{
+
+      if(result.code != 200){
+        $('.alert').addClass('alert-danger').text(result.message).show()
+
+      }
+    })
+  }
+  }
 
 }
 

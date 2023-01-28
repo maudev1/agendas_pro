@@ -237,13 +237,13 @@ return [
         ],
 
         // Sidebar items:
-        [
-            'text'        => 'Usuarios',
-            'url'         => 'admin/users',
-            'icon'        => 'far fa-fw fa-user',
-            'label'       => 0,
-            'label_color' => 'success',
-        ],
+        // [
+        //     'text'        => 'Usuarios',
+        //     'url'         => 'admin/users',
+        //     'icon'        => 'far fa-fw fa-user',
+        //     'label'       => 0,
+        //     'label_color' => 'success',
+        // ],
         [
             'text'        => 'Clientes',
             'url'         => 'admin/customers',
