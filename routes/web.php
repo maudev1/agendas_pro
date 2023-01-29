@@ -47,5 +47,6 @@ Route::controller(ScheduleController::class)->group(function(){
     Route::get('/admin/schedule/all', 'getAll');
     Route::post('/admin/schedule', 'store');
     Route::post('/admin/schedule/{id}', 'update');
+    Route::get('/admin/schedule/delete/{id}', 'delete');
     
 });

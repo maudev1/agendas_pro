@@ -121,4 +121,16 @@ class ScheduleController extends Controller
 
     }
 
+    public function delete($id){
+
+        $results = DB::table('schedule')->where('id', $id)->delete();
+
+        if($results){
+            
+            return response()->json(['message' => 'Deletado com sucesso!', 200]);
+        }
+
+
+    }
+
 }

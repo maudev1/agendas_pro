@@ -46,12 +46,13 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-
-                  <div class="alert" role="alert"></div>
-
-                    <form id="modal-form" autocomplete="off">
-
+                <div class="modal-body">                  
+                  <form id="modal-form" autocomplete="off">
+                        <!-- <div  class="form-group text-right">
+                          <a class="btn btn-danger"><i class="fas fa-trash danger"></i></a>
+                    
+                        </div> -->
+                    
                         <div class="form-group">
                               <label for="customer">Titulo</label>
                               <input class="form-control" value="Agendamento Esporádico" id="title" name="title">
@@ -94,9 +95,16 @@
                     <div id="preview"></div>
 
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer row">
+                  <div class="col text-left">
+                    <a id="delete" style="display:none" class="btn btn-danger delete"><i class="fas fa-trash danger"></i></a>
+
+                    
+                  </div>
+                  <div class="col text-right">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     <button type="button" id="save" class="btn btn-primary">Salvar</button>
+                  </div>
                 </div>
             </div>
         </div>
@@ -124,139 +132,6 @@
 <script src="/vendor/fullcalendar-6.0.1/dist/index.global.min.js"></script>
 <script src="/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/vendor/bootstrap-datetimepicker/js/demo.js"></script>
-
-<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-
-  var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    editable: true,
-    selectable: true,
-    dateClick:function(info){
-
-      console.log(info);
-
-      // info.dayEl.style.backgroundColor = 'red'
-
-      let date = new Date('d:m:y');
-
-      formDefault();
-
-      $('#start').val(info.dateStr) 
-      $('#title').val('Agendamento Esporádico') 
-      $('#preview').html(``);
-      $('#preview').append(`<p>${info.date}</p>`);
-      $('#exampleModal').modal('toggle');
-  
-    },
-
-    eventClick: function (info){
-
-      console.log(info)
-      let eventId = info.event._def.publicId;
-      let title  =  info.event._def.title;
-      let hour  =   info.event._def.extendedProps.hour;
-      let customer_id = info.event._def.extendedProps.customer_id; 
-
-      $('#eventId').val(eventId);
-      $('#title').val(title);
-      $('#hour').val(hour);
-      document.querySelectorAll('#customer option').forEach((element)=>{
-        if(element.value == customer_id){
-          $(element).attr('selected', 'selected')
-        }
-      })
-
-      $('#exampleModal').modal('toggle');
-
-    },
-    
-    events:'/admin/schedule/all',
-  });
-
-
-  document.querySelector('#save').addEventListener('click', function(){
-  
-    SaveEnvent();
-
-    calendar.refetchEvents()
-
-
-  });
-
-  calendar.render();
-});
-
-async function Schedules(){
-
-  let args = {
-    method:'GET'
-  }
-
- let results = await fetch('/admin/schedule/all', args)
-  .then((response)=>{
-      return response;
-      
-    })
-    .catch((err)=>{
-      return response
-    });
-
-    return results.json();
-
-}
-
-async function SaveEnvent(calendar){
- 
-  let data = [
-    {
-      title:  $('#title').val(),
-      start:  $('#start').val(),
-      hour:   $('#hour').val(),
-      notify: $('#notify').val(),
-      customer_id: $('#customer').val()
-    }
-  ];
-
-
-  let response = await fetch(`/admin/schedule/${$('#eventId').val()}`,{
-    method:'POST',
-    body:JSON.stringify(data),
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  })
-
-  if(response.status == 200){
-    $('#exampleModal').modal('toggle');
-    $('.alert').html('').hide();
-  }else{
-
-  let results = await response.json()
-
-  if(Array.isArray(results)){
-    results.forEach((result)=>{
-
-      if(result.code != 200){
-        $('.alert').addClass('alert-danger').text(result.message).show()
-
-      }
-    })
-  }
-  }
-
-}
-
-function formDefault(){
-  let form = document.querySelectorAll('#modal-form input');
-  form.forEach(element => {
-    element.value = null
-  });
-}
-
-
-</script>
+<script src="/js/calendar.config.js"></script>
 
 @stop
