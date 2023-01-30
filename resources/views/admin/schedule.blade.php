@@ -48,10 +48,9 @@
                 </div>
                 <div class="modal-body">                  
                   <form id="modal-form" autocomplete="off">
-                        <!-- <div  class="form-group text-right">
-                          <a class="btn btn-danger"><i class="fas fa-trash danger"></i></a>
-                    
-                        </div> -->
+
+                        <div id="alert" class="alert" style="display:none"></div>
+
                     
                         <div class="form-group">
                               <label for="customer">Titulo</label>
@@ -113,9 +112,6 @@
   </div>
 </div>
 
-<div hidden style="position:fixed; bottom:0; right:10px" class="alert alert-success" role="alert">
-  ola
-</div>
 
 @stop
 

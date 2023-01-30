@@ -74,7 +74,8 @@ class CustomerController extends Controller
 
         if ($request) {
 
-            if ($Helpers->CPFisValid($request->cpf)) {
+    
+            if (isset(Auth::user()->id)) {
 
                 $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
 
@@ -96,14 +97,12 @@ class CustomerController extends Controller
                 } catch (Exception $error) {
 
                     $results = ['message' => $error->getMessage(), 'code' => 401];
-
-                    // return response($error->getMessage());
-
-
                 }
             } else {
 
-                $results = ['message' => 'CPF inválido!', 'code' => 400];
+                $results = ['message' => 'Você não esta logado no sistema!', 'code' => 401];
+                
+                return redirect('/');
             }
 
             return response($results, $results['code'])

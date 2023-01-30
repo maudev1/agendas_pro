@@ -94,8 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
 });
 
-
-
 async function Schedules() {
 
     let args = {
@@ -163,9 +161,6 @@ async function DeletEvent(id){
         $('#exampleModal').modal('toggle');
         $('.alert').html('').hide();
     })
-
-    // alert(id)
-
 }
 
 async function UpdateEventDay(info) {
@@ -197,7 +192,14 @@ function formDefault() {
         element.value = null
     });
 
-    $('#delete').hide()
+    $('#alert').fadeOut("fast", function(){
+        $(this).hide();
+    })
+
+
+    $('#delete').fadeOut('fast', function(){
+        $(this).hide()
+    })
 
 }
 

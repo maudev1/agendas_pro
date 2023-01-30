@@ -42,8 +42,8 @@ class ScheduleController extends Controller
                         DB::table('schedule')->insert([
                             'title' => $event['title'],
                             'customer_id' => $event['customer_id'],
-                            'start' => $event['start'],
-                            'end' => $event['start'],
+                            'start' => $event['start'].'T'.$event['hour'],
+                            'end' => $event['start'].'T'.$event['hour'],
                             'hour' => $event['hour'],
                             'created_at' => $date,
                             'notify' => (isset($event['notify']) ? 1 : 0),
