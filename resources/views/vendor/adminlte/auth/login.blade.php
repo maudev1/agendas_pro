@@ -18,7 +18,7 @@
     @php( $password_reset_url = $password_reset_url ? url($password_reset_url) : '' )
 @endif
 
-@section('auth_header', __('adminlte::adminlte.login_message'))
+@section('auth_header', __('Efetue login ou registre-se'))
 
 @section('auth_body')
     <form action="{{ $login_url }}" method="post">

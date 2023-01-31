@@ -73,16 +73,21 @@ class ScheduleController extends Controller
 
         if($request){
             $requestJson = $request->json()->all();
+
+            // $data = array_filter($reques)
+
+
             if(empty($this->validation($requestJson))){
                 try {
                     $date = new \DateTime;
 
-                    DB::table('schedule')->where('id', $id)->update([
-                        'title' => $requestJson[0]['title'],
-                        'hour' => $requestJson[0]['hour'],
-                        'notify' => (isset($requestJson[0]['notify']) ? 1 : 0),
-                        'updated_at' => $date,
-                    ]);
+                    // DB::table('schedule')->where('id', $id)->update([
+                    //     'title' => $requestJson[0]['title'],
+                    //     'hour' => $requestJson[0]['hour'],
+                    //     'start' => $requestJson[0]['start'],
+                    //     'notify' => (isset($requestJson[0]['notify']) ? 1 : 0),
+                    //     'updated_at' => $date,
+                    // ]);
 
                     return response()->json(['message' => 'Agendamento atualizado com sucesso!'], 200);
 

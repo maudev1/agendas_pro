@@ -8,11 +8,21 @@ document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'pt-br',
-        initialView: 'dayGridMonth',
+        initialView: 'timeGridWeek',
         // initialDate: new Date(2023,1,1),
         editable: true,
         selectable: true,
         dropable: false,
+        // visibleRange:{
+        //     // start:new Date('Y-m-d'),
+        //     start:"2023-01-30",
+        //     end:"2023-02-01"
+        // },
+        businessHours:{
+            daysOfWeek: [0,2,3,4,5,6,7],
+            startTime: '09:00',
+            endTime: '19:00'
+        },
         dateClick: function (info) {
             // info.dayEl.style.backgroundColor = 'red'
 
@@ -48,12 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         eventMouseEnter: function (info) {
 
-            // console.log(info)
-
         },
         eventMouseLeave: function (info) {
-
-            // console.log(info)
         },
         eventReceive: function (info) {
             console.log(info)
@@ -165,7 +171,7 @@ async function DeletEvent(id){
 
 async function UpdateEventDay(info) {
 
-    console.log(info)
+    // console.log(info)
 
     let eventId = info.event._def.publicId;
     let newDate = info.event._instance.range.end
@@ -174,7 +180,7 @@ async function UpdateEventDay(info) {
         'start': newDate
     }
 
-    console.log(newDate)
+    // console.log(newDate)
     let response = await fetch(`/admin/schedule/${eventId}`, {
         method: 'POST',
         body: JSON.stringify(data),
