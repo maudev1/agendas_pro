@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
 use TheSeer\Tokenizer\Exception;
+use Illuminate\Hashing\BcryptHasher;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
@@ -32,36 +34,33 @@ class ScheduleController extends Controller
     {
         $results = [];
         if ($request) {
-            $requestJson = $request->json()->all();
-            if (empty($this->validation($requestJson))) {
-                foreach ($requestJson as $event) {
-                    try {
+            $event = $request->json()->all();
+            if (empty($this->validation($event))) {
+                try {
 
-                        $date = new \DateTime;
+                    $date = new \DateTime;
+                    
+                    DB::table('schedule')->insert([
+                        'title' => $event['title'],
+                        'customer_id' => $event['customer_id'],
+                        'start' => $event['start'],
+                        'end' => $event['start'],
+                        'created_at' => $date,
+                        'notify' => (isset($event['notify']) ? 1 : 0),
+                        'user_id' => '2',
+                    ]);
 
-                        DB::table('schedule')->insert([
-                            'title' => $event['title'],
-                            'customer_id' => $event['customer_id'],
-                            'start' => $event['start'].'T'.$event['hour'],
-                            'end' => $event['start'].'T'.$event['hour'],
-                            'hour' => $event['hour'],
-                            'created_at' => $date,
-                            'notify' => (isset($event['notify']) ? 1 : 0),
-                            'user_id' => '2',
-                        ]);
+                    return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
 
-                        return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
-
-                    } catch (Exception $error) {
-                        return response($error->getMessage(), 400)->header('Content-Type', 'text/json');
-
-                    }
+                } catch (Exception $error) {
+                    return response($error->getMessage(), 400)->header('Content-Type', 'text/json');
 
                 }
             } else {
-                $results = array_merge($this->validation($requestJson), $results);
+                $results = array_merge($this->validation($event), $results);
 
-                return response($results, 400)->header('Content-Type', 'text/json');
+                return response()->json($results, 400);
+
             }
 
 
@@ -69,32 +68,25 @@ class ScheduleController extends Controller
 
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
 
-        if($request){
-            $requestJson = $request->json()->all();
+        $requestData = $request->json()->all();
 
-            // $data = array_filter($reques)
+        if (empty($this->validation($requestData))) {
 
+            $date = new \DateTime;
 
-            if(empty($this->validation($requestJson))){
-                try {
-                    $date = new \DateTime;
+            $expected = array_merge($requestData, ['updated_at' => $date]);
 
-                    // DB::table('schedule')->where('id', $id)->update([
-                    //     'title' => $requestJson[0]['title'],
-                    //     'hour' => $requestJson[0]['hour'],
-                    //     'start' => $requestJson[0]['start'],
-                    //     'notify' => (isset($requestJson[0]['notify']) ? 1 : 0),
-                    //     'updated_at' => $date,
-                    // ]);
+            try {
 
-                    return response()->json(['message' => 'Agendamento atualizado com sucesso!'], 200);
+                DB::table('schedule')->where('id', $id)->update($expected);
 
-                } catch (Exception $error) {
-                    return response($error->getMessage(), 400)->header('Content-Type', 'text/json');
+                return response()->json(['message' => 'Agendamento atualizado com sucesso!'], 200);
 
-                }
+            } catch (Exception $error) {
+                return response()->json(['message' => $error->getMessage()], 400);
 
             }
 
@@ -106,19 +98,18 @@ class ScheduleController extends Controller
     {
         $errors = [];
 
-        if (!$data[0]['title']) {
-            $errors[] = ['message' => 'Preecha o titulo!', 'code' => 400];
 
+        if (array_key_exists('title', $data)) {
+            if (!$data['title']) {
+
+                $errors[] = ['message' => 'Preecha o titulo!', 'code' => 400];
+            }
         }
 
-        if(!$data[0]['hour']){
-            $errors[] = ['message' => 'Preecha o horário!', 'code' => 400];
-
-        }
-
-        if (!$data[0]['customer_id']) {
-            $errors[] = ['message' => 'Escolha um cliente!', 'code' => 400];
-
+        if (array_key_exists('customer_id', $data)) {
+            if (!$data['customer_id']) {
+                $errors[] = ['message' => 'Escolha um cliente!', 'code' => 400];
+            }
         }
 
         return $errors;
@@ -126,14 +117,38 @@ class ScheduleController extends Controller
 
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
 
         $results = DB::table('schedule')->where('id', $id)->delete();
 
-        if($results){
-            
+        if ($results) {
+
             return response()->json(['message' => 'Deletado com sucesso!', 200]);
         }
+
+
+    }
+
+    public function urlGenerate()
+    {
+
+        $bcrypt = new BcryptHasher();
+
+        $pass = $bcrypt->make('mauriciojr.dev@gmail.com');
+
+        $user = Auth::user()->id;
+
+        return response("http://127.0.0.1:8000/schedule/{$user}/{$pass}");
+        
+        if($bcrypt->check('banana', '$2y$10$BCed9PZ0eZYBu0nDcij6AeSCkGXqy42rr9BKwqysuXOPzPohF5Qbu')){
+
+            return response('ok');
+
+        }
+        
+
+
 
 
     }

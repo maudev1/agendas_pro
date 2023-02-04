@@ -46,11 +46,13 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">                  
+                <div class="modal-body"> 
+                  
+                  <input id="eventId" class="form-control" type="hidden" name="eventId">
                   <form id="modal-form" autocomplete="off">
-
-                        <div id="alert" class="alert" style="display:none"></div>
-
+                    
+                    <div id="alert" class="alert" style="display:none"></div>
+                    
                     
                         <div class="form-group">
                               <label for="customer">Titulo</label>
@@ -70,18 +72,17 @@
                             
                         </div>
                         
-                        <div class="form-group ">
+                        <!-- <div class="form-group ">
                           <label for="hour">Horário</label>
                           <input id="hour" class="form-control" name="hour">
-                          <input id="start" class="form-control" type="hidden" name="start">
-                          <input id="eventId" class="form-control" type="hidden" name="eventId">
-
-                        </div>
-                       
+                          
+                        </div> -->
+                        <input id="start" class="form-control" type="hidden" name="start">
+                        
                         
                         <div class="form-check-inline">
                           <label class="form-check-label">
-                            <input type="checkbox" id="notify" name="notify" class="form-check-input">
+                            <!-- <input type="checkbox" id="notify"  name="notify" class="form-check-input"> -->
                             Notificar cliente
 
                             </label>

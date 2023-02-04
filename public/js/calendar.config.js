@@ -6,26 +6,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     var calendarEl = document.getElementById('calendar');
+
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'pt-br',
         initialView: 'timeGridWeek',
-        // initialDate: new Date(2023,1,1),
         editable: true,
         selectable: true,
-        dropable: false,
-        // visibleRange:{
-        //     // start:new Date('Y-m-d'),
-        //     start:"2023-01-30",
-        //     end:"2023-02-01"
-        // },
+        eventColor:'#6B76F5',
         businessHours:{
             daysOfWeek: [0,2,3,4,5,6,7],
             startTime: '09:00',
             endTime: '19:00'
         },
-        dateClick: function (info) {
-            // info.dayEl.style.backgroundColor = 'red'
 
+        dateClick: function (info) {
             $('#start').val(info.dateStr)
             $('#title').val('Agendamento Esporádico')
             $('#preview').html(``);
@@ -61,20 +55,14 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         eventMouseLeave: function (info) {
         },
-        eventReceive: function (info) {
-            console.log(info)
+        // eventReceive: function (info) {
+        //     console.log(info)
+        // },
+        // eventDrop: function (info) {
+        //     // UpdateEventDay(info)
 
-        },
-        eventDrop: function (info) {
-            UpdateEventDay(info)
-
-            // info.revert();
-            // alert(info.event.title + " was dropped on " + info.event.start.toISOString());
-
-            // if (!confirm("Are you sure about this change?")) {
-            //   info.revert();
-            // }
-        },
+        //     console.log(info.event.start.toISOString())
+        // },
 
         events: '/admin/schedule/all',
     });
@@ -91,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector('#delete').addEventListener('click', function(){
-        DeletEvent($(this).data('id'));
+        DeleteEvent($(this).data('id'));
 
         calendar.refetchEvents();
 
@@ -121,15 +109,20 @@ async function Schedules() {
 
 async function SaveEnvent() {
 
-    let data = [
-        {
-            title: $('#title').val(),
-            start: $('#start').val(),
-            hour: $('#hour').val(),
-            notify: $('#notify').val(),
-            customer_id: $('#customer').val()
+    let form = document.querySelectorAll('#modal-form input');
+
+        let data = {
+            customer_id:$('#customer').val(),
         }
-    ];
+    
+
+    form.forEach(function(element){
+        if(element.value){
+                data[element.name] = element.value
+            
+        }
+
+    });
 
 
     let response = await fetch(`/admin/schedule/${$('#eventId').val()}`, {
@@ -160,7 +153,7 @@ async function SaveEnvent() {
 
 }
 
-async function DeletEvent(id){
+async function DeleteEvent(id){
 
     await fetch(`/admin/schedule/delete/${id}`)
     .then((response)=>{
@@ -170,17 +163,19 @@ async function DeletEvent(id){
 }
 
 async function UpdateEventDay(info) {
-
-    // console.log(info)
-
+    
     let eventId = info.event._def.publicId;
-    let newDate = info.event._instance.range.end
-
+    let newDate = info.event._instance.range.start
+    
     let data = {
-        'start': newDate
+        start: newDate
     }
 
-    // console.log(newDate)
+    console.log(info);
+    // console.log(info.event.start.toISOString());
+    
+    debugger;
+
     let response = await fetch(`/admin/schedule/${eventId}`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -197,6 +192,8 @@ function formDefault() {
     form.forEach(element => {
         element.value = null
     });
+
+    $('#eventId').val('');
 
     $('#alert').fadeOut("fast", function(){
         $(this).hide();

@@ -4,6 +4,7 @@ use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\PublicScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,5 +49,11 @@ Route::controller(ScheduleController::class)->group(function(){
     Route::post('/admin/schedule', 'store');
     Route::post('/admin/schedule/{id}', 'update');
     Route::get('/admin/schedule/delete/{id}', 'delete');
+    Route::get('/admin/urlgenerate', 'urlGenerate');
     
+});
+
+Route::controller(PublicScheduleController::class)->group(function () {
+    Route::get('/schedule/{id}/{key}', 'index');
+
 });
