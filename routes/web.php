@@ -54,6 +54,6 @@ Route::controller(ScheduleController::class)->group(function(){
 });
 
 Route::controller(PublicScheduleController::class)->group(function () {
-    Route::get('/schedule/{id}/{key}', 'index');
+    Route::get('/schedule/{id}/{crypt}', 'index');
 
 });

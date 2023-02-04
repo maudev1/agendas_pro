@@ -39,7 +39,7 @@ class ScheduleController extends Controller
                 try {
 
                     $date = new \DateTime;
-                    
+
                     DB::table('schedule')->insert([
                         'title' => $event['title'],
                         'customer_id' => $event['customer_id'],
@@ -135,20 +135,30 @@ class ScheduleController extends Controller
 
         $bcrypt = new BcryptHasher();
 
-        $pass = $bcrypt->make('mauriciojr.dev@gmail.com');
+        if (Auth::check()) {
+           $customer = Customer::find(2);
 
-        $user = Auth::user()->id;
+            if($customer){
 
-        return response("http://127.0.0.1:8000/schedule/{$user}/{$pass}");
-        
-        if($bcrypt->check('banana', '$2y$10$BCed9PZ0eZYBu0nDcij6AeSCkGXqy42rr9BKwqysuXOPzPohF5Qbu')){
+                $user = Auth::user()->id;
+            
+                // $crypt = urlencode($bcrypt->make($customer->mail));
+                $crypt = base64_encode($customer->mail);
+                
+                $host = $_SERVER['HTTP_HOST'];
+    
+                return response("<a target='_BLANK' href='http://{$host}/schedule/{$user}/{$crypt}'>LINK</a>");
+    
 
-            return response('ok');
+            
+            }else{
+
+                return response()->json(['message' => 'Cliente não encontrado'], 401);
+
+            }
+            
 
         }
-        
-
-
 
 
     }

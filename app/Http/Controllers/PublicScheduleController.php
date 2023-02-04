@@ -3,26 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Hashing\BcryptHasher;
-
+use App\Models\Customer;
 
 class PublicScheduleController extends Controller
 {
-    
-    public function index($id, $key){
 
+    public function index($id, $crypt)
+    {
 
-        $bcrypt = new BcryptHasher();
+        $customer = Customer::get()->where('mail', base64_decode($crypt));
 
-        if($bcrypt->check('mauriciojr.dev@gmail.com', $key)){
+        if ($customer) {
 
-            
-            // return view('customer/index');
-            return response('Autenticado');
+            // return response('Autenticado');
             
         }
+
+
         
-        
+        return view('customer/index');
+
 
     }
 }
