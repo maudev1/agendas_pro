@@ -19,11 +19,27 @@ document.addEventListener('DOMContentLoaded', function () {
             endTime: '19:00'
         },
 
+        titleFormat:{
+            month:'long',
+            year:'numeric',
+            day:'numeric',
+            weekday:'long'
+        },
+
         dateClick: function (info) {
+
+            let date = new Date(info.date);
+    
+            let Month = date.toLocaleDateString('pt-br', { month: 'long' });
+            let WeekDay = date.toLocaleDateString('pt-br', { weekday: 'long' });
+            let Hours = `${date.getHours()}:${date.getMinutes()}`;
+            let MonthDay = date.getDate();
+
+
             $('#start').val(info.dateStr)
             $('#title').val('Agendamento Esporádico')
             $('#preview').html(``);
-            $('#preview').append(`<p>${info.date}</p>`);
+            $('#preview').append(`<p>${WeekDay} - ${MonthDay} de ${Month} às ${Hours}</p>`);
             $('#exampleModal').modal('toggle');
 
         },
