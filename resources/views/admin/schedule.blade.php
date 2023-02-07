@@ -111,6 +111,9 @@
   </div>
 </div>
 
+<!-- Share button -->
+
+<x-sharebutton></x-sharebutton>
 
 @stop
 

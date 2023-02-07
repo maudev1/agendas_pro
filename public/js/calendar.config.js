@@ -99,7 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         calendar.refetchEvents();
 
-    })
+    });
+
+    $('.btn-share').on('click', function(){
+        getSchedulePublicLink();
+    });
 
     
 });
@@ -219,6 +223,26 @@ function formDefault() {
     $('#delete').fadeOut('fast', function(){
         $(this).hide()
     })
+
+}
+
+async function getSchedulePublicLink(){
+
+   let response = await fetch(`/admin/urlgenerate`,{
+    method:'GET'
+   });
+
+   let results = await response.json();
+
+   $('#url-field').val(results.url)
+
+   console.log(results)
+
+    
+}
+
+async function shareSchedule()
+{
 
 }
 

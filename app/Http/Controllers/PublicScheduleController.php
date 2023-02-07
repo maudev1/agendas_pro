@@ -3,25 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Customer;
+use App\Models\User;
 
 class PublicScheduleController extends Controller
 {
 
-    public function index($id, $crypt)
+    public function index($id)
     {
 
-        $customer = Customer::get()->where('mail', base64_decode($crypt));
-
-        if ($customer) {
-
+        
+        $user = User::get()->where('id', base64_decode($id));
+        
+        if ($user) {
+            
             // return response('Autenticado');
+            // return response($id);
+            return view('customer/index');
             
         }
 
 
         
-        return view('customer/index');
 
 
     }

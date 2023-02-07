@@ -49,11 +49,11 @@ Route::controller(ScheduleController::class)->group(function(){
     Route::post('/admin/schedule', 'store');
     Route::post('/admin/schedule/{id}', 'update');
     Route::get('/admin/schedule/delete/{id}', 'delete');
-    Route::get('/admin/urlgenerate', 'urlGenerate');
+    Route::get('/admin/urlgenerate/', 'urlGenerate');
     
 });
 
 Route::controller(PublicScheduleController::class)->group(function () {
-    Route::get('/schedule/{id}/{crypt}', 'index');
+    Route::get('/schedule/{id}/', 'index');
 
 });

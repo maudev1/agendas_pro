@@ -133,29 +133,37 @@ class ScheduleController extends Controller
     public function urlGenerate()
     {
 
-        $bcrypt = new BcryptHasher();
-
         if (Auth::check()) {
-           $customer = Customer::find(2);
 
-            if($customer){
+            $user = Auth::user()->id;
+            $host = $_SERVER['HTTP_HOST'];
+            $crypt = base64_encode($user);
 
-                $user = Auth::user()->id;
+            $url_encode = urlencode("schedule/{$crypt}");
             
-                // $crypt = urlencode($bcrypt->make($customer->mail));
-                $crypt = base64_encode($customer->mail);
+            return response()->json(["url" =>"http://{$host}/{$url_encode}"]);
+        //    $customer = Customer::find($id);
+
+        //     if($customer){
+
+        //         $user = Auth::user()->id;
+            
+        //         $crypt = base64_encode($customer->mail);
                 
-                $host = $_SERVER['HTTP_HOST'];
+        //         $host = $_SERVER['HTTP_HOST'];
     
-                return response("<a target='_BLANK' href='http://{$host}/schedule/{$user}/{$crypt}'>LINK</a>");
-    
-
+        //         return response("<a target='_BLANK' href='http://{$host}/schedule/{$user}/{$crypt}'>LINK</a>");
+                
+                
+                
+        //     }else{
+        //         $user = Auth::user()->id;
             
-            }else{
+        //         $crypt = base64_encode($user);
+                
+        //         return response()->json(["url" =>"http://{$host}/schedule/{$user}"]);
 
-                return response()->json(['message' => 'Cliente não encontrado'], 401);
-
-            }
+        //     }
             
 
         }
