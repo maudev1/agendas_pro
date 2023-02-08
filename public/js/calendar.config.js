@@ -1,6 +1,23 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    $('#copy-shareurl').on('click', function(){
+        let shareUrlField = $('#shareurl-field').val()
+        navigator.clipboard.writeText(shareUrlField).then(()=>{
+            alert('ok'); 
+        }).catch(()=>{
+            alert('err');
+        });
+
+
+        
+
+
+        
+
+
+     })
+
     $("#exampleModal").on('hide.bs.modal', function(){
         formDefault()
     });
@@ -234,7 +251,7 @@ async function getSchedulePublicLink(){
 
    let results = await response.json();
 
-   $('#url-field').val(results.url)
+   $('#shareurl-field').val(results.url)
 
    console.log(results)
 
@@ -245,4 +262,14 @@ async function shareSchedule()
 {
 
 }
+
+
+// function copyShareUrl()
+// {
+//     let shareUrl = $('').val();
+    
+//     navigator.clipboard.writeText;
+
+
+// }
 
