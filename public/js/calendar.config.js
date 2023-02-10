@@ -9,13 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('err');
         });
 
-
-        
-
-
-        
-
-
      })
 
     $("#exampleModal").on('hide.bs.modal', function(){
@@ -49,8 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
     
             let Month = date.toLocaleDateString('pt-br', { month: 'long' });
             let WeekDay = date.toLocaleDateString('pt-br', { weekday: 'long' });
-            let Hours = `${date.getHours()}:${date.getMinutes()}`;
+            let Hours = date.toLocaleTimeString('pt-BR');
             let MonthDay = date.getDate();
+
+            console.log()
 
 
             $('#start').val(info.dateStr)
@@ -262,14 +257,4 @@ async function shareSchedule()
 {
 
 }
-
-
-// function copyShareUrl()
-// {
-//     let shareUrl = $('').val();
-    
-//     navigator.clipboard.writeText;
-
-
-// }
 

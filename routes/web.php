@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PublicScheduleController;
+use App\Http\Controllers\ConfigController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,5 +56,11 @@ Route::controller(ScheduleController::class)->group(function(){
 
 Route::controller(PublicScheduleController::class)->group(function () {
     Route::get('/schedule/{id}/', 'index');
+    
+});
+
+Route::controller(ConfigController::class)->group(function () {
+    Route::get('/admin/config/', 'index');
+
 
 });

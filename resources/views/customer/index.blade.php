@@ -22,9 +22,23 @@
 
     <!-- Custom styles for this template -->
     <link href="form-validation.css" rel="stylesheet">
+
+    <!-- HCaptcha -->
+    <script src="https://js.hcaptcha.com/1/api.js?hl=fr" async defer></script>
   </head>
 
   <body class="bg-light">
+
+
+  <!-- <div
+  class="h-captcha"
+  data-sitekey="bec2ccf1-9c68-4581-8ebe-9fe20e476737"
+  data-theme="dark"
+  data-hl="pt"
+  data-error-callback="onError"
+></div> -->
+
+
 
     <div class="container">
       <div class="py-5 text-center">
