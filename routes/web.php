@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PublicScheduleController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\StoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,5 +63,11 @@ Route::controller(PublicScheduleController::class)->group(function () {
 Route::controller(ConfigController::class)->group(function () {
     Route::get('/admin/config/', 'index');
 
+
+});
+
+Route::controller(StoreController::class)->group(function () {
+    Route::get('/admin/store/', 'index');
+    Route::post('/admin/store/', 'store');
 
 });

@@ -258,6 +258,14 @@ return [
             'label'       => 0,
             'label_color' => 'success',
         ],
+
+        [
+            'text'        => 'Loja',
+            'url'         => 'admin/store',
+            'icon'        => 'fa fa-store',
+            'label'       => 0,
+            'label_color' => 'success',
+        ],
         
             
         

@@ -43,7 +43,7 @@
     <div class="container">
       <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" src="https://img.logoipsum.com/235.svg" alt="" width="130" height="72">
-        <h2>Agenda Barbearia do Chicão</h2>
+        <h2>Agenda {{ $store->name ?? ''}}</h2>
         <p class="lead"></p>
       </div>
 
