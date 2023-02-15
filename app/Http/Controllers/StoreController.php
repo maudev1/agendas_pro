@@ -22,6 +22,26 @@ class StoreController extends Controller
 
     }
 
+    public function update(Request $request, $id){
+        $store = Store::find($id);
+
+        // return response($request->nane);
+
+        if($store){
+
+            $store->name = $request->name;
+            $store->user_id = $id;
+            $store->slogan = $request->slogan;
+            $store->office_hour = $request->office_hour;
+            $store->work_days = $request->work_days;
+            $store->logo = !empty($request->logo) ? $request->logo :  'NONE';
+            $store->save();
+        }
+
+        return redirect('/admin/store');
+
+    }
+
 
     public function store(Request $request){
 
@@ -29,10 +49,19 @@ class StoreController extends Controller
      
         if($request){
 
-            DB::table('stores')
-                ->updateOrInsert(
-                    ['logo' => 'teste', 'name' => $request->name],
-                    ['user_id' => $id]);
+            $store = new Store();
+
+            // return response($request->logo);
+
+            $store->name = $request->name;
+            $store->user_id = $id;
+            $store->slogan = $request->slogan;
+            $store->office_hour = $request->office_hour;
+            $store->work_days = $request->work_days;
+            $store->logo = !empty($request->logo) ? $request->logo :  'NONE';
+
+            $store->save();
+
 
             // try{
 

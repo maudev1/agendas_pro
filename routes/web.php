@@ -69,5 +69,6 @@ Route::controller(ConfigController::class)->group(function () {
 Route::controller(StoreController::class)->group(function () {
     Route::get('/admin/store/', 'index');
     Route::post('/admin/store/', 'store');
+    Route::post('/admin/store/{id}', 'update');
 
 });
