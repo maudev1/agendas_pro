@@ -125,6 +125,7 @@ class ScheduleController extends Controller
         if ($results) {
 
             return response()->json(['message' => 'Deletado com sucesso!', 200]);
+            
         }
 
 

@@ -107,9 +107,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector('#delete').addEventListener('click', function(){
-        DeleteEvent($(this).data('id'));
+        
+        DeleteEvent()
 
         calendar.refetchEvents();
+
+
 
     });
 
@@ -185,9 +188,9 @@ async function SaveEnvent() {
 
 }
 
-async function DeleteEvent(id){
+async function DeleteEvent(){
 
-    await fetch(`/admin/schedule/delete/${id}`)
+    await fetch(`/admin/schedule/delete/${$('#eventId').val()}`)
     .then((response)=>{
         $('#exampleModal').modal('toggle');
         $('.alert').html('').hide();
