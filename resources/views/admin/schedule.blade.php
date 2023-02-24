@@ -7,6 +7,14 @@
 @stop
 
 @section('content')
+
+@section('css')
+
+<link rel="stylesheet" href="/css/calendar.css"></link>
+
+@stop
+
+
 <div class="row">
     <div class="col-md-12">
 
@@ -117,11 +125,6 @@
 
 @stop
 
-@section('css')
-
-<link rel="stylesheet" href="/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"></link>
-
-@stop
 
 @section('js')
 

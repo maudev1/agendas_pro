@@ -1,17 +1,19 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    $('#copy-shareurl').on('click', function(){
+    let dateToday = moment().format('YYYY-MM-DD');
+
+    $('#copy-shareurl').on('click', function () {
         let shareUrlField = $('#shareurl-field').val()
-        navigator.clipboard.writeText(shareUrlField).then(()=>{
-            alert('ok'); 
-        }).catch(()=>{
+        navigator.clipboard.writeText(shareUrlField).then(() => {
+            alert('ok');
+        }).catch(() => {
             alert('err');
         });
 
-     })
+    });
 
-    $("#exampleModal").on('hide.bs.modal', function(){
+    $("#exampleModal").on('hide.bs.modal', function () {
         formDefault()
     });
 
@@ -19,33 +21,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'pt-br',
-        initialView: 'timeGridWeek',
+        timeZone: 'America/Sao_Paulo',
+        initialView: 'timeGrid',
         editable: true,
-        selectable: true,
-        eventColor:'#6B76F5',
-        businessHours:{
-            daysOfWeek: [0,2,3,4,5,6,7],
+        // selectable: true,
+        displayEventTime:false,
+        // slotDuration: '01:00:00',
+        initialDate: dateToday,
+        // eventColor:'#6B76F5',
+        dayCount: 4,
+        visibleRange: {
+            start: dateToday
+        },
+        validRange: {
+            start: dateToday
+        },
+        businessHours: {
+            daysOfWeek: [0, 2, 3, 4, 5, 6, 7],
             startTime: '09:00',
             endTime: '19:00'
         },
 
-        titleFormat:{
-            month:'long',
-            year:'numeric',
-            day:'numeric',
-            weekday:'long'
+        // titleFormat: {
+        //     month: 'long',
+        //     year: 'numeric',
+        //     day: 'numeric',
+        //     weekday: 'long'
+        // },
+        eventDidMount: function (info) {
+            // if (info.event.extendedProps.image) {
+            if (info.event.extendedProps) {
+                var img = document.createElement('img');
+                img.src = 'https://i.pravatar.cc/300';
+                // img.src = info.event.extendedProps.imagem;
+                info.el.querySelector('.fc-event-main-frame').prepend(img);
+            }
         },
-
         dateClick: function (info) {
 
             let date = new Date(info.date);
-    
+
             let Month = date.toLocaleDateString('pt-br', { month: 'long' });
             let WeekDay = date.toLocaleDateString('pt-br', { weekday: 'long' });
             let Hours = date.toLocaleTimeString('pt-BR');
             let MonthDay = date.getDate();
-
-            console.log()
 
 
             $('#start').val(info.dateStr)
@@ -78,20 +97,16 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#exampleModal').modal('toggle');
 
         },
-        eventMouseEnter: function (info) {
 
+        eventMouseEnter: function (info) {
         },
+
         eventMouseLeave: function (info) {
         },
-        // eventReceive: function (info) {
-        //     console.log(info)
-        // },
-        // eventDrop: function (info) {
-        //     // UpdateEventDay(info)
 
-        //     console.log(info.event.start.toISOString())
-        // },
-
+        eventDrop: function (info) {
+            UpdateEventDay(info)
+        },
         events: '/admin/schedule/all',
     });
 
@@ -106,8 +121,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    document.querySelector('#delete').addEventListener('click', function(){
-        
+    document.querySelector('#delete').addEventListener('click', function () {
+
         DeleteEvent()
 
         calendar.refetchEvents();
@@ -116,11 +131,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    $('.btn-share').on('click', function(){
+    $('.btn-share').on('click', function () {
         getSchedulePublicLink();
     });
 
-    
+
+
+
 });
 
 async function Schedules() {
@@ -146,15 +163,15 @@ async function SaveEnvent() {
 
     let form = document.querySelectorAll('#modal-form input');
 
-        let data = {
-            customer_id:$('#customer').val(),
-        }
-    
+    let data = {
+        customer_id: $('#customer').val(),
+    }
 
-    form.forEach(function(element){
-        if(element.value){
-                data[element.name] = element.value
-            
+
+    form.forEach(function (element) {
+        if (element.value) {
+            data[element.name] = element.value
+
         }
 
     });
@@ -188,28 +205,23 @@ async function SaveEnvent() {
 
 }
 
-async function DeleteEvent(){
+async function DeleteEvent() {
 
     await fetch(`/admin/schedule/delete/${$('#eventId').val()}`)
-    .then((response)=>{
-        $('#exampleModal').modal('toggle');
-        $('.alert').html('').hide();
-    })
+        .then((response) => {
+            $('#exampleModal').modal('toggle');
+            $('.alert').html('').hide();
+        })
 }
 
 async function UpdateEventDay(info) {
-    
+
     let eventId = info.event._def.publicId;
     let newDate = info.event._instance.range.start
-    
+
     let data = {
         start: newDate
     }
-
-    console.log(info);
-    // console.log(info.event.start.toISOString());
-    
-    debugger;
 
     let response = await fetch(`/admin/schedule/${eventId}`, {
         method: 'POST',
@@ -230,34 +242,33 @@ function formDefault() {
 
     $('#eventId').val('');
 
-    $('#alert').fadeOut("fast", function(){
+    $('#alert').fadeOut("fast", function () {
         $(this).hide();
     })
 
 
-    $('#delete').fadeOut('fast', function(){
+    $('#delete').fadeOut('fast', function () {
         $(this).hide()
     })
 
 }
 
-async function getSchedulePublicLink(){
+async function getSchedulePublicLink() {
 
-   let response = await fetch(`/admin/urlgenerate`,{
-    method:'GET'
-   });
+    let response = await fetch(`/admin/urlgenerate`, {
+        method: 'GET'
+    });
 
-   let results = await response.json();
+    let results = await response.json();
 
-   $('#shareurl-field').val(results.url)
+    $('#shareurl-field').val(results.url)
 
-   console.log(results)
+    console.log(results)
 
-    
+
 }
 
-async function shareSchedule()
-{
+async function shareSchedule() {
 
 }
 

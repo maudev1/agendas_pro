@@ -1,0 +1,31 @@
+.fc-event-main {
+    /* padding: 8px 8px 0 !important; */
+}
+
+.fc-event-title {
+    font-size: 16px;
+    width: 100px;
+    text-align: center;
+
+}
+
+.fc-event-main img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: -20px
+        /* margin-right: 20px; */
+}
+
+.fc-v-event .fc-event-main-frame {
+    flex-direction: row !important;
+    justify-content: space-around;
+    align-items: center;
+
+    /* justify-content: space-between; */
+
+}
+
+.fc-event-title-container {
+    flex-grow: unset !important;
+}
