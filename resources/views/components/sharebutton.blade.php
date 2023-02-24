@@ -37,18 +37,3 @@
     </div>
   </div>
 </div>
-
-@section('css')
-<style>
-
-button.btn-share{
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 1;
-
-
-}
-
-</style>
-@stop
