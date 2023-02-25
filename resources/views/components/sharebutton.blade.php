@@ -16,7 +16,7 @@
       <div class="modal-body">
 
         <div class="input-group mb-3">
-          <input type="text" class="form-control" id="shareurl-field"  placeholder="" aria-label="" aria-describedby="basic-addon1">
+          <input type="text" class="form-control" id="shareurl-field" value="{{$link}}" placeholder="" aria-label="" aria-describedby="basic-addon1">
         <div class="input-group-prepend">
         <button class="btn btn-outline-primary" id="copy-shareurl" type="button">Copiar</button>
         </div>

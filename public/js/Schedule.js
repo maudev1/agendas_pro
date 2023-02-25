@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#copy-shareurl').on('click', function () {
         let shareUrlField = $('#shareurl-field').val()
         navigator.clipboard.writeText(shareUrlField).then(() => {
-            alert('ok');
+            alert('Copiado!');
         }).catch(() => {
             alert('err');
         });
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
+        events: `schedules/${$('#userId').val()}`,
         locale: 'pt-br',
         timeZone: 'America/Sao_Paulo',
         initialView: 'timeGrid',
@@ -42,12 +43,12 @@ document.addEventListener('DOMContentLoaded', function () {
             endTime: '19:00'
         },
 
-        // titleFormat: {
-        //     month: 'long',
-        //     year: 'numeric',
-        //     day: 'numeric',
-        //     weekday: 'long'
-        // },
+        titleFormat: {
+            month: 'long',
+            year: 'numeric',
+            day: 'numeric',
+            weekday: 'long'
+        },
         eventDidMount: function (info) {
             // if (info.event.extendedProps.image) {
             if (info.event.extendedProps) {
@@ -77,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         eventClick: function (info) {
 
+
             let eventId = info.event._def.publicId;
             let title = info.event._def.title;
             let hour = info.event._def.extendedProps.hour;
@@ -98,141 +100,82 @@ document.addEventListener('DOMContentLoaded', function () {
 
         },
 
-        eventMouseEnter: function (info) {
-        },
-
-        eventMouseLeave: function (info) {
-        },
-
         eventDrop: function (info) {
-            UpdateEventDay(info)
+
+
+            let eventId = info.event._def.publicId;
+            let newDate = info.event._instance.range.start
+        
+            let data = {
+                start: newDate
+            }
+
+            Request.url = `schedule/${eventId}`;
+            Request.method = 'POST';
+            Request.data = data;
+            Request.makeRequest();
+
         },
-        events: '/admin/schedule/all',
     });
 
     calendar.render();
 
-    document.querySelector('#save').addEventListener('click', function () {
+    $('#save').on('click', function () {
 
-        SaveEnvent();
+        let form = document.querySelectorAll('#modal-form input');
+
+        let data = {
+            customer_id: $('#customer').val(),
+        }
+
+        form.forEach(function (element) {
+            if (element.value) {
+                data[element.name] = element.value
+
+            }
+
+        });
+
+        Request.data = data;
+        Request.url  = `schedule/${$('#eventId').val()}`;
+        Request.method = 'POST'
+        Request.makeRequest();
+
+        const ResponseHandler = {
+            notify: function (response) {                
+                $('#exampleModal').modal('toggle');
+
+
+            }
+        };
+
+        Request.addObserver(ResponseHandler);
+        
+        calendar.refetchEvents();
+
+    });
+
+    $('#delete').on('click', function () {
+
+        Request.url = `schedule/delete/${$('#eventId').val()}`;
+        Request.method = 'GET';
+        Request.makeRequest();
+        
+        const ResponseHandler = {
+            notify: function (response) {
+                $('#exampleModal').modal('toggle');
+
+            }
+        };
+
+        Request.addObserver(ResponseHandler);
 
         calendar.refetchEvents();
 
-
     });
-
-    document.querySelector('#delete').addEventListener('click', function () {
-
-        DeleteEvent()
-
-        calendar.refetchEvents();
-
-
-
-    });
-
-    $('.btn-share').on('click', function () {
-        getSchedulePublicLink();
-    });
-
-
 
 
 });
-
-async function Schedules() {
-
-    let args = {
-        method: 'GET'
-    }
-
-    let results = await fetch('/admin/schedule/all', args)
-        .then((response) => {
-            return response;
-
-        })
-        .catch((err) => {
-            return response
-        });
-
-    return results.json();
-
-}
-
-async function SaveEnvent() {
-
-    let form = document.querySelectorAll('#modal-form input');
-
-    let data = {
-        customer_id: $('#customer').val(),
-    }
-
-
-    form.forEach(function (element) {
-        if (element.value) {
-            data[element.name] = element.value
-
-        }
-
-    });
-
-
-    let response = await fetch(`/admin/schedule/${$('#eventId').val()}`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    })
-
-    if (response.status == 200) {
-        $('#exampleModal').modal('toggle');
-        $('.alert').html('').hide();
-    } else {
-
-        let results = await response.json()
-
-        if (Array.isArray(results)) {
-            results.forEach((result) => {
-
-                if (result.code != 200) {
-                    $('.alert').addClass('alert-danger').text(result.message).show()
-
-                }
-            })
-        }
-    }
-
-}
-
-async function DeleteEvent() {
-
-    await fetch(`/admin/schedule/delete/${$('#eventId').val()}`)
-        .then((response) => {
-            $('#exampleModal').modal('toggle');
-            $('.alert').html('').hide();
-        })
-}
-
-async function UpdateEventDay(info) {
-
-    let eventId = info.event._def.publicId;
-    let newDate = info.event._instance.range.start
-
-    let data = {
-        start: newDate
-    }
-
-    let response = await fetch(`/admin/schedule/${eventId}`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    })
-
-
-}
 
 function formDefault() {
     let form = document.querySelectorAll('#modal-form input');
@@ -250,25 +193,6 @@ function formDefault() {
     $('#delete').fadeOut('fast', function () {
         $(this).hide()
     })
-
-}
-
-async function getSchedulePublicLink() {
-
-    let response = await fetch(`/admin/urlgenerate`, {
-        method: 'GET'
-    });
-
-    let results = await response.json();
-
-    $('#shareurl-field').val(results.url)
-
-    console.log(results)
-
-
-}
-
-async function shareSchedule() {
 
 }
 

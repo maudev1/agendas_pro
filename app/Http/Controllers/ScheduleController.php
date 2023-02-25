@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
 use TheSeer\Tokenizer\Exception;
-use Illuminate\Hashing\BcryptHasher;
 use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
@@ -18,15 +17,19 @@ class ScheduleController extends Controller
         $title = 'Agenda';
         $customers = Customer::all();
 
+        $userId = Auth::id();
+
         return view('admin/schedule')
+            ->with('userId', $userId)
             ->with('title', $title)
+            ->with('shareurl', $this->urlGenerate())
             ->with('customers', $customers);
     }
 
-    public function getAll()
+    public function getAll($userId)
     {
 
-        $schedules = DB::table('schedule')->get();
+        $schedules = DB::table('schedule')->where('user_id', $userId)->get();
         return response()->json($schedules);
     }
 
@@ -35,7 +38,11 @@ class ScheduleController extends Controller
         $results = [];
         if ($request) {
             $event = $request->json()->all();
+
+            return response()->json($event);
             if (empty($this->validation($event))) {
+
+                
                 try {
 
                     $date = new \DateTime;
@@ -47,7 +54,7 @@ class ScheduleController extends Controller
                         'end' => $event['start'],
                         'created_at' => $date,
                         'notify' => (isset($event['notify']) ? 1 : 0),
-                        'user_id' => '2',
+                        'user_id' => Auth::id()
                     ]);
 
                     return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
@@ -100,7 +107,7 @@ class ScheduleController extends Controller
 
 
         if (array_key_exists('title', $data)) {
-            if (!$data['title']) {
+            if (!$data['title'] || $data['title'] == "") {
 
                 $errors[] = ['message' => 'Preecha o titulo!', 'code' => 400];
             }
@@ -131,7 +138,7 @@ class ScheduleController extends Controller
 
     }
 
-    public function urlGenerate()
+    function urlGenerate()
     {
 
         if (Auth::check()) {
@@ -142,30 +149,8 @@ class ScheduleController extends Controller
 
             $url_encode = urlencode("schedule/{$crypt}");
             
-            return response()->json(["url" =>"http://{$host}/{$url_encode}"]);
-        //    $customer = Customer::find($id);
+            return "http://{$host}/{$url_encode}";
 
-        //     if($customer){
-
-        //         $user = Auth::user()->id;
-            
-        //         $crypt = base64_encode($customer->mail);
-                
-        //         $host = $_SERVER['HTTP_HOST'];
-    
-        //         return response("<a target='_BLANK' href='http://{$host}/schedule/{$user}/{$crypt}'>LINK</a>");
-                
-                
-                
-        //     }else{
-        //         $user = Auth::user()->id;
-            
-        //         $crypt = base64_encode($user);
-                
-        //         return response()->json(["url" =>"http://{$host}/schedule/{$user}"]);
-
-        //     }
-            
 
         }
 
