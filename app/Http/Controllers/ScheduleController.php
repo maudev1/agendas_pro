@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ScheduleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
@@ -33,45 +34,23 @@ class ScheduleController extends Controller
         return response()->json($schedules);
     }
 
-    public function store(Request $request)
+    public function store(ScheduleRequest $request)
     {
-        $results = [];
-        if ($request) {
-            $event = $request->json()->all();
 
-            return response()->json($event);
-            if (empty($this->validation($event))) {
+        $date = new \DateTime;
 
-                
-                try {
+        DB::table('schedule')->insert([
+            'title' => $request->title,
+            'customer_id' => $request->customer_id,
+            'start' => $request->start,
+            'end' => $request->start,
+            'created_at' => $date,
+            'notify' => (isset($event['notify']) ? 1 : 0),
+            'user_id' => Auth::id()
+        ]);
 
-                    $date = new \DateTime;
+        return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
 
-                    DB::table('schedule')->insert([
-                        'title' => $event['title'],
-                        'customer_id' => $event['customer_id'],
-                        'start' => $event['start'],
-                        'end' => $event['start'],
-                        'created_at' => $date,
-                        'notify' => (isset($event['notify']) ? 1 : 0),
-                        'user_id' => Auth::id()
-                    ]);
-
-                    return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
-
-                } catch (Exception $error) {
-                    return response($error->getMessage(), 400)->header('Content-Type', 'text/json');
-
-                }
-            } else {
-                $results = array_merge($this->validation($event), $results);
-
-                return response()->json($results, 400);
-
-            }
-
-
-        }
 
     }
 
@@ -132,7 +111,7 @@ class ScheduleController extends Controller
         if ($results) {
 
             return response()->json(['message' => 'Deletado com sucesso!', 200]);
-            
+
         }
 
 
@@ -148,7 +127,7 @@ class ScheduleController extends Controller
             $crypt = base64_encode($user);
 
             $url_encode = urlencode("schedule/{$crypt}");
-            
+
             return "http://{$host}/{$url_encode}";
 
 
