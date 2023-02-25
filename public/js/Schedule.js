@@ -1,7 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    let dateToday = moment().format('YYYY-MM-DD');
+    let today = moment().format('YYYY-MM-DD');
 
     $('#copy-shareurl').on('click', function () {
         let shareUrlField = $('#shareurl-field').val()
@@ -25,22 +25,19 @@ document.addEventListener('DOMContentLoaded', function () {
         timeZone: 'America/Sao_Paulo',
         initialView: 'timeGrid',
         editable: true,
-        // selectable: true,
-        displayEventTime:false,
-        // slotDuration: '01:00:00',
-        initialDate: dateToday,
-        // eventColor:'#6B76F5',
+        displayEventTime: false,
+        slotMinTime: '08:00:00',
+        slotMaxTime: '18:00:00',
+        initialDate: today,
         dayCount: 4,
         visibleRange: {
-            start: dateToday
+            start: today
         },
         validRange: {
-            start: dateToday
+            start: today
         },
         businessHours: {
             daysOfWeek: [0, 2, 3, 4, 5, 6, 7],
-            startTime: '09:00',
-            endTime: '19:00'
         },
 
         titleFormat: {
@@ -105,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let eventId = info.event._def.publicId;
             let newDate = info.event._instance.range.start
-        
+
             let data = {
                 start: newDate
             }
@@ -118,7 +115,27 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     });
 
+    let dayOffEvent = {
+        title: 'Dia de folga',
+        start: '2023-02-27',
+        allDay: true
+    };
+
+    function addDayOffEvent(dayOffEvent) {
+
+        calendar.addEvent({
+            title: dayOffEvent.title,
+            startRecur: dayOffEvent.start,
+            endRecur: dayOffEvent.start,
+            daysOfWeek: [1],
+            display: 'background'
+        });
+    }
+
     calendar.render();
+
+    addDayOffEvent(dayOffEvent);
+
 
     $('#save').on('click', function () {
 
@@ -137,12 +154,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         Request.data = data;
-        Request.url  = `schedule/${$('#eventId').val()}`;
+        Request.url = `schedule/${$('#eventId').val()}`;
         Request.method = 'POST'
         Request.makeRequest();
 
         const ResponseHandler = {
-            notify: function (response) {                
+            notify: function (response) {
                 $('#exampleModal').modal('toggle');
 
 
@@ -150,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         Request.addObserver(ResponseHandler);
-        
+
         calendar.refetchEvents();
 
     });
@@ -160,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
         Request.url = `schedule/delete/${$('#eventId').val()}`;
         Request.method = 'GET';
         Request.makeRequest();
-        
+
         const ResponseHandler = {
             notify: function (response) {
                 $('#exampleModal').modal('toggle');

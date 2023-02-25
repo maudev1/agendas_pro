@@ -13,7 +13,8 @@ const Request = {
     // Método que notifica todos os observadores registrados quando a requisição é bem sucedida
     notifyObservers: function (response) {
         this.observers.forEach(function (observer) {
-            observer.notify(response);
+            // console.log(observer)
+            observer.notify(response);            
         });
     },
 
@@ -38,11 +39,13 @@ const Request = {
 
                 let result = await response.json();
 
-                console.log(result)
+                const errors = Object.values(result.errors).flat();
 
-                result.forEach(function(r){
-                    sendError(r.message)
-                });
+                errors.forEach((error)=>{
+
+                    sendError(error);
+
+                })
 
             }            
             
