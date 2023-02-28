@@ -41,7 +41,7 @@
 
 <input type="hidden" id="userId" value="{{ $userId }}">
 
-<div class="row">
+<div id="app" class="row">
   <div class="col">
     <div>
       <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -71,13 +71,22 @@
                         
                         <div class="form-group">
                               <label for="customer">Cliente</label>
-                              <select class="form-control" id="customer">
+
+                              <v-select 
+                              v-model="selected"
+                              :options="options" 
+                              :value="selected" 
+                              :reduce="(customer) => customer.id"
+                              @input="makeSelect" 
+                              label="customer"></v-select>
+
+                              <!-- <select class="form-control" id="customer">
                                 <option value="">Escolha o cliente</option>
 
                                 @foreach ($customers as $customer)
                                   <option value="{{$customer->id}}">{{$customer->name}}</option>
                                 @endforeach
-                            </select>
+                            </select> -->
                             
                         </div>
                         
@@ -129,8 +138,11 @@
 
 @section('js')
 
-<script src="/js/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-select@latest"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
 
+<script src="/js/moment.min.js"></script>
 <script src="/vendor/fullcalendar-6.0.1/dist/index.global.min.js"></script>
 <script src="/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/vendor/bootstrap-datetimepicker/js/demo.js"></script>

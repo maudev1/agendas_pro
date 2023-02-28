@@ -37,7 +37,7 @@ class ScheduleRequest extends FormRequest
     {
 
         return [
-            'title.required' => 'O titulo é um campo obrigatório!',
+            'title.required' => 'Defina o título!',
             'customer_id.required' => 'Selecione o cliente!'
         ];
 

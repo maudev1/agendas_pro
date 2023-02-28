@@ -194,6 +194,55 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+Vue.component('v-select', VueSelect.VueSelect);
+
+new Vue({
+    el:'#app',
+    data(){
+        return {
+            'options': [],
+            selected:''
+        }
+    },
+    methods:{
+        customers: function(){
+
+            const self = this;
+
+            Request.method = 'GET',
+            Request.url    = 'customers/all',
+            Request.makeRequest()
+
+            const ResponseHandler = {
+                notify: function (response) {
+
+                    response.forEach(function(customer){
+
+                        self.options.push({
+                            customer:customer.name,
+                            id:customer.id
+                        })
+
+                    })
+                }
+            };
+    
+            Request.addObserver(ResponseHandler);
+
+
+        },
+        makeSelect:function(value){
+
+            this.selected = value
+
+        }
+    },
+    mounted(){
+        this.customers();
+    }
+});
+
+
 function formDefault() {
     let form = document.querySelectorAll('#modal-form input');
     form.forEach(element => {

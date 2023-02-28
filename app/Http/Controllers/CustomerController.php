@@ -115,12 +115,19 @@ class CustomerController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * 
      */
-    public function show($id)
+    public function show()
     {
-        //
+
+        $id = Auth::user()->id; 
+        $customers = Customer::where('user_id', $id)->get();
+
+        return response()->json($customers);
+      
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -169,4 +176,7 @@ class CustomerController extends Controller
     {
         //
     }
+
+
+    
 }
