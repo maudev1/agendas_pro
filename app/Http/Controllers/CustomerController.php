@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
 use Exception;
 use App\Http\Classes\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
 
 class CustomerController extends Controller
 {
@@ -36,8 +38,8 @@ class CustomerController extends Controller
             $editButton = '<button 
             class="btn btn-success edit-button" 
             data-target="#exampleModal"
-            onclick="Fetch('.$customer->id.')"
-            data-customer-id="'.$customer->id.'" 
+            onclick="Fetch(' . $customer->id . ')"
+            data-customer-id="' . $customer->id . '" 
             data-toggle="modal" 
             type="button"
             >
@@ -63,52 +65,31 @@ class CustomerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
+
+        // $request->attributes->set('locale', 'pt');
+
+        // return response()->json($request->name);
 
         $Helpers = new Helpers();
         $customer = new Customer;
-        $results = [];
-
-        if ($request) {
-
     
-            if (isset(Auth::user()->id)) {
+        $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
 
-                $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
+        $customer->name = $request->name;
+        $customer->cpf = $doc;
+        $customer->mail = $request->mail;
+        $customer->phone = $request->phone;
+        $customer->password = $request->password;
+        $customer->user_id = Auth::user()->id;
+        $customer->save();
 
-                if(Auth::check()){
-                    echo 'teste';
-                }
+        $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200];
 
-                try {
-                    $customer->name = $request->name;
-                    $customer->cpf = $doc;
-                    $customer->mail = $request->mail;
-                    $customer->phone = $request->phone;
-                    $customer->password = $request->password;
-                    $customer->user_id = Auth::user()->id;
-                    $customer->save();
+        return response()->json($results);
 
-                    $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200];
-
-                } catch (Exception $error) {
-
-                    $results = ['message' => $error->getMessage(), 'code' => 401];
-                }
-            } else {
-
-                $results = ['message' => 'Você não esta logado no sistema!', 'code' => 401];
-                
-                return redirect('/');
-            }
-
-            return response($results, $results['code'])
-                ->header('Content-Type', 'text/json');
-
-        }
     }
 
     /**
@@ -120,11 +101,11 @@ class CustomerController extends Controller
     public function show()
     {
 
-        $id = Auth::user()->id; 
+        $id = Auth::user()->id;
         $customers = Customer::where('user_id', $id)->get();
 
         return response()->json($customers);
-      
+
     }
 
 
@@ -138,8 +119,8 @@ class CustomerController extends Controller
     public function edit($id)
     {
         return response(Customer::findOrfail($id), 200)
-        ->header('Content-type', 'text/json');
-        
+            ->header('Content-type', 'text/json');
+
     }
 
     /**
@@ -159,10 +140,10 @@ class CustomerController extends Controller
         $customer->mail = $request->mail;
         $customer->phone = $request->phone;
 
-        if($request->password){   
+        if ($request->password) {
             $customer->password = $request->password;
         }
-        
+
         $customer->save();
     }
 
@@ -178,5 +159,5 @@ class CustomerController extends Controller
     }
 
 
-    
+
 }
