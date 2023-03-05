@@ -1,4 +1,4 @@
-function active_datatable(columnsData, url) {
+function ActiveDatatable(columnsData, url) {
     $('#myTable').DataTable({
         ajax: url,
         columns:columnsData,
@@ -7,7 +7,7 @@ function active_datatable(columnsData, url) {
 
 }
 
-function reaload_datatable()
+function RealoadDatatable()
 {
     $('#myTable').DataTable().ajax.reload();
 
