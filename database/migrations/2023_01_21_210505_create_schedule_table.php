@@ -19,7 +19,6 @@ class CreateScheduleTable extends Migration
             $table->integer('customer_id');
             $table->integer('user_id');
             $table->integer('notify');
-            $table->text('hour');
             $table->text('start');
             $table->text('end');
             $table->timestamps();
