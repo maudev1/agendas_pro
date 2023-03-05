@@ -72,21 +72,13 @@
                         <div class="form-group">
                               <label for="customer">Cliente</label>
 
-                              <v-select 
-                              v-model="selected"
-                              :options="options" 
-                              :value="selected" 
-                              :reduce="(customer) => customer.id"
-                              @input="makeSelect" 
-                              label="customer"></v-select>
-
-                              <!-- <select class="form-control" id="customer">
-                                <option value="">Escolha o cliente</option>
+                              <select class="form-control" id="customer">
+                                <option value="">Qual é o cliente?</option>
 
                                 @foreach ($customers as $customer)
                                   <option value="{{$customer->id}}">{{$customer->name}}</option>
                                 @endforeach
-                            </select> -->
+                            </select>
                             
                         </div>
                         
@@ -137,17 +129,14 @@
 
 
 @section('js')
-
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-select@latest"></script>
-<link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
-
-<script src="/js/moment.min.js"></script>
+<script src="/js/moment.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 <script src="/vendor/fullcalendar-6.0.1/dist/index.global.min.js"></script>
 <script src="/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/vendor/bootstrap-datetimepicker/js/demo.js"></script>
 <script src="/js/HttpObserver.js"></script>
 <script src="/js/HttpNotifier.js"></script>
 <script src="/js/Schedule.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 
 @stop
