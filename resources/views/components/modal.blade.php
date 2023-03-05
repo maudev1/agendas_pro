@@ -1,4 +1,5 @@
 <div>
+    <form id="modal-form" autocomplete="off">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -15,7 +16,7 @@
 
                 <div class="alert" role="alert"></div>
 
-                    <form id="modal-form" autocomplete="off">
+                   
 
                         <input id="id" name="id" type="hidden">
 
@@ -28,19 +29,20 @@
                         </div>
                         
                         @endforeach
-                    </form>
+                  
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" id="save" class="btn btn-primary">Salvar</button>
+                    <button type="submit" id="save" class="btn btn-primary">Salvar</button>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Adicionar cliente
-</button>
+        Adicionar cliente
+    </button>
+</form>
 
 </div>

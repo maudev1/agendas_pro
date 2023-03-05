@@ -13,7 +13,6 @@ const Request = {
     // Método que notifica todos os observadores registrados quando a requisição é bem sucedida
     notifyObservers: function (response) {
         this.observers.forEach(function (observer) {
-            // console.log(observer)
             observer.notify(response);            
         });
     },
@@ -59,6 +58,22 @@ const Request = {
 
     }
 };
+
+let sendError = (error) =>{
+
+    $('.alert').addClass('alert-danger').text(error).show();
+
+    setTimeout(function(){
+
+        $('.alert').fadeOut(function(){
+            $('.alert').hide();
+        });
+
+    }, 5000)
+
+
+}
+
 
 // // Cria o objeto observador que irá aguardar a resposta da requisição AJAX
 // const ResponseHandler = {

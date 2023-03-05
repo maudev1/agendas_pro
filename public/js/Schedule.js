@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
         formDefault()
     });
 
-    var calendarEl = document.getElementById('calendar');
+    const calendarEl = document.getElementById('calendar');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         events: `schedules/${$('#userId').val()}`,
         locale: 'pt-br',
         timeZone: 'America/Sao_Paulo',
@@ -191,56 +191,60 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+    $('select').selectize({
+        sortField: 'text'
+    });
+
 
 });
 
-Vue.component('v-select', VueSelect.VueSelect);
+// Vue.component('v-select', VueSelect.VueSelect);
 
-new Vue({
-    el:'#app',
-    data(){
-        return {
-            'options': [],
-            selected:''
-        }
-    },
-    methods:{
-        customers: function(){
+// new Vue({
+//     el:'#app',
+//     data(){
+//         return {
+//             'options': [],
+//             selected:''
+//         }
+//     },
+//     methods:{
+//         customers: function(){
 
-            const self = this;
+//             const self = this;
 
-            Request.method = 'GET',
-            Request.url    = 'customers/all',
-            Request.makeRequest()
+//             Request.method = 'GET',
+//             Request.url    = 'customers/all',
+//             Request.makeRequest()
 
-            const ResponseHandler = {
-                notify: function (response) {
+//             const ResponseHandler = {
+//                 notify: function (response) {
 
-                    response.forEach(function(customer){
+//                     response.forEach(function(customer){
 
-                        self.options.push({
-                            customer:customer.name,
-                            id:customer.id
-                        })
+//                         self.options.push({
+//                             customer:customer.name,
+//                             id:customer.id
+//                         })
 
-                    })
-                }
-            };
+//                     })
+//                 }
+//             };
     
-            Request.addObserver(ResponseHandler);
+//             Request.addObserver(ResponseHandler);
 
 
-        },
-        makeSelect:function(value){
+//         },
+//         makeSelect:function(value){
 
-            this.selected = value
+//             this.selected = value
 
-        }
-    },
-    mounted(){
-        this.customers();
-    }
-});
+//         }
+//     },
+//     mounted(){
+//         this.customers();
+//     }
+// });
 
 
 function formDefault() {
