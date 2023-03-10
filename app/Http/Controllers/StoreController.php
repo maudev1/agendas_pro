@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Store;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreRequest;
+
 
 class StoreController extends Controller
 {
@@ -22,10 +23,8 @@ class StoreController extends Controller
 
     }
 
-    public function update(Request $request, $id){
+    public function update(StoreRequest $request, $id){
         $store = Store::find($id);
-
-        // return response($request->nane);
 
         if($store){
 

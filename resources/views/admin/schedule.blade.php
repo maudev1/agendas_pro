@@ -82,11 +82,6 @@
                             
                         </div>
                         
-                        <!-- <div class="form-group ">
-                          <label for="hour">Horário</label>
-                          <input id="hour" class="form-control" name="hour">
-                          
-                        </div> -->
                         <input id="start" class="form-control" type="hidden" name="start">
                         
                         
