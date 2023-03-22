@@ -10,11 +10,6 @@ jQuery(($) => {
 
     ActiveDatatable(columnsData, '/admin/customers/to_datatables');
 
-
-    // $('#save').on('click', function () {
-    //     Save();
-    // });
-
     $('button[data-toggle=modal]').on('click', function(){
         ClearForm();
     })
@@ -59,6 +54,27 @@ $('#modal-form').on('submit', function(event){
 
 });
 
+$('#delete-confirm').on('click', function(){
+
+    let customer = $('#customer-id').val();
+
+    Request.url = customer ? `/admin/customers/delete/${customer}` : "/admin/customers";
+    Request.method = "GET";
+    Request.makeRequest();
+
+    const ResponseHandler = {
+        notify: function (response) {
+
+            $('#confirmModal').modal('toggle');
+            
+            RealoadDatatable();
+
+        }
+    };
+
+    Request.addObserver(ResponseHandler);
+
+});
 
 
 async function Fetch(customerId)
@@ -75,6 +91,7 @@ async function Fetch(customerId)
 
     if(response.status == 200){
         let data = await response.json();
+
         $('#id').val(data.id)
         $('#name').val(data.name)
         $('#cpf').val(data.cpf)
@@ -82,9 +99,12 @@ async function Fetch(customerId)
         $('#mail').val(data.mail)
     }
 
-
-
 }
+
+function Delete(customerId){
+    $('#customer-id').val(customerId);
+}
+
 
 function ClearForm()
 {

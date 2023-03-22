@@ -53,6 +53,7 @@ Route::middleware(['auth', 'auth.basic'])->group(function(){
         Route::get('/admin/customers/all', 'show');
         Route::post('/admin/customers', 'store');
         Route::post('/admin/customers/update/{id}', 'update');
+        Route::get('/admin/customers/delete/{id}', 'destroy');
     
     });
 

@@ -33,5 +33,29 @@ class Helpers
         return true;
     }
 
+    /**
+     * 
+     * @param string $text 
+     * 
+     * @param string $type 
+     * 
+     * @param array $attributes
+     * 
+     */
+
+    public function button_template($text, $type, $attributes){
+
+        $button = "<button ";
+
+        foreach($attributes as $key => $value){
+
+            $button .= "$key = '$value'";
+
+        }
+
+        return $button." type='$type'>$text</button>";
+
+    }
+
 
 }

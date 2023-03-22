@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
-use Exception;
 use App\Http\Classes\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,33 +21,38 @@ class CustomerController extends Controller
     {
         $customers = Customer::all();
 
-        return view('/admin/customers')->with('customers', $customers);
+        return view('/admin/customers', compact('customers'));
     }
 
     public function to_datatables()
     {
 
-        // $customers = Customer::all();
         $customers = DB::table('customers')->where('user_id', 1)->get();
-
         $data = array();
+
+        $helper = new Helpers();
 
         foreach ($customers as $customer) {
 
-            $editButton = '<button 
-            class="btn btn-success edit-button" 
-            data-target="#exampleModal"
-            onclick="Fetch(' . $customer->id . ')"
-            data-customer-id="' . $customer->id . '" 
-            data-toggle="modal" 
-            type="button"
-            >
-            <i  class="fas fa-edit"></i></button>';
+            $editButton = $helper->button_template('<i  class="fas fa-edit"></i>','button',[
+                'class' => 'btn btn-success',
+                'data-target' => '#exampleModal',
+                'onclick' => 'Fetch("'.$customer->id.'")',
+                'data-toggle'=>"modal" 
+            ]);
+
+            $deleteButton = $helper->button_template('<i  class="fas fa-trash"></i>','button',[
+                'class' => 'btn btn-danger',
+                'data-target' => '#confirmModal',
+                'onclick' => 'Delete("'.$customer->id.'")',
+                'data-toggle'=>"modal" 
+            ]);
+
 
             $data[] = array(
                 'name' => $customer->name,
                 'phone' => $customer->phone,
-                'options' => $editButton
+                'options' => $editButton.' '.$deleteButton,
             );
         }
 
@@ -68,10 +72,6 @@ class CustomerController extends Controller
      */
     public function store(CustomerRequest $request)
     {
-
-        // $request->attributes->set('locale', 'pt');
-
-        // return response()->json($request->name);
 
         $Helpers = new Helpers();
         $customer = new Customer;
@@ -102,6 +102,7 @@ class CustomerController extends Controller
     {
 
         $id = Auth::user()->id;
+
         $customers = Customer::where('user_id', $id)->get();
 
         return response()->json($customers);
@@ -128,7 +129,6 @@ class CustomerController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -151,11 +151,16 @@ class CustomerController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $customer = Customer::find($id);
+        
+        if($customer->delete()){
+            return Response()->json(['success' => true]);
+
+        };
+
     }
 
 
