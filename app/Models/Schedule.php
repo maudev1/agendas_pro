@@ -11,7 +11,14 @@ class Schedule extends Model
 
     protected $fillable = [
         'description',
+        'product_id',
         'customer_id',
-        'company_id'
+        'company_id',
     ];
+
+    public function products(){
+
+        return $this->hasMany(Product::class, 'id','product_id');
+
+    }
 }

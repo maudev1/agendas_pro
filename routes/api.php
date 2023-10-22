@@ -18,19 +18,10 @@ use App\Http\Controllers\Api;
 */
 
 
-
-
-
-// Route::middleware('json.response')->group(function(){
-//     Route::post('/auth/login', [AuthController::class, 'loginUser']);
-
-
-// });
-
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::resource('schedule', Api\ScheduleController::class)->except('create');
     Route::resource('company', Api\CompanyController::class)->except('create');
-
+    Route::resource('product', Api\ProductController::class)->except('create');
 
 });
 

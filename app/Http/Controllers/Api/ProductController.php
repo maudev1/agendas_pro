@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models;
 
-class ScheduleController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        return Models\Schedule::with('products')->get();
-        
+        return Models\Product::all();
+
     }
 
     /**
@@ -26,7 +26,7 @@ class ScheduleController extends Controller
      */
     public function create()
     {
-        return false;
+
     }
 
     /**
@@ -37,21 +37,20 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
+        $product = Models\Product::create($request->only(['name', 'price']));
 
-        $schedule = Models\Schedule::create($request->only(['description', 'product_id','company_id', 'customer_id']));
-
-        if(isset($schedule->id)){
+        if(isset($product->id)){
             
             return response()->json([
                 'success' => 'true', 
-                'message' => 'Cliente agendado com sucesso!'
+                'message' => 'Produto Adicionado com sucesso!'
                 ]);
 
         }
 
         return response()->json([
             'success' => 'false', 
-            'message' => 'Erro ao agendar cliente!'
+            'message' => 'Erro ao adicionar produto!'
             ]);
     }
 
