@@ -23,6 +23,8 @@ Route::middleware(['auth:sanctum', 'cors'])->group(function(){
     Route::resource('company', Api\CompanyController::class)->except('create');
     Route::resource('product', Api\ProductController::class)->except('create');
 
+    Route::resource('customer', Api\CustomerController::class)->except('create');
+
 });
 
 Route::prefix('auth')->group(function () {
