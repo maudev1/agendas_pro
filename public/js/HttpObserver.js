@@ -59,7 +59,7 @@ const Request = {
     }
 };
 
-let sendError = (error) =>{
+var sendError = (error) =>{
 
     $('.alert').addClass('alert-danger').text(error).show();
 

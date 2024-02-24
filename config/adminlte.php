@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'Agendas PRO',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -254,7 +254,7 @@ return [
         ],
         [
             'text'        => 'Agenda',
-            'url'         => 'admin/schedule',
+            'url'         => 'admin/schedules',
             'icon'        => 'far fa-fw fa-calendar',
             'label'       => 0,
             'label_color' => 'success',

@@ -194,6 +194,13 @@ document.addEventListener('DOMContentLoaded', function () {
         sortField: 'text'
     });
 
+    $('#new-customer-switch').on('change', function(){
+
+        $(".customer").hide()
+        $(".new-customer").show()
+     
+    })
+
 
 });
 

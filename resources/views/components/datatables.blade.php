@@ -1,5 +1,5 @@
 <div>
-    <table id="myTable" class="display" style="width:100%">
+    <table id="myTable" class="display table table-striped" style="width:100%">
         <thead>
             <tr>
                 @foreach($headers as $item)

@@ -21,12 +21,11 @@ class CustomerController extends Controller
     {
         $customers = Customer::all();
 
-        return view('/admin/customers', compact('customers'));
+        return view('admin.customers', compact('customers'));
     }
 
     public function to_datatables()
     {
-
         $customers = DB::table('customers')->where('user_id', 1)->get();
         $data = array();
 
@@ -37,7 +36,7 @@ class CustomerController extends Controller
             $editButton = $helper->button_template('<i  class="fas fa-edit"></i>','button',[
                 'class' => 'btn btn-success',
                 'data-target' => '#exampleModal',
-                'onclick' => 'Fetch("'.$customer->id.'")',
+                // 'onclick' => 'Fetch("'.$customer->id.'")',
                 'data-toggle'=>"modal" 
             ]);
 
@@ -49,18 +48,18 @@ class CustomerController extends Controller
             ]);
 
 
-            $data[] = array(
-                'name' => $customer->name,
-                'phone' => $customer->phone,
+            $data[] = [
+                'name'    => $customer->name,
+                'phone'   => $customer->phone,
                 'options' => $editButton.' '.$deleteButton,
-            );
+            ];
         }
 
         $response = array(
             "aaData" => $data
         );
 
-        return json_encode($response);
+        return response()->json($response);
 
     }
 
@@ -101,11 +100,11 @@ class CustomerController extends Controller
     public function show()
     {
 
-        $id = Auth::user()->id;
+        // $id = Auth::user()->id;
 
-        $customers = Customer::where('user_id', $id)->get();
+        // $customers = Customer::where('user_id', $id)->get();
 
-        return response()->json($customers);
+        // return response()->json($customers);
 
     }
 

@@ -20,6 +20,7 @@ class CreateScheduleTable extends Migration
             $table->integer('user_id');
             $table->integer('notify');
             $table->text('start');
+            $table->text('locale');
             $table->text('end');
             $table->timestamps();
         });

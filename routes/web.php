@@ -7,6 +7,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PublicScheduleController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\StoreController;
+use App\Models\Customer;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,7 @@ Route::middleware(['auth', 'auth.basic'])->group(function(){
     Route::get('/admin/home', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
 
     Route::controller(ScheduleController::class)->group(function(){
-        Route::get('/admin/schedule', 'index');
+        Route::get('/admin/schedules', 'index');
         Route::get('/admin/schedules/{id}', 'getAll');
         Route::post('/admin/schedule', 'store');
         Route::post('/admin/schedule/{id}', 'update');
@@ -39,23 +40,29 @@ Route::middleware(['auth', 'auth.basic'])->group(function(){
         
     });
 
+    Route::prefix("admin")->group(function(){
 
-    Route::controller(UsersController::class)->group(function () {
-        Route::get('/admin/users', 'index');
-        Route::post('/admin/users', 'create');
-    
-    });
+        // Users Route
 
-    Route::controller(CustomerController::class)->group(function () {
-        Route::get('/admin/customers', 'index');
-        Route::get('/admin/customers/to_datatables', 'to_datatables');
-        Route::get('/admin/customers/edit/{id}', 'edit');
-        Route::get('/admin/customers/all', 'show');
-        Route::post('/admin/customers', 'store');
-        Route::post('/admin/customers/update/{id}', 'update');
-        Route::get('/admin/customers/delete/{id}', 'destroy');
-    
+        Route::resource("users",UsersController::class);
+
+        // Customer Route
+        Route::resource("customers", CustomerController::class)->except("show");
+        Route::get('customers/to_datatables', [CustomerController::class, 'to_datatables'])->name("customers.datatables");
+
+
     });
+    
+
+    // Route::controller(CustomerController::class)->group(function () {
+    //     // Route::get('/admin/customers', 'index');
+    //     Route::get('/admin/customers/edit/{id}', 'edit');
+    //     Route::get('/admin/customers/all', 'show');
+    //     Route::post('/admin/customers', 'store');
+    //     Route::post('/admin/customers/update/{id}', 'update');
+    //     Route::get('/admin/customers/delete/{id}', 'destroy');
+    
+    // });
 
     Route::controller(ConfigController::class)->group(function () {
         Route::get('/admin/config/', 'index');
