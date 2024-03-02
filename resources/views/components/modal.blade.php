@@ -60,7 +60,7 @@
 
 </div>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-type="insert" data-target="#exampleModal">
         Adicionar cliente
 </button>
 

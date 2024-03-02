@@ -10,6 +10,14 @@ jQuery(($) => {
         }
     });
 
+    $('.cpf-mask').mask('000.000.000-00', {
+        onKeyPress: function (cep, e, field, options) {
+            var masks = ['000.000.000-000', '00.000.000/0000-00'];
+            var mask = (cep.length >= 15) ? masks[1] : masks[0];
+            $('#document').mask(mask, options);
+        }
+    });
+
 
     //phone field jquerymask
 

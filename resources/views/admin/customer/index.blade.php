@@ -15,34 +15,41 @@
         $headers = ['Nome', 'Telefone', 'Opções'] 
     
     @endphp
-        <x-datatables :headers="$headers" ></x-datatables>
+        <x-datatables :headers="$headers" :data="$customers"></x-datatables>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        
-    @include('admin.customer.create')
-    
-    @include('admin.customer.delete')
+        @php
+
+            $fields = [
+                ['label' => 'Nome', 'field' => 'name'],
+                ['label' => 'CPF', 'field' => 'cpf'],
+                ['label' => 'Telefone', 'field' => 'phone'],
+                ['label' => 'E-mail', 'field' => 'mail'],
+                ['label' => 'Senha', 'field' => 'password'],
+            ]
+            
+        @endphp
 
     </div>
+
 </div>
+
+    <x-modal :fields="$fields" ></x-modal>
 
 @stop
 
 @section('css')
-<link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
 @stop
 
 @section('js')
+
+
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.13.1/b-2.3.3/r-2.4.0/sb-1.4.0/datatables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-<script src="/vendor/jquery/jquery.mask.js"></script>
-<script src="/js/apply.masks.js"></script>
-<script src="/js/HttpObserver.js"></script>
-<script src="/js/HttpNotifier.js"></script>
-<script src="/js/Customer.js"></script>
+<script src="{{asset('js/datatables.config.js')}}"></script>
+<script src="{{asset('js/admin/Customer.js')}}"></script>
 
 @stop

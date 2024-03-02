@@ -11,9 +11,10 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{asset('css/admin_custom.css')}}">
 @stop
 
 @section('js')
-    
+    <script src="{{asset("vendor/jquery/jquery.mask.js")}}"></script>
+    <script src="{{asset("js/apply.masks.js")}}"></script>
 @stop

@@ -20,7 +20,7 @@
 
                     <div class="form-group">
                         <label>CPF</label>
-                        <input id="cpf" class="form-control" name="cpf">
+                        <input id="cpf" class="form-control cpf-mask" name="cpf">
                     </div>
 
                     <div class="form-group">

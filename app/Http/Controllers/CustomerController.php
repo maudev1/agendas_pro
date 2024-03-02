@@ -21,7 +21,7 @@ class CustomerController extends Controller
     {
         $customers = Customer::all();
 
-        return view('admin.customers', compact('customers'));
+        return view('admin.customer.index', compact('customers'));
     }
 
     public function to_datatables()
@@ -34,17 +34,17 @@ class CustomerController extends Controller
         foreach ($customers as $customer) {
 
             $editButton = $helper->button_template('<i  class="fas fa-edit"></i>','button',[
-                'class' => 'btn btn-success',
+                'class'       => 'btn btn-success edit',
+                'data-id'     => $customer->id,
                 'data-target' => '#exampleModal',
-                // 'onclick' => 'Fetch("'.$customer->id.'")',
-                'data-toggle'=>"modal" 
+                'data-toggle' => 'modal' 
             ]);
 
             $deleteButton = $helper->button_template('<i  class="fas fa-trash"></i>','button',[
-                'class' => 'btn btn-danger',
+                'class'       => 'btn btn-danger',
                 'data-target' => '#confirmModal',
-                'onclick' => 'Delete("'.$customer->id.'")',
-                'data-toggle'=>"modal" 
+                'onclick'     => 'Delete("'.$customer->id.'")',
+                'data-toggle' => 'modal' 
             ]);
 
 
@@ -118,6 +118,7 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
+        
         return response(Customer::findOrfail($id), 200)
             ->header('Content-type', 'text/json');
 
@@ -131,19 +132,24 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
 
         $customer = Customer::find($id);
-        $customer->name = $request->name;
-        $customer->cpf = $doc;
-        $customer->mail = $request->mail;
-        $customer->phone = $request->phone;
+        $customer->name   =  $request->name;
+        $customer->cpf    =  $doc;
+        $customer->mail   =  $request->mail;
+        $customer->phone  =  $request->phone;
 
         if ($request->password) {
             $customer->password = $request->password;
         }
 
-        $customer->save();
+        if($customer->save()){
+
+            return Response()->json(['success' => true]);
+
+        }
     }
 
     /**
