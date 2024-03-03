@@ -38,6 +38,30 @@ class Commons {
 
   }
 
+  alertMessage(message, type, active){
 
+    let element = $(".alert");
+
+    switch(type){
+
+      case 'error' :
+        element.addClass('alert-danger')
+      
+        break;
+      case 'success':
+        element.addClass('alert-success')
+
+    }
+
+    if(active){
+      element.html(message).show()
+
+    }else{
+      element.html()
+      element.hide()
+    }
+
+
+  }
 
 }

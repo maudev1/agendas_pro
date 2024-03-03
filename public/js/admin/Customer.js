@@ -40,7 +40,6 @@ let customer = {
                 customer.update(this);
 
             } else {
-
                 customer.create(this);
 
             }
@@ -99,15 +98,40 @@ let customer = {
 
             ReloadDatatable();
 
-        } else {
+        } else if(results.errors){
+
+            let errors = Object.values(results.errors)
+            let reverset = errors.reverse()
+
+            reverset.forEach(function(error){
+                error.forEach(function(e){
+
+                    $(".alert").addClass("alert-danger").html(e).show()
+
+                    commons.alertMessage(e, 'error', true)
+
+                })
+
+
+            });
+
+            setTimeout(function(){
+
+                commons.alertMessage('', 'error', false)
+
+            },3000);
 
             commons.loadFormSpinner($(".modal-body"), false);
+
+        }else{
+
+            commons.loadFormSpinner($(".modal-body"), false);
+
 
         }
 
 
     },
-
     edit: async function (customerId) {
 
         let commons = new Commons();
@@ -179,9 +203,35 @@ let customer = {
 
             ReloadDatatable();
 
-        } else {
+        } else if(results.errors){
+
+            let errors = Object.values(results.errors)
+            let reverset = errors.reverse()
+
+            reverset.forEach(function(error){
+                error.forEach(function(e){
+
+                    $(".alert").addClass("alert-danger").html(e).show()
+
+                    commons.alertMessage(e, 'error', true)
+
+                })
+
+
+            });
+
+            setTimeout(function(){
+
+                commons.alertMessage('', 'error', false)
+
+            },3000);
 
             commons.loadFormSpinner($(".modal-body"), false);
+
+        }else{
+
+            commons.loadFormSpinner($(".modal-body"), false);
+
 
         }
 
@@ -192,10 +242,7 @@ let customer = {
 
 
 
-    },
-
-
-
+    }
 };
 
 (() => {

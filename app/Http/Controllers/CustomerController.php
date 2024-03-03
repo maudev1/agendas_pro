@@ -85,7 +85,7 @@ class CustomerController extends Controller
         $customer->user_id = Auth::user()->id;
         $customer->save();
 
-        $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200];
+        $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200, 'success' => true];
 
         return response()->json($results);
 
@@ -130,7 +130,7 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      */
-    public function update(Request $request, $id)
+    public function update(CustomerRequest $request, $id)
     {
 
         $doc = preg_replace('/[^0-9]/m', '', $request->cpf);

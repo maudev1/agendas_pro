@@ -22,14 +22,15 @@ class CustomerRequest extends FormRequest
         return true;
     }
 
-    public function messages(){
+    public function messages()
+    {
 
 
         return [
 
-            'name.required' => 'O :attribute é obrigatório!',
-            'phone.unique' =>  'O :attribute ja está cadastrado!', 
-            'phone.required' => 'O :attribute é obrigatório!' 
+            'name.required' =>  'O :attribute é obrigatório!',
+            'phone.unique' =>   'O :attribute ja está cadastrado!',
+            'phone.required' => 'O :attribute é obrigatório!'
 
         ];
     }
@@ -41,12 +42,19 @@ class CustomerRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules =  [
 
             'name' =>  'required',
-            'phone' => 'required|unique:customers'
-            
+            // 'phone' => 'unique:customers'
+
         ];
+
+        if ($this->checkIsPhone()) {
+
+            $rules['phone'] = 'unique:customers';
+        }
+
+        return $rules;
     }
 
     protected function failedValidation(Validator $validator)
@@ -55,10 +63,16 @@ class CustomerRequest extends FormRequest
         $response = new JsonResponse([
             'errors' => $validator->errors(),
         ], 422);
-    
+
         throw new ValidationException($validator, $response);
     }
 
+    protected function checkIsPhone()
+    {
 
+        $request  = $this->request->all();
 
+        return isset($request["phone"]);
+
+    }
 }
