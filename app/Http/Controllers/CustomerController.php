@@ -41,9 +41,9 @@ class CustomerController extends Controller
             ]);
 
             $deleteButton = $helper->button_template('<i  class="fas fa-trash"></i>','button',[
-                'class'       => 'btn btn-danger',
+                'class'       => 'btn btn-danger delete',
+                'data-id'     => $customer->id,
                 'data-target' => '#confirmModal',
-                'onclick'     => 'Delete("'.$customer->id.'")',
                 'data-toggle' => 'modal' 
             ]);
 

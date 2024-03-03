@@ -49,6 +49,8 @@ class CustomerRequest extends FormRequest
 
         ];
 
+        // dd($this);
+
         if ($this->checkIsPhone()) {
 
             $rules['phone'] = 'unique:customers';

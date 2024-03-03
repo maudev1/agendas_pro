@@ -1,7 +1,9 @@
+
 let customer = {
 
     route: "admin/customers",
     editModalId: "#exampleModal",
+    deleteModalId: "#confirmModal",
 
     init: function () {
 
@@ -34,9 +36,9 @@ let customer = {
 
             e.preventDefault();
 
-            let id = $('#id').val();
+            let customerId = $('#id').val();
 
-            if (id) {
+            if (customerId) {
                 customer.update(this);
 
             } else {
@@ -44,13 +46,34 @@ let customer = {
 
             }
 
-
-
-
         });
 
-    },
+        $(customer.deleteModalId).on('shown.bs.modal', function(e){
+            
+            e.preventDefault();
 
+            let customerId = $(e.relatedTarget).data("id");
+
+            $("#customer-id").val(customerId);
+
+ 
+        });
+
+        $("#confirm-form").on('submit', function(e){
+
+            e.preventDefault();
+
+            let customerId = $('#customer-id').val();
+            
+            if(customerId){
+                customer.delete(customerId);
+
+            }
+
+
+        })
+
+    },
     datatables: function () {
 
         let columnsData = [
@@ -165,7 +188,6 @@ let customer = {
 
 
     },
-
     update: async function (element) {
 
         let commons = new Commons();
@@ -237,12 +259,28 @@ let customer = {
 
 
     },
+    delete: async function (customerId) {
 
-    delete: function () {
+
+        let options = {
+            method: "DELETE",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+        };
 
 
+        let response = await fetch(`/${customer.route}/${customerId}`, options)
+        let results  = await response.json();
+
+        if(results.success){
+            $(customer.deleteModalId).modal("toggle");
+            ReloadDatatable();
+        }
 
     }
+
 };
 
 (() => {
