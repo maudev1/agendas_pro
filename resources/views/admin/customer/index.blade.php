@@ -37,18 +37,22 @@
 
 </div>
 
-    <x-modal :fields="$fields" ></x-modal>
+    <x-admin.customer.modal :fields="$fields" ></x-admin.customer.modal>
 
 @stop
 
 @section('css')
-<link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/3.0.0/css/responsive.dataTables.min.css" rel="stylesheet">
+
+<link href="{{asset('css/customers.css')}}" rel="stylesheet">
 @stop
 
 @section('js')
 
 
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.13.1/b-2.3.3/r-2.4.0/sb-1.4.0/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('js/datatables.config.js')}}"></script>
 <script src="{{asset('js/admin/Customer.js')}}"></script>
 

@@ -62,8 +62,7 @@
 
 </div>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-type="insert" data-target="#exampleModal">
-    Adicionar cliente
-</button>
+
+<button title="Adicionar Cliente" class="btn-new-customer" type="button" data-toggle="modal" data-type="insert" data-target="#exampleModal"><i class="fas fa-user-plus"></i></button>
 
 </div>
