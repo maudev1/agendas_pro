@@ -33,25 +33,25 @@ class CustomerController extends Controller
 
         foreach ($customers as $customer) {
 
-            $editButton = $helper->button_template('<i  class="fas fa-edit"></i>','button',[
+            $editButton = $helper->button_template('<i  class="fas fa-edit"></i>', 'button', [
                 'class'       => 'btn btn-success edit',
                 'data-id'     => $customer->id,
                 'data-target' => '#exampleModal',
-                'data-toggle' => 'modal' 
+                'data-toggle' => 'modal'
             ]);
 
-            $deleteButton = $helper->button_template('<i  class="fas fa-trash"></i>','button',[
+            $deleteButton = $helper->button_template('<i  class="fas fa-trash"></i>', 'button', [
                 'class'       => 'btn btn-danger delete',
                 'data-id'     => $customer->id,
                 'data-target' => '#confirmModal',
-                'data-toggle' => 'modal' 
+                'data-toggle' => 'modal'
             ]);
 
 
             $data[] = [
                 'name'    => $customer->name,
                 'phone'   => $customer->phone,
-                'options' => $editButton.' '.$deleteButton,
+                'options' => $editButton . ' ' . $deleteButton,
             ];
         }
 
@@ -60,7 +60,6 @@ class CustomerController extends Controller
         );
 
         return response()->json($response);
-
     }
 
 
@@ -74,8 +73,11 @@ class CustomerController extends Controller
 
         $Helpers = new Helpers();
         $customer = new Customer;
-    
+
         $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
+
+
+        $data = [];
 
         $customer->name = $request->name;
         $customer->cpf = $doc;
@@ -85,10 +87,14 @@ class CustomerController extends Controller
         $customer->user_id = Auth::user()->id;
         $customer->save();
 
+        // $flight = Flight::updateOrCreate(
+        //     ['departure' => 'Oakland', 'destination' => 'San Diego'],
+        //     ['price' => 99, 'discounted' => 1]
+        // );
+
         $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200, 'success' => true];
 
         return response()->json($results);
-
     }
 
     /**
@@ -118,10 +124,9 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        
+
         return response(Customer::findOrfail($id), 200)
             ->header('Content-type', 'text/json');
-
     }
 
     /**
@@ -135,21 +140,18 @@ class CustomerController extends Controller
 
         $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
 
-        $customer = Customer::find($id);
-        $customer->name   =  $request->name;
-        $customer->cpf    =  $doc;
-        $customer->mail   =  $request->mail;
-        $customer->phone  =  $request->phone;
+        Customer::updateOrCreate(
+            ['id' => $id],
+            [
+                'name'  => $request->name,
+                'phone' => $request->phone,
+                'mail' => $request->mail,
+                'password' => $request->password,
+                'cpf' => $doc,
+            ]
+        );
 
-        if ($request->password) {
-            $customer->password = $request->password;
-        }
-
-        if($customer->save()){
-
-            return Response()->json(['success' => true]);
-
-        }
+        return Response()->json(['success' => true]);
     }
 
     /**
@@ -160,14 +162,9 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $customer = Customer::find($id);
-        
-        if($customer->delete()){
+
+        if ($customer->delete()) {
             return Response()->json(['success' => true]);
-
         };
-
     }
-
-
-
 }

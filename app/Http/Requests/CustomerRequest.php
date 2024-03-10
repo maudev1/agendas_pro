@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Customer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
@@ -43,13 +44,9 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-
             'name' =>  'required',
-            // 'phone' => 'unique:customers'
 
         ];
-
-        // dd($this);
 
         if ($this->checkIsPhone()) {
 
@@ -74,7 +71,13 @@ class CustomerRequest extends FormRequest
 
         $request  = $this->request->all();
 
-        return isset($request["phone"]);
+        $customer = Customer::where("phone",$request["phone"])->where("id","<>" ,$request["id"])->get()->count();
+
+        if($customer > 0){
+
+            return true;
+
+        }
 
     }
 }

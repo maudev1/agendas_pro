@@ -80,7 +80,7 @@
 
     <script src="/js/moment.min.js"></script>
     <script src="/vendor/fullcalendar-6.0.1/dist/index.global.min.js"></script>
-    <script src="/js/Schedule.js"></script>
+    <!-- <script src="/js/admin/Schedule.js"></script> -->
 
 
     <!-- Bootstrap core JavaScript
