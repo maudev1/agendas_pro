@@ -1,0 +1,13 @@
+button.btn-new-customer {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    z-index: 999;
+    background-color: #28a745;
+    color: white;
+    border:none;
+    border-radius: 30px;
+    width: 3em;
+    height: 3em;
+
+}

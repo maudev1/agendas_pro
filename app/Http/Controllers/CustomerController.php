@@ -26,7 +26,7 @@ class CustomerController extends Controller
 
     public function to_datatables()
     {
-        $customers = DB::table('customers')->where('user_id', 1)->get();
+        $customers = Customer::where('user_id', 1)->get();
         $data = array();
 
         $helper = new Helpers();
@@ -105,13 +105,7 @@ class CustomerController extends Controller
      */
     public function show()
     {
-
-        // $id = Auth::user()->id;
-
-        // $customers = Customer::where('user_id', $id)->get();
-
-        // return response()->json($customers);
-
+        return false;
     }
 
 
