@@ -15,7 +15,7 @@ function ActiveDatatable(columnsData, url) {
             responsive:true,
             columnDefs: [
                 // { responsivePriority: 1, targets: 0 },
-                { responsivePriority: 3, targets: 2 }
+                { responsivePriority: columnsData.length, targets: 2 }
             ]
         });
 

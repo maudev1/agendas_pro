@@ -158,8 +158,6 @@
 <script src="/vendor/fullcalendar-6.0.1/dist/index.global.min.js"></script>
 <script src="/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/vendor/bootstrap-datetimepicker/js/demo.js"></script>
-<script src="/js/HttpObserver.js"></script>
-<script src="/js/HttpNotifier.js"></script>
 <script src="/js/admin/Schedule.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"

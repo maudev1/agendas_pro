@@ -119,7 +119,7 @@
         <script src="{{asset('js/HttpObserver.js')}}"></script>
         <script src="{{asset('js/HttpNotifier.js')}}"></script>
         
-        <link rel="stylesheet" href="{{ asset('css/commons.css') }}"
+        <link rel="stylesheet" href="{{ asset('css/commons.css') }}"></link>
 
     </body>
 

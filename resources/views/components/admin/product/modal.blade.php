@@ -5,7 +5,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{ $title ?? "Adicionar novo cliente" }}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{ $title ?? "Adicionar novo Produto" }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -15,10 +15,9 @@
                         <input id="id" name="id" type="hidden">
 
                         @foreach($fields as $field)
-
                         <div class="form-group">
                             <label>{{ $field['label'] }} </label>
-                            <input id="{{ $field['field'] }}" class="form-control" name="{{ $field['field'] }}">
+                            <input id="{{ $field['field'] }}" class="form-control <?php echo isset($field['class']) ? implode(" ", $field['class']) : null ?>" name="{{ $field['field'] }}">
                         </div>
 
                         @endforeach
@@ -47,7 +46,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- <div class="alert" role="alert"></div> -->
-                    <input id="customer-id" type="hidden">
+                    <input id="product-id" type="hidden">
 
                     <p>Deseja excluir esse registro?</p>
 
@@ -63,8 +62,13 @@
 </div>
 
 
-<button title="Adicionar Cliente" class="btn btn-success btn-floating add btn-lg" type="button" data-toggle="modal" data-type="insert" data-target="#exampleModal">
-<i class="fas fa-plus"></i>
+<button 
+    title="Adicionar Produto" 
+    class="btn btn-success btn-floating btn-lg add" 
+    type="button" 
+    data-toggle="modal" 
+    data-type="insert" 
+    data-target="#exampleModal"><i class="fas fa-plus"></i></i>
 </button>
 
 </div>

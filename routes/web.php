@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PublicScheduleController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StoreController;
 use App\Models\Customer;
 
@@ -49,6 +50,10 @@ Route::middleware(['auth', 'auth.basic'])->group(function(){
         // Customer Route
         Route::resource("customers", CustomerController::class)->except("show");
         Route::get('customers/to_datatables', [CustomerController::class, 'to_datatables'])->name("customers.datatables");
+
+        // Products Route 
+        Route::resource("products", ProductController::class)->except("show");
+        Route::get('products/to_datatables', [ProductController::class, 'to_datatables'])->name("products.datatables");
 
 
     });

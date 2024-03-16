@@ -1,5 +1,5 @@
 <!-- Button trigger modal -->
-<button type="button" title="Compartilha agenda" class="btn btn-primary btn-share btn-lg" data-toggle="modal" data-target="#shareModal">
+<button type="button" title="Compartilha agenda" class="btn btn-primary btn-floating share btn-lg" data-toggle="modal" data-target="#shareModal">
 <i class="fas fa-share-alt"></i></button>
 
 
