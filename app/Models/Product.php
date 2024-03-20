@@ -14,4 +14,23 @@ class Product extends Model
         "price",
         "discount"
     ];
+
+    public static function boot(){
+
+        parent::boot();
+
+        self::creating(function($model){
+
+            // ! CORRIGIR FORMATAÇÃO DE NÚMEROS 
+
+            $model->price = floatval($model->price);
+
+            if(!$model->discount){
+                $model->discount = 0;
+
+            }
+
+        });
+
+    }
 }

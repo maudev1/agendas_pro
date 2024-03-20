@@ -64,7 +64,6 @@ class ProductController extends Controller
         return response()->json($response);
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -103,8 +102,6 @@ class ProductController extends Controller
     {
         return false;
     }
-
-
 
     /**
      * Show the form for editing the specified resource.

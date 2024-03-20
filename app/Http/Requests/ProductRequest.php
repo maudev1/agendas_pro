@@ -24,7 +24,20 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-                        //
+
+            'price' => 'required|numeric',
+            'discount' => 'numeric'
+            
         ];
     }
+
+    public function messages()
+    {
+
+        return [
+            'price.required' => 'Defina o valor do produto!'
+        ];
+
+    }
+
 }

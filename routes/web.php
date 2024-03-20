@@ -90,3 +90,14 @@ Route::controller(PublicScheduleController::class)->group(function () {
     
 });
 
+Route::get('teste', function(){
+
+
+    $number = '2.020,00';
+
+    // $numberFormat = number_format($number, 2, ',', ' ');
+
+    return response()->json(['valor' => floatval($number) ]);
+
+});
+
