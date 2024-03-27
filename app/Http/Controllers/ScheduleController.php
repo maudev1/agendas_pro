@@ -6,6 +6,7 @@ use App\Http\Requests\ScheduleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
+use App\Models\Product;
 use TheSeer\Tokenizer\Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,14 +18,12 @@ class ScheduleController extends Controller
 
         $title = 'Agenda';
         $customers = Customer::all();
-
+        $products  = Product::all(); 
         $userId = Auth::id();
+        $shareurl = $this->urlGenerate();
 
-        return view('admin/schedule')
-            ->with('userId', $userId)
-            ->with('title', $title)
-            ->with('shareurl', $this->urlGenerate())
-            ->with('customers', $customers);
+        return view('admin/schedule', compact('products', 'userId', 'title', 'shareurl', 'customers'));
+
     }
 
     public function getAll($userId)

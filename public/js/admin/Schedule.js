@@ -190,15 +190,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    $('select').selectize({
+    $('#customer').selectize({
         sortField: 'text'
     });
 
-    $('#new-customer-switch').on('change', function(){
+    $('#products').selectize({
+        sortField: 'text'
+    });
 
-        $(".customer").hide()
-        $(".new-customer").show()
-     
+    $('#new-customer-switch').on('change', function () {
+
+        if ($(this)[0].checked) {
+
+            $(".customer").hide()
+
+            $(".new-customer").show()
+
+        } else {
+
+            $(".customer").show()
+            $(".new-customer").hide()
+
+
+        }
+
+
     })
 
 

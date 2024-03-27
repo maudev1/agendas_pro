@@ -35,5 +35,22 @@ class Product extends Model
 
         });
 
+
+        self::updating(function($model){
+
+            $price = str_replace('.', '', $model->price);
+            $price = str_replace(',', '.', $price);
+            
+            $price = (float) $price;
+
+            $model->price = $price;
+
+            if(!$model->discount){
+                $model->discount = 0;
+
+            }
+
+        });
+
     }
 }

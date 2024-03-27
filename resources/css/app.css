@@ -1,4 +1,9 @@
-.login-page{
-    background-color: white !important;
-  
-  }
+.login-page {
+  background-color: white !important;
+
+}
+
+
+.new-customer {
+  display: none;
+}

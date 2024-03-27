@@ -70,7 +70,7 @@
 
                 </div>
 
-                <hr>
+                <!-- <hr> -->
 
                 <div class="form-group">
 
@@ -95,9 +95,26 @@
 
                 </div>
 
-                <div class="form-group new-customer">
+                <div class="form-group new-customer" style="display: none;">
                   <label for="customer-name">Nome do Cliente</label>
                   <input type="text" name="customerName" class="form-control" id="customer-name">
+
+                </div>
+
+
+                <div class="form-group">
+                  <label for="product">Produtos</label>
+
+                  <select name="products[]" id="products" multiple>
+                    <option value="" >Escolha</option>
+
+                    @foreach($products as $product)
+                    
+                      <option value="{{$product->id}}">{{ $product->description }}</option>
+                    
+                    @endforeach
+                  
+                  </select>
 
                 </div>
 
@@ -107,14 +124,14 @@
                 <div class="form-check-inline">
                   <label class="form-check-label">
                     <!-- <input type="checkbox" id="notify"  name="notify" class="form-check-input"> -->
-                    Notificar cliente
+                    <!-- Notificar cliente -->
 
                   </label>
 
                 </div>
               </form>
 
-              <hr>
+              <!-- <hr> -->
 
             </div>
             <div class="modal-footer row">
