@@ -21,9 +21,12 @@ class Product extends Model
 
         self::creating(function($model){
 
-            // ! CORRIGIR FORMATAÇÃO DE NÚMEROS 
+            $price = str_replace('.', '', $model->price);
+            $price = str_replace(',', '.', $price);
+            
+            $price = (float) $price;
 
-            $model->price = floatval($model->price);
+            $model->price = $price;
 
             if(!$model->discount){
                 $model->discount = 0;

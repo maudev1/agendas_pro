@@ -71,7 +71,7 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-
+        
         $Helpers = new Helpers();
         $products = new Product;
 

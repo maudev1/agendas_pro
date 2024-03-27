@@ -16,8 +16,19 @@
 
                         @foreach($fields as $field)
                         <div class="form-group">
-                            <label>{{ $field['label'] }} </label>
-                            <input id="{{ $field['field'] }}" class="form-control <?php echo isset($field['class']) ? implode(" ", $field['class']) : null ?>" name="{{ $field['field'] }}">
+                            
+                            
+                            @if($field['field'] == 'discount')
+                                <label>{{ $field['label'] }} </label>
+                                <input id="{{ $field['field'] }}" value="0" class="form-control <?php echo isset($field['class']) ? implode(" ", $field['class']) : null ?>" name="{{ $field['field'] }}">
+                            
+                            @else
+                            
+                                <label>{{ $field['label'] }} </label>
+                                <input id="{{ $field['field'] }}" class="form-control <?php echo isset($field['class']) ? implode(" ", $field['class']) : null ?>" name="{{ $field['field'] }}">
+                            
+                            @endif
+                        
                         </div>
 
                         @endforeach
