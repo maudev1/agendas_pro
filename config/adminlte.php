@@ -257,6 +257,13 @@ return [
             'label'       => 0,
             'label_color' => 'success',
         ],
+        [
+            'text'        => 'Perfis',
+            'url'         => 'admin/profiles',
+            'icon'        => 'far fa-fw fa-user',
+            'label'       => 0,
+            'label_color' => 'success',
+        ],
 
         [
             'text'        => 'Loja',

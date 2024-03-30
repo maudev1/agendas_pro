@@ -7,6 +7,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PublicScheduleController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoreController;
 use App\Models\Customer;
 
@@ -43,8 +44,11 @@ Route::middleware(['auth', 'auth.basic'])->group(function(){
 
     Route::prefix("admin")->group(function(){
 
-        // Users Route
+        // Profile Route
+        Route::resource("profiles",ProfileController::class)->except("show");
+        Route::get('profiles/to_datatables', [ProfileController::class, 'to_datatables'])->name("profiles.datatables");
 
+        // Users Route
         Route::resource("users",UsersController::class);
 
         // Customer Route

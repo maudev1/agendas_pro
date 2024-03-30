@@ -10,12 +10,12 @@ function ActiveDatatable(columnsData, url) {
             dataType: "json",
             order: [[0, "desc"], [1, "desc"]],
             language: {
-                url: '//cdn.datatables.net/plug-ins/2.0.2/i18n/pt-BR.json',
+                url: '/js/i18n/pt-BR.json',
             },
             responsive:true,
             columnDefs: [
                 // { responsivePriority: 1, targets: 0 },
-                { responsivePriority: columnsData.length, targets: 2 }
+                { responsivePriority: columnsData.length, targets: columnsData.length-1 }
             ]
         });
 
