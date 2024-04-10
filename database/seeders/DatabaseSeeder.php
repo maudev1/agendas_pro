@@ -16,13 +16,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        return DB::table('users')->insert([
-            'name' => 'administrador',
-            'email' => 'mauriciojr.dev@gmail.com',
-            'document' => '3333333333',
-            'phone' => '11996502162',
-            'password' => Hash::make('juniorsk8')
-        ]);
+        // return DB::table('users')->insert([
+        //     'name' => 'administrador',
+        //     'email' => 'mauriciojr.dev@gmail.com',
+        //     'document' => '3333333333',
+        //     'phone' => '11996502162',
+        //     'password' => Hash::make('juniorsk8')
+        // ]);
+
+        
 
     }
 }

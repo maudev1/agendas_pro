@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Perfis')
+@section('title', 'Usuários')
 
 @section('content_header')
-<h1>Perfis</h1>
+<h1>Usuários</h1>
 @stop
 
 @section('content')
@@ -12,7 +12,7 @@
     <div class="col-md-12">
         @php
 
-        $headers = ['Nome','Opções']
+        $headers = ['Nome','E-mail','Telefone','Opções']
 
         @endphp
         <x-datatables :headers="$headers"></x-datatables>
@@ -24,11 +24,17 @@
 
 $fields = [
     ['label' => 'Nome', 'field' => 'name'],
+    ['label' => 'CPF', 'field' => 'document'],
+    ['label' => 'Telefone', 'field' => 'phone'],
+    ['label' => 'E-mail', 'field' => 'email'],
+    ['label' => 'Perfil', 'field' => 'role'],
+    ['label' => 'Senha', 'field' => 'password'],
+    ['label' => 'Confirmação de Senha', 'field' => 're_password'],
 ]
 
 @endphp
 
-<x-admin.profile.modal :fields="$fields"></x-admin.profile.modal>
+<x-admin.user.modal :fields="$fields" :roles="$roles"></x-admin.user.modal>
 
 @stop
 
@@ -42,7 +48,7 @@ $fields = [
 <script type="text/javascript" src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('js/datatables.config.js')}}"></script>
-<script src="{{asset('js/admin/Profile.js')}}"></script>
+<script src="{{asset('js/admin/User.js')}}"></script>
 
 
 @stop

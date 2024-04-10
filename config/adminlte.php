@@ -225,57 +225,59 @@ return [
     |
     */
 
-    'menu' => [
-        // Navbar items:
-        [
-            'type'         => 'navbar-search',
-            'text'         => 'search',
-            'topnav_right' => true,
-        ],
-        [
-            'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
-        [
-            'text'        => 'Produtos',
-            'url'         => 'admin/products',
-            'icon'        => 'fas fa-cube',
-            'label'       => 0,
-            'label_color' => 'success',
-        ],
-        [
-            'text'        => 'Clientes',
-            'url'         => 'admin/customers',
-            'icon'        => 'far fa-fw fa-envelope',
-            'label'       => 0,
-            'label_color' => 'success',
-        ],
-        [
-            'text'        => 'Agenda',
-            'url'         => 'admin/schedules',
-            'icon'        => 'far fa-fw fa-calendar',
-            'label'       => 0,
-            'label_color' => 'success',
-        ],
-        [
-            'text'        => 'Perfis',
-            'url'         => 'admin/profiles',
-            'icon'        => 'far fa-fw fa-user',
-            'label'       => 0,
-            'label_color' => 'success',
-        ],
+    'menu' => [],
 
-        [
-            'text'        => 'Loja',
-            'url'         => 'admin/store',
-            'icon'        => 'fa fa-store',
-            'label'       => 0,
-            'label_color' => 'success',
-        ],
+    // 'menu' => [
+    //     // Navbar items:
+    //     [
+    //         'type'         => 'navbar-search',
+    //         'text'         => 'search',
+    //         'topnav_right' => true,
+    //     ],
+    //     [
+    //         'type'         => 'fullscreen-widget',
+    //         'topnav_right' => true,
+    //     ],
+    //     [
+    //         'text'        => 'Produtos',
+    //         'url'         => 'admin/products',
+    //         'icon'        => 'fas fa-cube',
+    //         'label'       => 0,
+    //         'label_color' => 'success',
+    //     ],
+    //     [
+    //         'text'        => 'Clientes',
+    //         'url'         => 'admin/customers',
+    //         'icon'        => 'far fa-fw fa-envelope',
+    //         'label'       => 0,
+    //         'label_color' => 'success',
+    //     ],
+    //     [
+    //         'text'        => 'Agenda',
+    //         'url'         => 'admin/schedules',
+    //         'icon'        => 'far fa-fw fa-calendar',
+    //         'label'       => 0,
+    //         'label_color' => 'success',
+    //     ],
+    //     [
+    //         'text'        => 'Perfis',
+    //         'url'         => 'admin/profiles',
+    //         'icon'        => 'far fa-fw fa-user',
+    //         'label'       => 0,
+    //         'label_color' => 'success',
+    //     ],
+
+    //     [
+    //         'text'        => 'Loja',
+    //         'url'         => 'admin/store',
+    //         'icon'        => 'fa fa-store',
+    //         'label'       => 0,
+    //         'label_color' => 'success',
+    //     ],
         
             
         
-    ],
+    // ],
 
     /*
     |--------------------------------------------------------------------------

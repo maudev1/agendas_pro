@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             // \Illuminate\Foundation\Http\Middleware\SetLocale::class,
+            
         ],
 
         'api' => [
@@ -66,6 +67,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'access-control' => \App\Http\Middleware\AccessControlMiddleware::class,
+        'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'checkPermission' => \App\Http\Middleware\CheckPermission::class,
+
 
     ];
 }

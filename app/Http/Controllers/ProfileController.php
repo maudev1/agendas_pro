@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Classes\Helpers;
 use App\Http\Requests\ProfileRequest;
-use App\Models\Profile;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -17,38 +17,38 @@ class ProfileController extends Controller
     public function index()
     {
 
-        $profiles = Profile::all();
+        $roles = Role::all();
 
-        return response()->view('admin.profile.index', compact('profiles'));
+        return response()->view('admin.profile.index', compact('roles'));
     }
 
     public function to_datatables()
     {
 
-        $profiles = Profile::all();
+        $roles = Role::all();
         $data = array();
 
         $helper = new Helpers();
 
-        foreach ($profiles as $profile) {
+        foreach ($roles as $role) {
 
             $editButton = $helper->button_template('<i  class="fas fa-edit"></i>', 'button', [
                 'class'       => 'btn btn-success edit',
-                'data-id'     => $profile->id,
+                'data-id'     => $role->id,
                 'data-target' => '#exampleModal',
                 'data-toggle' => 'modal'
             ]);
 
             $deleteButton = $helper->button_template('<i  class="fas fa-trash"></i>', 'button', [
                 'class'       => 'btn btn-danger delete',
-                'data-id'     => $profile->id,
+                'data-id'     => $role->id,
                 'data-target' => '#confirmModal',
                 'data-toggle' => 'modal'
             ]);
 
 
             $data[] = [
-                'description' => $profile->description,
+                'description' => $role->name,
                 'options' => $editButton . ' ' . $deleteButton,
             ];
         }
@@ -79,11 +79,11 @@ class ProfileController extends Controller
     public function store(ProfileRequest $request)
     {
         
-        $profile = new Profile;
+        $role = new Role;
 
-        $data = $request->only(["description"]);
+        $data = $request->only(["name"]);
 
-        if($profile->create($data)){
+        if($role->create(array_merge($data, ['guard_name' => 'web']))){
 
             $results = ['message' => 'Perfil cadastrado com sucesso!', 'code' => 200, 'success' => true];
 
@@ -115,7 +115,7 @@ class ProfileController extends Controller
      */
     public function edit($id)
     {
-        return response(Profile::findOrfail($id), 200)
+        return response(Role::findOrfail($id), 200)
         ->header('Content-type', 'text/json');
     }
 
@@ -128,10 +128,10 @@ class ProfileController extends Controller
      */
     public function update(ProfileRequest $request, $id)
     {
-        Profile::updateOrCreate(
+        Role::updateOrCreate(
             ['id' => $id],
             [
-                'description'  => $request->description
+                'name'  => $request->name
             ]
         );
 
@@ -146,10 +146,11 @@ class ProfileController extends Controller
      */
     public function destroy($id)
     {
-        $profile = Profile::find($id);
+        $role = Role::find($id);
 
-        if ($profile->delete()) {
+        if ($role->delete()) {
             return Response()->json(['success' => true]);
         };
     }
+
 }

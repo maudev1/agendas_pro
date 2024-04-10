@@ -1,7 +1,12 @@
 <?php
 
+
+// ! TERMINAR ESSA CARALHA
+
 namespace App\Http\Controllers;
 
+use App\Http\Classes\Helpers;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -14,20 +19,54 @@ class UsersController extends Controller
      */
     public function index()
     {
-        
+
+        $roles = Role::all();
+
+        return view('admin.user.index', compact('roles'));
+    }
+
+    public function to_datatables()
+    {
+        $users = User::all();
+
         $data = array();
 
-        foreach(User::all() as $user){
+        $helper = new Helpers();
 
-            $data[] = array(
-                'name'   =>  $user->name,
-                'email' => $user->email
-            );
+        foreach ($users as $user) {
+
+            $editButton = $helper->button_template('<i  class="fas fa-edit"></i>', 'button', [
+                'class'       => 'btn btn-success edit',
+                'data-id'     => $user->id,
+                'data-target' => '#exampleModal',
+                'data-toggle' => 'modal'
+            ]);
+
+            $deleteButton = $helper->button_template('<i  class="fas fa-trash"></i>', 'button', [
+                'class'       => 'btn btn-danger delete',
+                'data-id'     => $user->id,
+                'data-target' => '#confirmModal',
+                'data-toggle' => 'modal'
+            ]);
+
+
+            $data[] = [
+                'name'      => $user->name,
+                'email'     => $user->email,
+                'phone'     => $user->phone,
+                'profile'   => $user->profile,
+                'options'   => $editButton . ' ' . $deleteButton,
+            ];
         }
 
-        return view('admin.users',['users' => $data]);
-       
+        $response = array(
+            "aaData" => $data
+        );
+
+        return response()->json($response);
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -47,7 +86,36 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $user = new User;
+
+        $data = $request->only(["name", "document", "email", "password", "phone"]);
+
+        $role = Role::find($request->role);
+       
+        
+        if ($user->create($data)->syncRoles($role->name)) {
+            
+
+            $results = ['message' => 'Usuário cadastrado com sucesso!', 'code' => 200, 'success' => true];
+
+            // if($role){
+
+            //     $user->assignRole($role->name);
+
+                if($user->hasRole($role->name)){
+
+                    dd('deu certo vei');
+
+                }
+
+            // }
+        
+            return response()->json($results);
+        } else {
+
+            return response()->json(["success" => false]);
+        }
     }
 
     /**
@@ -69,7 +137,8 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        return response(User::findOrfail($id), 200)
+            ->header('Content-type', 'text/json');
     }
 
     /**
@@ -81,7 +150,27 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $data =             [
+            'name'      => $request->name,
+            'document'  => $request->document,
+            'phone'     => $request->phone,
+            'email'     => $request->email,
+            'profile'   => $request->profile,
+        ];
+
+        if(isset($request->password)){
+
+            $data["password"] = $request->password;
+
+        }
+
+        User::updateOrCreate(
+            ['id' => $id],
+            $data
+        );
+
+        return Response()->json(['success' => true]);
     }
 
     /**

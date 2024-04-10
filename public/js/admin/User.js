@@ -1,30 +1,31 @@
 
-let profile = {
+let user = {
 
-    route: "admin/profiles",
+    route: "admin/users",
+    route_profile: "admin/profiles",
     editModalId: "#exampleModal",
     deleteModalId: "#confirmModal",
 
     init: function () {
 
-        profile.datatables()
+        user.datatables();
 
-        $(profile.editModalId).on('shown.bs.modal', function (e) {
+        $(user.editModalId).on('shown.bs.modal', function (e) {
             let target = $(e.relatedTarget);
 
             if (target.data("type") != "insert") {
 
-                profile.edit(target.data("id"));
+                user.edit(target.data("id"));
 
             }
 
         })
 
-        $(profile.editModalId).on('hidden.bs.modal', function (e) {
+        $(user.editModalId).on('hidden.bs.modal', function (e) {
 
             let elements = $(e.currentTarget).find("input")
 
-            $('#exampleModalLabel').html("Adicionar novo Perfil")
+            $('#exampleModalLabel').html("Adicionar novo Usuário")
 
             elements.each(function (i, e) {
 
@@ -38,37 +39,37 @@ let profile = {
 
             e.preventDefault();
 
-            let profileId = $('#id').val();
+            let userId = $('#id').val();
 
-            if (profileId) {
-                profile.update(this);
+            if (userId) {
+                user.update(this);
 
             } else {
-                profile.create(this);
+                user.create(this);
 
             }
 
         });
 
-        $(profile.deleteModalId).on('shown.bs.modal', function(e){
-            
+        $(user.deleteModalId).on('shown.bs.modal', function (e) {
+
             e.preventDefault();
 
-            let profileId = $(e.relatedTarget).data("id");
+            let userId = $(e.relatedTarget).data("id");
 
-            $("#profile-id").val(profileId);
+            $("#user-id").val(userId);
 
- 
+
         });
 
-        $("#confirm-form").on('submit', function(e){
+        $("#confirm-form").on('submit', function (e) {
 
             e.preventDefault();
 
-            let profileId = $('#profile-id').val();
-            
-            if(profileId){
-                profile.delete(profileId);
+            let userId = $('#user-id').val();
+
+            if (userId) {
+                user.delete(userId);
 
             }
 
@@ -79,17 +80,19 @@ let profile = {
     datatables: function () {
 
         let columnsData = [
-            { data: 'description' },
+            { data: 'name' },
+            { data: 'email' },
+            { data: 'phone' },
             { data: 'options' }
         ];
 
-        ActiveDatatable(columnsData, `/${profile.route}/to_datatables`);
+        ActiveDatatable(columnsData, `/${user.route}/to_datatables`);
 
 
     },
     create: async function (element) {
 
-        $('#exampleModalLabel').html("Adicionar novo Perfil")
+        $('#exampleModalLabel').html("Adicionar novo Usuário")
 
         let commons = new Commons();
 
@@ -113,24 +116,24 @@ let profile = {
             }
         };
 
-        let response = await fetch(`/${profile.route}`, options);
+        let response = await fetch(`/${user.route}`, options);
         let results = await response.json();
 
         if (results.success) {
 
-            $(profile.editModalId).modal("toggle");
+            $(user.editModalId).modal("toggle");
 
             commons.loadFormSpinner($(".modal-body"), false);
 
             ReloadDatatable();
 
-        } else if(results.errors){
+        } else if (results.errors) {
 
             let errors = Object.values(results.errors)
             let reverset = errors.reverse()
 
-            reverset.forEach(function(error){
-                error.forEach(function(e){
+            reverset.forEach(function (error) {
+                error.forEach(function (e) {
 
                     $(".alert").addClass("alert-danger").html(e).show()
 
@@ -141,15 +144,15 @@ let profile = {
 
             });
 
-            setTimeout(function(){
+            setTimeout(function () {
 
                 commons.alertMessage('', 'error', false)
 
-            },3000);
+            }, 3000);
 
             commons.loadFormSpinner($(".modal-body"), false);
 
-        }else{
+        } else {
 
             commons.loadFormSpinner($(".modal-body"), false);
 
@@ -158,15 +161,15 @@ let profile = {
 
 
     },
-    edit: async function (profileId) {
+    edit: async function (userId) {
 
-        $('#exampleModalLabel').html("Editar Perfil")
+        $('#exampleModalLabel').html("Editar Usuário")
 
         let commons = new Commons();
 
         commons.loadFormSpinner($(".modal-body"), true)
 
-        let response = await fetch(`/${profile.route}/${profileId}/edit`, {
+        let response = await fetch(`/${user.route}/${userId}/edit`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -181,7 +184,11 @@ let profile = {
 
                 $('#id').val(data.id)
                 $('#name').val(data.name)
-                
+                $('#document').val(data.document)
+                $('#email').val(data.email)
+                $('#phone').val(data.phone)
+                $('#profile').val(data.profile)
+
                 commons.loadFormSpinner($(".modal-body"), false)
             }, 500)
 
@@ -216,24 +223,24 @@ let profile = {
 
         let id = $('#id').val();
 
-        let response = await fetch(`/${profile.route}/${id}`, options);
+        let response = await fetch(`/${user.route}/${id}`, options);
         let results = await response.json();
 
         if (results.success) {
 
-            $(profile.editModalId).modal("toggle");
+            $(user.editModalId).modal("toggle");
 
             commons.loadFormSpinner($(".modal-body"), false);
 
             ReloadDatatable();
 
-        } else if(results.errors){
+        } else if (results.errors) {
 
             let errors = Object.values(results.errors)
             let reverset = errors.reverse()
 
-            reverset.forEach(function(error){
-                error.forEach(function(e){
+            reverset.forEach(function (error) {
+                error.forEach(function (e) {
 
                     $(".alert").addClass("alert-danger").html(e).show()
 
@@ -244,15 +251,15 @@ let profile = {
 
             });
 
-            setTimeout(function(){
+            setTimeout(function () {
 
                 commons.alertMessage('', 'error', false)
 
-            },3000);
+            }, 3000);
 
             commons.loadFormSpinner($(".modal-body"), false);
 
-        }else{
+        } else {
 
             commons.loadFormSpinner($(".modal-body"), false);
 
@@ -261,7 +268,7 @@ let profile = {
 
 
     },
-    delete: async function (profileId) {
+    delete: async function (userId) {
 
 
         let options = {
@@ -273,11 +280,11 @@ let profile = {
         };
 
 
-        let response = await fetch(`/${profile.route}/${profileId}`, options)
-        let results  = await response.json();
+        let response = await fetch(`/${user.route}/${userId}`, options)
+        let results = await response.json();
 
-        if(results.success){
-            $(profile.deleteModalId).modal("toggle");
+        if (results.success) {
+            $(user.deleteModalId).modal("toggle");
             ReloadDatatable();
         }
 
@@ -288,6 +295,6 @@ let profile = {
 (() => {
 
     "use strict";
-    profile.init();
+    user.init();
 
 })()

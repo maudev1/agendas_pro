@@ -19,6 +19,10 @@ jQuery(($) => {
     });
 
 
+    $('#document').mask('000.000.000-00');
+
+
+
     //phone field jquerymask
 
     $('#phone').mask('(00) 0000-0000', {

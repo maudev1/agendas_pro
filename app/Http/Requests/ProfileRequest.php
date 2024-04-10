@@ -28,7 +28,7 @@ class ProfileRequest extends FormRequest
     {
         return [
 
-            'description' => 'required',
+            'name' => 'required',
             
         ];
     }
