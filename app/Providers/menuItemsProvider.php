@@ -38,8 +38,8 @@ class menuItemsProvider extends ServiceProvider
             
 
             if(!$role){
-                $user->assignRole('profissional');
-                $role->givePermissionTo('schedules');
+                $user->assignRole('admin');
+                // $role->givePermissionTo('schedules');
 
             }
             
