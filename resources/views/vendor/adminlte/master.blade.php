@@ -73,6 +73,10 @@
         <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
     @endif
 
+    <script src="{{ asset('js/commons.js') }}"></script>
+   
+
+
 </head>
 
 <body class="@yield('classes_body')" @yield('body_data')>
@@ -104,6 +108,9 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('js/apply.masks.js') }}"></script>
 
 </body>
 
