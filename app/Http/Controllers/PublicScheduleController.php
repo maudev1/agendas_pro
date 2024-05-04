@@ -17,7 +17,7 @@ class PublicScheduleController extends Controller
         if ($user) {
 
             $store = Store::where('user_id', $user_id)->first();
-            return view('customer/index')->with('store', $store);
+            return view('customer/index', compact("store", "user"));
             
         }
 

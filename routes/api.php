@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\CustomerAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,18 +14,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    
-    
+
+// Route::post('customer/register', [CustomerAuthController::class, 'register']);
+
+
+
+Route::group(['middleware' => ['cors', 'json.response']], function () {
+
+    Route::post('customer/login',    [CustomerAuthController::class, 'login'])->name('apin.login');
+    Route::post('customer/logout',   [CustomerAuthController::class, 'logout'])->name('apin.logout');
+    Route::post('customer/register', [CustomerAuthController::class, 'register'])->name('apin.register');
+
     Route::get('teste', function(){
 
-        return response()->json(['message' , 'teste']);
+
+        return response()->json(['ai amizade']);
+
 
     });
-    
-    
-    return $request->user();
-
 
 
 

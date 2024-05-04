@@ -25,7 +25,7 @@
     flex-grow: unset !important;
 }
 
-button.btn-share{
+button.btn-floating{
     position: fixed;
     right: 20px;
     bottom: 20px;

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Profile;
+use Illuminate\Console\Scheduling\Schedule;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -50,6 +51,12 @@ class User extends Authenticatable
     public function profile(){
 
         return $this->has_one(Profile::class, "profile", "id"); 
+
+    }
+
+    public function schedules(){
+
+        return $this->has_many(Schedule::class, "user", "id"); 
 
     }
 

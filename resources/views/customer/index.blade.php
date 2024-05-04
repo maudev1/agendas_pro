@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'AgendasPro') }}</title>
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -26,20 +26,18 @@
 
     <!-- HCaptcha -->
     <script src="https://js.hcaptcha.com/1/api.js?hl=fr" async defer></script>
+
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+    
+    <!-- Scripts -->
+    
+    <script src="{{ asset('js/commons.js') }}"></script>
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+
+
   </head>
 
   <body class="bg-light">
-
-
-    <!-- <div
-  class="h-captcha"
-  data-sitekey="bec2ccf1-9c68-4581-8ebe-9fe20e476737"
-  data-theme="dark"
-  data-hl="pt"
-  data-error-callback="onError"
-></div> -->
-
-
 
     <div class="container">
       <div class="py-5 text-center">
@@ -80,8 +78,10 @@
 
     <script src="/js/moment.min.js"></script>
     <script src="/vendor/fullcalendar-6.0.1/dist/index.global.min.js"></script>
-    <!-- <script src="/js/admin/Schedule.js"></script> -->
-
+    
+    <script src="/js/admin/Schedule.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
+  integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

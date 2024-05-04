@@ -8,7 +8,7 @@ use App\Models\Customer;
 use App\Http\Classes\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
@@ -71,31 +71,23 @@ class CustomerController extends Controller
     public function store(CustomerRequest $request)
     {
 
-        $Helpers = new Helpers();
         $customer = new Customer;
 
         $doc = preg_replace('/[^0-9]/m', '', $request->cpf);
 
-
-        $data = [];
-
         $customer->name = $request->name;
         $customer->cpf = $doc;
-        $customer->mail = $request->mail;
+        $customer->email = $request->email;
         $customer->phone = $request->phone;
-        $customer->password = $request->password;
+        $customer->password = Hash::make($request->password);
         $customer->user_id = Auth::user()->id;
         $customer->save();
-
-        // $flight = Flight::updateOrCreate(
-        //     ['departure' => 'Oakland', 'destination' => 'San Diego'],
-        //     ['price' => 99, 'discounted' => 1]
-        // );
 
         $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200, 'success' => true];
 
         return response()->json($results);
     }
+
 
     /**
      * Display the specified resource.
@@ -139,7 +131,7 @@ class CustomerController extends Controller
             [
                 'name'  => $request->name,
                 'phone' => $request->phone,
-                'mail' => $request->mail,
+                'email' => $request->email,
                 'password' => $request->password,
                 'cpf' => $doc,
             ]
