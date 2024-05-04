@@ -19,6 +19,16 @@ class CustomerAuthController extends Controller
     public function register(CustomerRequest $request)
     {
 
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:customers',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        if ($validator->fails())
+        {
+            return response(['errors'=>$validator->errors()->all()], 422);
+        }
 
         $cpf = preg_replace('/[^0-9]/m', '', $request->cpf);
 
@@ -40,6 +50,7 @@ class CustomerAuthController extends Controller
 
             $results['success'] = true;
             $results['data'] = [
+                'customer_info' => $customer,
                 'token' => $token
             ];
 
