@@ -31,7 +31,8 @@ class StoreController extends Controller
             $store->name = $request->name;
             $store->user_id = $id;
             $store->slogan = $request->slogan;
-            $store->office_hour = $request->office_hour;
+            $store->office_hour_start = $request->office_hour_start;
+            $store->office_hour_end   = $request->office_hour_end;
             $store->work_days = $request->work_days;
             $store->logo = !empty($request->logo) ? $request->logo :  'NONE';
             $store->save();

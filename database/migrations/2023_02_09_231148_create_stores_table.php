@@ -17,7 +17,8 @@ class CreateStoresTable extends Migration
             $table->id();
             $table->text('name');
             $table->text('slogan')->nullable();
-            $table->text('office_hour');
+            $table->text('office_hour_start');
+            $table->text('office_hour_end');
             $table->text('logo');
             $table->integer('user_id');
             $table->timestamps();
