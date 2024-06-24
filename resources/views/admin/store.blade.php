@@ -64,7 +64,31 @@
             </div>
             <div class="col-md-6 col-sm-12">
                 <label>Horário de funcionamento</label>
-            <input class="form-control" type="time" value="{{ $store->office_hour ?? '' }}" name="office_hour">
+
+            <div class="form-group row">
+                <div class="co-1">
+                    <p class="italic">
+                        <em>da</em>
+                    </p>
+                </div>
+                <div class="col-5">
+                    <input class="form-control" type="time" value="{{ $store->office_hour_start ?? '' }}" name="office_hour_start">
+                    
+                </div>
+
+                <div class="col-1 text-center">
+                    <p class="italic">
+                        <em>a</em>
+                    </p>
+                </div>
+
+                <div class="col-5">
+                    <input class="form-control" type="time" value="{{ $store->office_hour_end ?? '' }}"   name="office_hour_end">
+
+                </div>
+
+            </div>
+
 
             </div>
             </div>

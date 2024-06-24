@@ -20,8 +20,9 @@ class CustomerAuthController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:customers',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:customers',
+            'phone'    => 'required|string|max:255|unique:customers',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
@@ -30,15 +31,16 @@ class CustomerAuthController extends Controller
             return response(['errors'=>$validator->errors()->all()], 422);
         }
 
-        $cpf = preg_replace('/[^0-9]/m', '', $request->cpf);
+        $cpf   = preg_replace('/[^0-9]/m', '', $request->cpf);
+        $phone = preg_replace('/[^0-9]/m', '', $request->phone);
 
         $customer = Customer::create([
-            "name"     => $request->name,
-            "cpf"      => $cpf,
+            "name"      => $request->name,
+            "cpf"       => $cpf,
             "email"     => $request->email,
-            "user_id"  => "0",
-            "phone"    => $request->phone,
-            "password" => Hash::make($request->password),
+            "user_id"   => "0",
+            "phone"     => $phone,
+            "password"  => Hash::make($request->password),
 
         ]);
 
@@ -49,8 +51,8 @@ class CustomerAuthController extends Controller
             $token = $customer->createToken('token-name', ['server:update'])->plainTextToken;
 
             $results['success'] = true;
-            $results['data'] = [
-                'customer_info' => $customer,
+            $results['customer'] = [
+                'info' => $customer,
                 'token' => $token
             ];
 
@@ -61,17 +63,22 @@ class CustomerAuthController extends Controller
     public function login(Request $request)
     {
 
-        $user = Customer::where('email', $request->email)->first();
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        $customer = Customer::where('phone', preg_replace('/[^0-9]/m', '', $request->phone))->first();
+        if (!$customer || !Hash::check($request->password, $customer->password)) {
             return response()->json([
-                'message' => 'Invalid Credentials'
+                'message' => 'Usuário ou senha incorretos.'
             ], 401);
         }
 
-        $token = $user->createToken($user->name . '-AuthToken')->plainTextToken;
-        return response()->json([
-            'access_token' => $token,
-        ]);
+        $token = $customer->createToken($customer->name . '-AuthToken')->plainTextToken;
+        $results = [];
+        $results['success'] = true;
+        $results['customer'] = [
+            'info' => $customer,
+            'token' => $token
+        ];
+
+        return response()->json($results);
     }
 
     public function logout(){

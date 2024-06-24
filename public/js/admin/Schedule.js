@@ -1,6 +1,5 @@
 
 document.addEventListener('DOMContentLoaded', function () {
-
     let today = moment().format('YYYY-MM-DD');
 
     $('#copy-shareurl').on('click', function () {
@@ -20,13 +19,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         events: `schedules/${$('#userId').val()}`,
+        eventColor: ' #e6e6e6',
+        eventTextColor:'black',
+        eventBorderColor:'black', 
+        themeSystem: 'bootstrap4',
         locale: 'pt-br',
         timeZone: 'America/Sao_Paulo',
         initialView: 'timeGrid',
         editable: true,
         displayEventTime: false,
-        slotMinTime: '08:00:00',
-        slotMaxTime: '18:00:00',
+        slotMinTime: $('#office-hour-start').val(),
+        slotMaxTime: $('#office-hour-end').val(),
         initialDate: today,
         dayCount: 4,
         visibleRange: {
@@ -37,32 +40,50 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         businessHours: {
             daysOfWeek: [0, 2, 3, 4, 5, 6, 7],
+            startTime: $('#office-hour-start').val(),
+            endTime: $('#office-hour-end').val(),
         },
-
         titleFormat: {
             month: 'long',
             year: 'numeric',
             day: 'numeric',
             weekday: 'long'
         },
-        eventDidMount: function (info) {
-            // if (info.event.extendedProps.image) {
+        eventDidMount: async function (info) {
+
+            let id = info.event._def.publicId
+
+            let response = await fetch(`/schedule/status/${id}`)
+            let results = await response.json()
+
             if (info.event.extendedProps) {
-                var img = document.createElement('img');
-                img.src = 'https://i.pravatar.cc/300';
-                // img.src = info.event.extendedProps.imagem;
-                info.el.querySelector('.fc-event-main-frame').prepend(img);
+                // var img = document.createElement('img');
+                // img.src = 'https://i.pravatar.cc/300';
+                // // img.src = info.event.extendedProps.imagem;
+                // info.el.querySelector('.fc-event-main-frame').prepend(img);
+
+                if (!results.confirmation) {
+                    actionButtons(id, 'confirmation', info.el)
+
+                } else {
+                    actionButtons(id, '', info.el)
+
+                }
+
+                actionButtons(id, 'whatsapp', info.el)
+                actionButtons(id, 'cancel', info.el)
+
+
+
             }
         },
         dateClick: function (info) {
 
             let date = new Date(info.date);
-
             let Month = date.toLocaleDateString('pt-br', { month: 'long' });
             let WeekDay = date.toLocaleDateString('pt-br', { weekday: 'long' });
             let Hours = date.toLocaleTimeString('pt-BR');
             let MonthDay = date.getDate();
-
 
             $('#start').val(info.dateStr)
             $('#title').val('Agendamento Esporádico')
@@ -71,9 +92,9 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#exampleModal').modal('toggle');
 
         },
-
         eventClick: function (info) {
 
+            console.log(info)
 
             let eventId = info.event._def.publicId;
             let title = info.event._def.title;
@@ -95,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#exampleModal').modal('toggle');
 
         },
-
         eventDrop: function (info) {
 
 
@@ -114,12 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     });
 
-    let dayOffEvent = {
-        title: 'Dia de folga',
-        start: '2023-02-27',
-        allDay: true
-    };
-
     function addDayOffEvent(dayOffEvent) {
 
         calendar.addEvent({
@@ -131,10 +145,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    let dayOffEvent = {
+        title: 'Dia de folga',
+        start: '2023-02-27',
+        allDay: true
+    };
+
+
     calendar.render();
 
     addDayOffEvent(dayOffEvent);
-
 
     $('#save').on('click', function () {
 
@@ -239,4 +259,49 @@ function formDefault() {
     })
 
 }
+
+function actionButtons(id, type, el) {
+    var button = document.createElement('button');
+    button.classList.add('btn')
+    button.classList.add('btn-sm')
+
+    if (type == 'confirmation') {
+        button.classList.add('btn-warning')
+        button.classList.add('confirmation')
+        button.setAttribute('data-id', id)
+        button.innerHTML = '<i class="fas fa-clock"></i>';
+
+
+    }else if(type == 'cancel') {
+
+        button.classList.add('btn-danger')
+        button.innerHTML = '<i class="fa fa-times"></i>';
+
+    
+    }else if(type == 'whatsapp') {
+        
+        button.classList.add('btn-success')
+        button.innerHTML = '<i class="fa fa-phone"></i>';
+
+    }else {
+        button.classList.add('btn-success')
+        button.innerHTML = '<i class="fas fa-check"></i>';
+    }
+
+
+    
+    el.querySelector('.fc-event-main-frame').append(button)
+
+    $('.confirmation').on('click', function(event){
+
+        
+        event.stopPropagation();
+        
+        alert("teste")
+
+    })
+
+
+}
+
 

@@ -42,6 +42,7 @@ class menuItemsProvider extends ServiceProvider
                 // $role->givePermissionTo('schedules');
 
             }
+
             
             $userPermissions = $role->permissions->pluck('name')->toArray();
 

@@ -38,11 +38,12 @@ class MenuItemsController extends Controller
     public function setItems($item)
     {
         $items = [
-            'products'  => ['icon' => 'fas fa-cube', 'text' => 'Produtos'],
+            'products'   => ['icon' => 'fas fa-cube', 'text' => 'Produtos'],
             'schedules'  => ['icon' => 'far fa-fw fa-calendar', 'text' => 'Agenda'],
-            'profiles'  => ['icon' => 'far fa-fw fa-user', 'text' => 'Perfis'],
-            'store'  => ['icon' => 'fa fa-store', 'text' => 'Loja'],
+            'store'      => ['icon' => 'fa fa-store', 'text' => 'Loja'],
             'customers'  => ['icon' => 'far fa-fw fa-envelope', 'text' => 'Clientes'],
+            'users'      => ['icon' => 'far fa-fw fa-user', 'text' => 'Usuarios'],
+            'profiles'   => ['icon' => 'far fa-fw fa-user', 'text' => 'Perfis'],
         ];
 
         return $items[$item];

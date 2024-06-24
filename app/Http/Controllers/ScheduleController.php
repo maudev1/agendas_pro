@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\Store;
 use TheSeer\Tokenizer\Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,17 +20,18 @@ class ScheduleController extends Controller
         $title = 'Agenda';
         $customers = Customer::all();
         $products  = Product::all(); 
-        $userId = Auth::id();
-        $shareurl = $this->urlGenerate();
+        $userId    = Auth::id();
+        $shareurl  = $this->urlGenerate();
+        $store     = Store::first(); 
 
-        return view('admin/schedule', compact('products', 'userId', 'title', 'shareurl', 'customers'));
+        return view('admin/schedule', compact('products', 'userId', 'title', 'shareurl', 'customers', 'store'));
 
     }
 
     public function getAll($userId)
     {
 
-        $schedules = DB::table('schedule')->where('user_id', $userId)->get();
+        $schedules = DB::table('schedules')->where('user_id', $userId)->get();
         return response()->json($schedules);
     }
 
@@ -38,7 +40,7 @@ class ScheduleController extends Controller
 
         $date = new \DateTime;
 
-        DB::table('schedule')->insert([
+        DB::table('schedules')->insert([
             'title' => $request->title,
             'customer_id' => $request->customer_id,
             'start' => $request->start,
@@ -66,7 +68,7 @@ class ScheduleController extends Controller
 
             try {
 
-                DB::table('schedule')->where('id', $id)->update($expected);
+                DB::table('schedules')->where('id', $id)->update($expected);
 
                 return response()->json(['message' => 'Agendamento atualizado com sucesso!'], 200);
 
@@ -105,7 +107,7 @@ class ScheduleController extends Controller
     public function delete($id)
     {
 
-        $results = DB::table('schedule')->where('id', $id)->delete();
+        $results = DB::table('schedules')->where('id', $id)->delete();
 
         if ($results) {
 
@@ -134,5 +136,6 @@ class ScheduleController extends Controller
 
 
     }
+
 
 }

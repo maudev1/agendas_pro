@@ -74,6 +74,7 @@
     @endif
 
     <script src="{{ asset('js/commons.js') }}"></script>
+    <script src="{{ asset('js/HttpObserver.js') }}"></script>
    
 
 

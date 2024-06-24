@@ -19,5 +19,6 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'profiles'  , 'guard_name' => 'web']);
         Permission::create(['name' => 'store'     , 'guard_name' => 'web']);
         Permission::create(['name' => 'customers' , 'guard_name' => 'web']);
+        Permission::create(['name' => 'users' , 'guard_name' => 'web']);
     }
 }

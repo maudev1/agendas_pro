@@ -53,6 +53,8 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
         Route::get('/admin/store/', 'index');
         Route::post('/admin/store/', 'store');
         Route::post('/admin/store/{id}', 'update');
+        Route::get('/admin/store/workdays', 'workDays');
+
     });
 
 
@@ -87,5 +89,9 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
 
 Route::controller(PublicScheduleController::class)->group(function () {
     Route::get('/schedule/{id}/', 'index');
+    Route::post('/schedule/date/', 'getDate');
+    Route::post('/schedule', 'store');
+    Route::get('/schedule/status/{id}', 'getStatus');
+
 });
 

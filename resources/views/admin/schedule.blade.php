@@ -41,6 +41,8 @@
 </div>
 
 <input type="hidden" id="userId" value="{{ $userId }}">
+<input type="hidden" id="office-hour-start" value="{{ $store->office_hour_start }}" >
+<input type="hidden" id="office-hour-end"   value="{{ $store->office_hour_end }}" >
 
 <div id="app" class="row">
   <div class="col">
@@ -161,7 +163,7 @@
 
 @section('css')
 
-<link rel="stylesheet" href="/css/schedule.css">
+<link rel="stylesheet" href="{{ asset('css/schedule.css') }}">
 
 
 @endsection

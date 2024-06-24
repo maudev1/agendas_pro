@@ -22,7 +22,6 @@ class StoreController extends Controller
         
 
     }
-
     public function update(StoreRequest $request, $id){
         $store = Store::find($id);
 
@@ -41,8 +40,6 @@ class StoreController extends Controller
         return redirect('/admin/store');
 
     }
-
-
     public function store(Request $request){
 
         $id = Auth::user()->id;
@@ -50,9 +47,6 @@ class StoreController extends Controller
         if($request){
 
             $store = new Store();
-
-            // return response($request->logo);
-
             $store->name = $request->name;
             $store->user_id = $id;
             $store->slogan = $request->slogan;
@@ -62,24 +56,24 @@ class StoreController extends Controller
 
             $store->save();
 
-
-            // try{
-
-            //     $store->name  = $request->name;
-            //     $store->user_id = Auth::user()->id;
-            //     $store->logo = 'logo_url';
-            //     $store->create();
-
-            
-            // }catch(Exception $exception){
-
-            // }
-
             return redirect('/admin/store');
 
         }
 
     }
 
+    public function workDays()
+    {
+
+        $id = Auth::user()->id;
+
+        $store = Store::where('user_id',$id)->first()->toArray();
+
+        return response()->json([
+            'office_hour_start' => $store['office_hour_start'],
+            'office_hour_end' => $store['office_hour_end']
+            ]);
+        
+    }
 
 }

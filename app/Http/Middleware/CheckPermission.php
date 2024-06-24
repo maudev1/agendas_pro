@@ -22,13 +22,16 @@ class CheckPermission
 
         $permission = Permission::where("name",$name)->first();
 
+
+        
         if($permission){
-
+            
             $user = Auth::user();
-
+            
             $role = $user->roles->first();
-            $userPermissions = $role->permissions->pluck('name')->toArray();
 
+            $userPermissions = $role->permissions->pluck('name')->toArray();
+            
             if(in_array($permission->name, $userPermissions)){
 
                 return $next($request);
