@@ -91,6 +91,7 @@ Route::controller(PublicScheduleController::class)->group(function () {
     Route::get('/schedule/{id}/', 'index');
     Route::post('/schedule/date/', 'getDate');
     Route::post('/schedule', 'store');
+    Route::post('/schedule/{id}', 'update');
     Route::get('/schedule/status/{id}', 'getStatus');
 
 });

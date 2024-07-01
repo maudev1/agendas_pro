@@ -21,8 +21,6 @@ let schedule = {
 
                 event.preventDefault();
 
-                // console.log(event)
-
                 schedule.create(this)
 
 
@@ -35,14 +33,11 @@ let schedule = {
                 schedule.toCustomerDetails();
 
 
-
             });
-
 
 
         })
 
-        // alert('teste')
 
     },
     create: async function (element) {
@@ -86,9 +81,9 @@ let schedule = {
         } else if (results.errors) {
 
             let errors = Object.values(results.errors)
-            let reverset = errors.reverse()
+            let reversed = errors.reverse()
 
-            reverset.forEach(function (error) {
+            reversed.forEach(function (error) {
                 error.forEach(function (e) {
 
                     $(".alert").addClass("alert-danger").html(e).show()
@@ -155,7 +150,13 @@ let schedule = {
 
         } else {
 
-            alert('Para prosseguir, escolha uma data!');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Escolha uma data!",
+              });
+
+              
 
 
         }

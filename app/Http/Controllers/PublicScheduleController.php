@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use DateTime;
 use DateInterval;
 use DatePeriod;
+use Exception;
 
 class PublicScheduleController extends Controller
 {
@@ -21,69 +22,69 @@ class PublicScheduleController extends Controller
         $encodedUserId = $id;
         $userId = base64_decode($id);
         $user = User::get()->where('id', $userId);
-        
+
         if ($user) {
 
             $store    = Store::where('user_id', $userId)->first();
             $products = Product::all();
 
-            return view('customer/index', compact("store", "user", "encodedUserId" , "products"));
-            
+            return view('customer/index', compact("store", "user", "encodedUserId", "products"));
         }
-
-
-
     }
 
 
     public function getDate(Request $request)
     {
-        
+
         $userId = base64_decode($request->user);
         $user    = User::get()->where('id', $userId);
         $date    = $request->date;
-        
+
         if ($user) {
 
             $store    = Store::where('user_id', $userId)->first();
 
 
+            // dd($store->office_hour_end);
+
             $officeHourStart  = new DateTime($store->office_hour_start);
             $officeHourEnd    = new DateTime($store->office_hour_end);
+            $officeHourEnd    = $officeHourEnd->sub(new DateInterval('PT1H'));
+        
             $interval         = new DateInterval('PT1H');
-            $period           = new DatePeriod($officeHourStart, $interval ,$officeHourEnd->add($interval));
+            $period           = new DatePeriod($officeHourStart, $interval, $officeHourEnd->add($interval));
 
-            $scheduled = DB::table('schedules')->where('user_id', '=', $userId)->whereDate('start', $date)->get()->toArray();
+            $scheduled = DB::table('schedules')
+            ->where('user_id', '=', $userId)
+            ->where('confirmation', '<>', '1')
+            ->whereDate('start', $date)->get()->toArray();
 
 
-            $scheduledHours = array_map(function($s){
+            $scheduledHours = array_map(function ($s) {
 
                 $hours = new DateTime($s->start);
 
                 return $hours->format("H:i");
 
-            }, $scheduled); 
+            }, $scheduled);
+
+            // dd($scheduledHours);
 
             $availableHours            = [];
 
-            foreach($period as $p){
+            foreach ($period as $p) {
 
                 $hour = $p->format('H:i');
 
-                if(!in_array($hour, $scheduledHours)){
+                if (!in_array($hour, $scheduledHours)) {
 
                     $availableHours[] = $hour;
-
                 }
-
-
             }
-            
+
 
             return response()->json($availableHours);
-
         }
-
     }
 
     public function store(ScheduleRequest $request)
@@ -95,7 +96,7 @@ class PublicScheduleController extends Controller
 
         DB::table('schedules')->insert([
             // 'title'       => $request->title,
-            'title'       => 'Agendamento teste',
+            'title'       => $request->customerName,
             // 'customer_id' => $request->customer_id,
             'customer_id' => '1',
             'start'       => $request->hour,
@@ -106,9 +107,7 @@ class PublicScheduleController extends Controller
             'user_id'     => '1'
         ]);
 
-        return response()->json(['success' => true , 'message' => 'Agendamento realizado com sucesso'], 200);
-
-
+        return response()->json(['success' => true, 'message' => 'Agendamento realizado com sucesso'], 200);
     }
 
     public function getStatus($id)
@@ -117,7 +116,22 @@ class PublicScheduleController extends Controller
         $schedule = Schedule::find($id)->toArray();
 
         return response()->json($schedule);
+    }
 
+    public function update(Request $request, $id)
+    {
 
+        $requestData = $request->json()->all();
+
+        try {
+
+            DB::table('schedules')->where('id', $id)->update($requestData);
+
+            return response()->json(['success' => true], 200);
+
+        } catch (Exception $error) {
+            return response()->json(['message' => $error->getMessage()], 400);
+
+        }
     }
 }

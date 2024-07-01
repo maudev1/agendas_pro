@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     let today = moment().format('YYYY-MM-DD');
 
@@ -18,16 +17,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
+        dragScroll:false,
         events: `schedules/${$('#userId').val()}`,
         eventColor: ' #e6e6e6',
-        eventTextColor:'black',
-        eventBorderColor:'black', 
+        eventTextColor: 'black',
+        eventBorderColor: 'black',
         themeSystem: 'bootstrap4',
         locale: 'pt-br',
         timeZone: 'America/Sao_Paulo',
         initialView: 'timeGrid',
         editable: true,
         displayEventTime: false,
+        // eventStartEditable:false,
+        eventResizableFromStart:false,
+        eventDurationEditable:false,
+        snapDuration:'01:00:00',
+        slotDuration:'01:00:00',
         slotMinTime: $('#office-hour-start').val(),
         slotMaxTime: $('#office-hour-end').val(),
         initialDate: today,
@@ -63,16 +68,56 @@ document.addEventListener('DOMContentLoaded', function () {
                 // info.el.querySelector('.fc-event-main-frame').prepend(img);
 
                 if (!results.confirmation) {
+
                     actionButtons(id, 'confirmation', info.el)
+
+                    $('.confirmation').on('click', function (event) {
+                        event.stopPropagation();
+
+                        Swal.fire({
+                            title: "Atenção",
+                            text: "Você gostaria de confirmar o agendamento?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Sim, confirmar!",
+                            cancelButtonText: "Não"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+
+                                let id = $(this).data('id');
+
+                                let data = {
+                                    confirmation: '1'
+                                }
+
+                                let options = {
+                                    method: "POST",
+                                    body: JSON.stringify(data),
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                        'Content-Type': 'application/json;charset=utf-8'
+                                    }
+                                }
+
+                                fetch(`/schedule/${id}`, options).then(function (e) {
+
+                                    calendar.refetchEvents();
+
+
+
+                                })
+                            }
+                        });
+
+
+                    })
 
                 } else {
                     actionButtons(id, '', info.el)
 
                 }
-
-                actionButtons(id, 'whatsapp', info.el)
-                actionButtons(id, 'cancel', info.el)
-
 
 
             }
@@ -117,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         },
         eventDrop: function (info) {
-
 
             let eventId = info.event._def.publicId;
             let newDate = info.event._instance.range.start
@@ -272,36 +316,26 @@ function actionButtons(id, type, el) {
         button.innerHTML = '<i class="fas fa-clock"></i>';
 
 
-    }else if(type == 'cancel') {
+    } else if (type == 'cancel') {
 
         button.classList.add('btn-danger')
         button.innerHTML = '<i class="fa fa-times"></i>';
 
-    
-    }else if(type == 'whatsapp') {
-        
+
+    } else if (type == 'whatsapp') {
+
         button.classList.add('btn-success')
         button.innerHTML = '<i class="fa fa-phone"></i>';
 
-    }else {
+    } else {
         button.classList.add('btn-success')
         button.innerHTML = '<i class="fas fa-check"></i>';
     }
 
 
-    
+
     el.querySelector('.fc-event-main-frame').append(button)
-
-    $('.confirmation').on('click', function(event){
-
-        
-        event.stopPropagation();
-        
-        alert("teste")
-
-    })
 
 
 }
-
 
