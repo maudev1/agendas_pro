@@ -23,6 +23,8 @@ class CreateScheduleTable extends Migration
             $table->text('locale');
             $table->text('end');
             $table->timestamps();
+            $table->integer('confirmation');
+            $table->text('products');
         });
     }
 

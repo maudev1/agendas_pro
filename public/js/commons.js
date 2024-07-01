@@ -64,4 +64,15 @@ class Commons {
 
   }
 
+  customAlert(icon, title, text)
+  {
+      Swal.fire({
+          icon: icon,
+          title: title,
+          text: text,
+          confirmButtonColor:'#0d6efd'
+      });
+
+  }
+
 }

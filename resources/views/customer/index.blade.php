@@ -11,6 +11,10 @@
   <meta name="generator" content="Hugo 0.122.0">
   <title>Bolinho Barber</title>
 
+  <!-- fontawesome -->
+  <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+
+
   <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/cover/">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
@@ -26,8 +30,9 @@
 </head>
 
 <!-- <body class="d-flex h-100 text-center text-bg-dark"> -->
-<body class="d-flex h-100 text-center text-bg-dark">
-  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+
+<body class="d-flex h-100 text-bg-dark">
+  <!-- <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
     <symbol id="check2" viewBox="0 0 16 16">
       <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
     </symbol>
@@ -41,7 +46,7 @@
     <symbol id="sun-fill" viewBox="0 0 16 16">
       <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
     </symbol>
-  </svg>
+  </svg> -->
 
   <!-- <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
     <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
@@ -90,7 +95,7 @@
 
   <!-- <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column"> -->
   <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    <header class="mb-3 mt-3">
+    <header class="mb-3 mt-3 text-center">
       <div>
         <h3>Bolinho barber</h3>
         <!-- <nav class="nav nav-masthead justify-content-center float-md-end">
@@ -101,14 +106,11 @@
       </div>
     </header>
 
-    <main class="px-3">
+    <main class="px-3 te">
 
-      <figure>
+      <figure class="text-center">
         <img src="{{ asset('img/logo.jpeg') }}" alt="">
       </figure>
-      <!-- <h3>Escolha uma data:</h3> -->
-
-      <!-- <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Learn more</a> -->
 
       <form id="date-form" action="post">
 
@@ -117,17 +119,46 @@
 
         <input type="hidden" name="user" value="{{ $encodedUserId }}">
 
-        <div class="row">
-          <div class="col col-sm-12 col-md-12 col-bg-12">
-            <label for="">Escolha uma data:</label>
+        <div id="products-section" class="row">
+          <div class="col-sm-12 col-md-12 col-bg-12">
+
+            <label for="products">O que gostaria de fazer?</label>
 
             <div class="form-group mb-3 mt-3">
-              <input class="form-control date" type="date" name="date" id="date">
+
+              <select class="form-control" name="products[]" id="products" multiple>
+                <option value="">Clique para escolher</option>
+
+                @foreach($products as $product)
+                  
+
+                  <option value="{{ $product->id }}">{{ $product->description }}</option>
+
+                @endforeach
+
+              </select>
+
 
             </div>
 
-            <div class="from-group mb-3">
-              <button class="btn btn-outline-primary">Próximo</button>
+          </div>
+        </div>
+
+        <div id="date-changer-section" class="row">
+          <div class="col col-sm-12 col-md-12 col-bg-12">
+            <label for="date">Escolha uma data:</label>
+
+            <div class="form-group mb-3 mt-3">
+              <input class="form-control date" type="date" name="date" id="date" />
+
+            </div>
+
+            <div class="from-group mb-3 text-center">
+              <button class="btn btn-outline-primary">Próximo
+
+              <i class="fas fa-chevron-right"></i>
+
+              </button>
             </div>
 
           </div>
@@ -151,21 +182,34 @@
 
         </div> -->
 
-        <div class="row" id="available-hours-form" style="display:none">
+        <div class="row" id="available-hours-section" style="display:none">
           <div class="col col-sm-12 col-md-12 col-bg-12">
-            <label for="available-hours">Horários disponíveis</label>
+            <label for="available-hours">Horários disponíveis:</label>
             <div class="from-group mb-3 mt-3">
               <select class="form-control" name="availableHours" id="available-hours"></select>
 
             </div>
 
-            <div class="from-group mb-3">
-              <button type="button" class="btn btn-outline-primary" id="hours-form">Próximo</button>
+            <div class="from-group mb-3 row">
+              <div class="col col-sm-6 col-md-6 col-bg-12 text-center">
+                <button type="button" class="btn btn-outline-primary" id="checkout-form-before">
+                 
+                <i class="fas fa-chevron-left"></i>
+                  Voltar
+                </button>
+
+                <button type="button" class="btn btn-outline-primary" id="hours-form">Próximo
+
+                <i class="fas fa-chevron-right"></i>
+
+                </button>
+
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="row" id="customer-details" style="display:none">
+        <div class="row" id="customer-details-section" style="display:none">
           <div class="col col-sm-12 col-md-12 col-bg-12 text-left">
             <label for="customer-name">Nome</label>
             <div class="form-group mt-3 mb-3 ">
@@ -175,8 +219,17 @@
             <div class="form-group mt-3 mb-3">
               <input type="text" name="customerPhone" class="form-control" id="customer-phone" value="11996502162">
             </div>
-            <div class="from-group mb-3">
-              <button type="submit" class="btn btn-outline-primary">Agendar</button>
+            <div class="from-group mb-3 text-center">
+              <button type="button" class="btn btn-outline-primary" id="customer-details-before">
+                <i class="fas fa-chevron-left"></i>
+                   Voltar
+              </button>
+
+              <button type="submit" class="btn btn-outline-primary">
+                Agendar 
+                
+                <i class="fas fa-check"></i>
+              </button>
             </div>
 
           </div>
@@ -205,104 +258,16 @@
     </footer>
   </div>
 
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+  integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
+  integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+
   <script src="{{ asset('js/commons.js')}}"></script>
   <script src="{{ asset('js/Schedule.js')}}"></script>
-  <script>
-    jQuery(function($) {
 
-      // $('#date-form').on('submit', function(event) {
-
-      //   event.preventDefault();
-
-      //   let form = new FormData(this);
-
-      //   getSchedule(form)
-
-
-      // });
-
-      // $('#hours-form').on('click', function(event) {
-
-      //   event.preventDefault();
-
-      //   toCustomerDetails();
-
-
-
-      // });
-
-      // $('#checkout-form').on('submit', function(event){
-
-      //   event.preventDefault();
-
-      //   console.log(event)
-
-
-
-      // });
-
-      // async function getSchedule(form) {
-
-      //   let date = $('.date').val();
-
-      //   if (date) {
-
-      //     let options = {
-      //       method: 'POST',
-      //       headers: {
-      //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-      //         // 'Content-Type': 'application/json;charset=utf-8'
-      //       },
-      //       body: form
-      //     }
-
-      //     let response = await fetch('/schedule/date', options);
-      //     let results = await response.json();
-
-      //     if (results) {
-
-      //       let availableHours = '';
-
-      //       results.forEach(function(r) {
-
-      //         availableHours += `<option value="${r}">${r}</option>`
-
-      //       });
-
-
-      //       $("#available-hours").html(`<option value="">Escolha</option>${availableHours}`)
-      //       $('#date-form').hide();
-      //       $('#available-hours-form').show()
-
-      //     }
-
-
-      //   } else {
-
-      //     alert('Para prosseguir, escolha uma data!');
-
-
-      //   }
-
-
-
-
-
-      // }
-
-      // function toCustomerDetails() {
-
-      //   $('#available-hours-form').hide();
-
-      //   $('#customer-details').show();
-
-
-
-      // }
-
-    });
-  </script>
-  <!-- <script src="../assets/dist/js/bootstrap.bundle.min.js"></script> -->
 
 </body>
 

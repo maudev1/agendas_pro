@@ -26,6 +26,15 @@ let schedule = {
 
             });
 
+            $('#checkout-form-before').on('click', function(){
+
+                $('#date-form').show();
+
+                $('#available-hours-section').hide()
+
+
+            });
+
             $('#hours-form').on('click', function (event) {
 
                 event.preventDefault();
@@ -35,6 +44,24 @@ let schedule = {
 
             });
 
+            $('#customer-details-before').on('click', function(){
+
+                $('#customer-details-section').hide();
+                $('#available-hours-section').show();
+
+
+            });
+
+            $('#products').selectize({
+                sortField: 'text'
+
+            });
+
+            const fullDate    = new Date();
+            const dateAndTime = fullDate.toJSON();
+            const date        = dateAndTime.split('T');
+
+            $('#date').attr('min', `${date[0]}`)
 
         })
 
@@ -52,11 +79,12 @@ let schedule = {
             data[this.name] = this.value;
         });
 
-        data['title']       = `Corte de ${$('#customer-name').val()}`;
-        data['hour']       = `${$('#date').val()}T${$('#available-hours').val()}:00`;
-        data['user_id']     = `1`;
-        data['notify']      = `1`;
+        data['title'] = `Corte de ${$('#customer-name').val()}`;
+        data['hour'] = `${$('#date').val()}T${$('#available-hours').val()}:00`;
+        data['user_id'] = `1`;
+        data['notify'] = `1`;
         data['customer_id'] = '1';
+        data['products'] = $('#products').val();
 
         let options = {
             method: "POST",
@@ -71,7 +99,7 @@ let schedule = {
         let results = await response.json();
 
         if (results.success) {
-            $('#customer-details').hide()
+            $('#customer-details-section').hide()
             $('#confirmation').show()
 
             commons.loadFormSpinner($('#confirmation'), true)
@@ -114,9 +142,22 @@ let schedule = {
     },
     getSchedule: async function (form) {
 
-        let date = $('.date').val();
+        let products = $('#products').val();
+        let date = $('#date').val();
 
-        if (date) {
+        let commons = new Commons();
+
+        if (!products || products == '') {
+
+            commons.customAlert("error", 'Ops...', 'Escolha algum serviço!')
+
+
+        } else if (!date || date == '') {
+
+            commons.customAlert("error", 'Ops...', 'Escolha a data!')
+            
+
+        } else {
 
             let options = {
                 method: 'POST',
@@ -143,20 +184,13 @@ let schedule = {
 
                 $("#available-hours").html(`<option value="">Escolha</option>${availableHours}`)
                 $('#date-form').hide();
-                $('#available-hours-form').show()
+                $('#available-hours-section').show()
 
             }
 
 
-        } else {
 
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Escolha uma data!",
-              });
 
-              
 
 
         }
@@ -168,9 +202,22 @@ let schedule = {
     },
     toCustomerDetails: function () {
 
-        $('#available-hours-form').hide();
+        let availableHours = $('#available-hours').val();
 
-        $('#customer-details').show();
+        if(availableHours == '' || !availableHours ){
+
+            let commons = new Commons();
+
+            commons.customAlert("error", 'Ops...', 'Escolha um horário!')
+
+        }else{
+            $('#available-hours-section').hide();
+
+            $('#customer-details-section').show();
+
+        }
+
+
 
 
 

@@ -44,9 +44,6 @@ class PublicScheduleController extends Controller
 
             $store    = Store::where('user_id', $userId)->first();
 
-
-            // dd($store->office_hour_end);
-
             $officeHourStart  = new DateTime($store->office_hour_start);
             $officeHourEnd    = new DateTime($store->office_hour_end);
             $officeHourEnd    = $officeHourEnd->sub(new DateInterval('PT1H'));
@@ -59,7 +56,6 @@ class PublicScheduleController extends Controller
             ->where('confirmation', '<>', '1')
             ->whereDate('start', $date)->get()->toArray();
 
-
             $scheduledHours = array_map(function ($s) {
 
                 $hours = new DateTime($s->start);
@@ -67,8 +63,6 @@ class PublicScheduleController extends Controller
                 return $hours->format("H:i");
 
             }, $scheduled);
-
-            // dd($scheduledHours);
 
             $availableHours            = [];
 
@@ -90,7 +84,6 @@ class PublicScheduleController extends Controller
     public function store(ScheduleRequest $request)
     {
 
-        // dd($request);    
 
         $date = new \DateTime;
 
@@ -102,6 +95,7 @@ class PublicScheduleController extends Controller
             'start'       => $request->hour,
             'end'         => $request->hour,
             'created_at'  => $date,
+            'products'    => json_encode($request->products),
             // 'notify'      => (isset($event['notify']) ? 1 : 0),
             'notify'      => '1',
             'user_id'     => '1'
