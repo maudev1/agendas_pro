@@ -90,6 +90,7 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
 Route::controller(PublicScheduleController::class)->group(function () {
     Route::get('/schedule/{id}/', 'index');
     Route::post('/schedule/date/', 'getDate');
+    Route::post('/schedule/products', 'getProducts');
     Route::post('/schedule', 'store');
     Route::post('/schedule/{id}', 'update');
     Route::get('/schedule/status/{id}', 'getStatus');

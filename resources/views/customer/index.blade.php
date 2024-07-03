@@ -21,9 +21,13 @@
 
   <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-
+  <script src="{{ asset('vendor/jquery/jquery.mask.js') }}"></script>
+  
   <!-- Custom styles for this template -->
   <link href="{{ asset('css/schedule.css') }}" rel="stylesheet">
+  
+  <!-- JQuery masks -->
+  <script src="{{ asset('js/apply.masks.js') }}"></script>
 
   <!-- SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -209,8 +213,11 @@
           </div>
         </div>
 
-        <div class="row" id="customer-details-section" style="display:none">
-          <div class="col col-sm-12 col-md-12 col-bg-12 text-left">
+        <div id="customer-details-section" style="display:none">
+        <!-- <div id="customer-details-section" > -->
+
+          <x-checkout></x-checkout>
+          <!-- <div class="col col-sm-12 col-md-12 col-bg-12 text-left">
             <label for="customer-name">Nome</label>
             <div class="form-group mt-3 mb-3 ">
               <input type="text" name="customerName" class="form-control" id="customer-name" value="Mauricio">
@@ -225,18 +232,18 @@
                    Voltar
               </button>
 
-              <button type="submit" class="btn btn-outline-primary">
+              <button type="submit" class="btn btn-outline-success">
                 Agendar 
                 
                 <i class="fas fa-check"></i>
               </button>
             </div>
 
-          </div>
+          </div> -->
         </div>
 
         <div class="row" id="confirmation" style="display:none">
-          <div class="col col-sm-12 col-md-12 col-bg-12 text-left">
+          <div class="col col-sm-12 col-md-12 col-bg-12 text-center">
             <div class="container">
 
               <p>Aguardando confirmação do salão...</p>

@@ -65,7 +65,7 @@ class PublicScheduleController extends Controller
             }, $scheduled);
 
             $availableHours            = [];
-
+            
             foreach ($period as $p) {
 
                 $hour = $p->format('H:i');
@@ -128,4 +128,21 @@ class PublicScheduleController extends Controller
 
         }
     }
+
+    /**
+     * 
+     * Get products by array list
+     * 
+     * 
+     */
+
+     public function getProducts(Request $request)
+     {
+ 
+        $products = Product::whereIn('id', $request->products)->get()->toArray();
+ 
+        return response()->json($products);
+ 
+ 
+     }
 }

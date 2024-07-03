@@ -52,7 +52,7 @@ class ProductController extends Controller
             $data[] = [
                 'description' => $product->description,
                 'discount'   =>  $product->discount,
-                'price'   => numfmt_format_currency($moneyFormat,$product->price, "BRL"),
+                'price'   => numfmt_format_currency($moneyFormat, $product->price, "BRL"),
                 'options' => $editButton . ' ' . $deleteButton,
             ];
         }
@@ -71,25 +71,21 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        
+
         $Helpers = new Helpers();
         $products = new Product;
 
         $data = $request->only(["description", "price", "discount"]);
 
-        if($products->create($data)){
+        if ($products->create($data)) {
 
             $results = ['message' => 'Cliente cadastrado com sucesso!', 'code' => 200, 'success' => true];
 
             return response()->json($results);
-            
-        }else{
-            
+        } else {
+
             return response()->json(["success" => false]);
-
         }
-
-
     }
 
     /**
@@ -150,4 +146,6 @@ class ProductController extends Controller
             return Response()->json(['success' => true]);
         };
     }
+
+
 }

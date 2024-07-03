@@ -26,9 +26,17 @@ jQuery(($) => {
     //phone field jquerymask
 
     $('#phone').mask('(00) 0000-0000', {
-        onKeyPress: function (cep, e, field, options) {
-            var masks = ['(00) 0000-00000', '(00) 00000-0000'];
-            var mask = (cep.length >= 15) ? masks[1] : masks[0];
+        onKeyPress: function (phone, e, field, options) {
+            var masks = ['(00) 0000-0000', '(00) 00000-0000'];
+            var mask = (phone.length >= 14) ? masks[1] : masks[0];
+            $('#phone').mask(mask, options);
+        }
+    });
+
+    $('.phone').mask('(00) 0000-0000', {
+        onKeyPress: function (phone, e, field, options) {
+            var masks = ['(00) 0000-0000', '(00) 00000-0000'];
+            var mask = (phone.length >= 14) ? masks[1] : masks[0];
             $('#phone').mask(mask, options);
         }
     });
