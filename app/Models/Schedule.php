@@ -17,7 +17,8 @@ class Schedule extends Model
         'locale',
         'end',
         'confirmation',
-        'products'
+        'products',
+        'notification_submitted'
     ];
 
 }

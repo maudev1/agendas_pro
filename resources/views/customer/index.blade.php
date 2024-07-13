@@ -293,7 +293,7 @@
           <div class="col col-sm-12 col-md-12 col-bg-12 text-center">
             <div class="container">
 
-              <p><i class=" fas fa-check"></i> Serviço confirmado!</p>
+              <p><i class=" fas fa-check"></i> Atendimento confirmado!</p>
 
 
 
@@ -314,7 +314,7 @@
     </footer>
   </div>
 
-  <script type="module">
+  <!-- <script type="module">
     // Import the functions you need from the SDKs you need
     import {
       initializeApp
@@ -354,7 +354,7 @@
 
  
 
-  </script>
+  </script> -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 

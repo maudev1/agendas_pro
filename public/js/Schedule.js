@@ -4,7 +4,7 @@ let schedule = {
 
     init: function () {
 
-        schedule.notify()
+        
         schedule.flowControl();
 
         if (localStorage.getItem('flow') === '4') {
@@ -434,6 +434,8 @@ let schedule = {
 
                 schedule.flowControl();
 
+                schedule.notify();
+
             }
 
 
@@ -444,32 +446,31 @@ let schedule = {
     },
     notify: async function () {
 
-        // console.log(await window.Notification.requestPermission())
 
-        // await window.Notification.requestPermission()
+        await window.Notification.requestPermission()
 
-        // if (!("Notification" in window)) {
-        //     // if (!("Notification" in navigator)) {
-        //     console.log('Esse browser não suporta notificações desktop');
-        // } else {
-        //     if (window.Notification.permission !== 'denied') {
-        //         // Pede ao usuário para utilizar a Notificação Desktop
-        //         await window.Notification.requestPermission();
-        //     }
-        // }
+        if (!("Notification" in window)) {
+            // if (!("Notification" in navigator)) {
+            console.log('Esse browser não suporta notificações desktop');
+        } else {
+            if (window.Notification.permission !== 'denied') {
+                // Pede ao usuário para utilizar a Notificação Desktop
+                await window.Notification.requestPermission();
+            }
+        }
 
 
-        // if (window.Notification.permission === 'granted') {
-        //     const notification = new Notification('Título', {
-        //         body: 'Conteúdo da notificação'
-        //     });
+        if (window.Notification.permission === 'granted') {
+            const notification = new Notification('Atendimento Confirmado!', {
+                body: 'O seu cabeleireiro acabou de confirmar o seu atendimento'
+            });
 
-        //     notification.onclick = (e) => {
-        //         e.preventDefault();
-        //         window.focus();
-        //         notification.close();
-        //     }
-        // }
+            notification.onclick = (e) => {
+                e.preventDefault();
+                window.focus();
+                notification.close();
+            }
+        }
 
 
 

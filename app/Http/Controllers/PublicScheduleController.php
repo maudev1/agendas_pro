@@ -167,9 +167,12 @@ class PublicScheduleController extends Controller
      public function notification($id)
      {
  
-         $notification = Schedule::where('confirmation','=', '1')->where('id', '=',$id)->get();
+         $notification = Schedule::where('confirmation','=', '1')->where('notification_submitted', '<>', '1')->where('id', '=',$id)->get();
 
          if($notification->count()){
+
+            $notification->notification_submitted = '1';
+            $notification->save();
 
             return response()->json(['success' => true, 'message' => 'Serviço confirmado!']);
 
