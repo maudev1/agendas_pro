@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         eventResizableFromStart:false,
         eventDurationEditable:false,
         snapDuration:'01:00:00',
-        slotDuration:'01:00:00',
+        // slotDuration:'01:00:00',
         slotMinTime: $('#office-hour-start').val(),
         slotMaxTime: $('#office-hour-end').val(),
         initialDate: today,

@@ -1,0 +1,16 @@
+{
+    "name": "AgendasPro",
+    "short_name": "AgendasPro",
+    "description": "Agende sua Beleza",
+    "start_url": "/",
+    "lang": "pt-BR",
+    "theme_color": "#0d6efd",
+    "display": "standalone",
+    "icons": [
+      {
+        "src": "img/2.png",
+        "sizes": "500x500",
+        "type": "img/png"
+      }
+    ]
+  }

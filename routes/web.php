@@ -94,6 +94,9 @@ Route::controller(PublicScheduleController::class)->group(function () {
     Route::post('/schedule', 'store');
     Route::post('/schedule/{id}', 'update');
     Route::get('/schedule/status/{id}', 'getStatus');
+    Route::get('/schedule/notification/{id}', 'notification');
+
+
 
 });
 

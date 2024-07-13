@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
 use App\Models\Schedule;
+use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 use DateInterval;
@@ -36,7 +37,7 @@ class PublicScheduleController extends Controller
     public function getDate(Request $request)
     {
 
-        $userId = base64_decode($request->user);
+        $userId  = base64_decode($request->user);
         $user    = User::get()->where('id', $userId);
         $date    = $request->date;
 
@@ -46,15 +47,20 @@ class PublicScheduleController extends Controller
 
             $officeHourStart  = new DateTime($store->office_hour_start);
             $officeHourEnd    = new DateTime($store->office_hour_end);
-            $officeHourEnd    = $officeHourEnd->sub(new DateInterval('PT1H'));
-        
-            $interval         = new DateInterval('PT1H');
-            $period           = new DatePeriod($officeHourStart, $interval, $officeHourEnd->add($interval));
+
+            $start_time    = $officeHourStart->getTimestamp();
+            $end_time      = $officeHourEnd->getTimestamp();
+
+            $duration      = 60; // Mock duration
+            $interval      = $duration * 60;
+
+            $availableHours = [];
 
             $scheduled = DB::table('schedules')
-            ->where('user_id', '=', $userId)
-            ->where('confirmation', '<>', '1')
-            ->whereDate('start', $date)->get()->toArray();
+                ->where('user_id', '=', $userId)
+                ->whereDate('start', $date)
+                ->where('confirmation', '=', '1')
+                ->get()->toArray();
 
             $scheduledHours = array_map(function ($s) {
 
@@ -64,16 +70,18 @@ class PublicScheduleController extends Controller
 
             }, $scheduled);
 
-            $availableHours            = [];
-            
-            foreach ($period as $p) {
 
-                $hour = $p->format('H:i');
+            while ($start_time <= $end_time) 
+            {
+                $hour = date("h:i", $start_time);
 
-                if (!in_array($hour, $scheduledHours)) {
-
+                if(!in_array($hour, $scheduledHours)){
+                    
                     $availableHours[] = $hour;
+                    
                 }
+                
+                $start_time += $interval;
             }
 
 
@@ -81,27 +89,34 @@ class PublicScheduleController extends Controller
         }
     }
 
-    public function store(ScheduleRequest $request)
-    {
 
+    public function store(Request $request)
+    {
 
         $date = new \DateTime;
 
-        DB::table('schedules')->insert([
-            // 'title'       => $request->title,
-            'title'       => $request->customerName,
-            // 'customer_id' => $request->customer_id,
-            'customer_id' => '1',
-            'start'       => $request->hour,
-            'end'         => $request->hour,
-            'created_at'  => $date,
-            'products'    => json_encode($request->products),
-            // 'notify'      => (isset($event['notify']) ? 1 : 0),
-            'notify'      => '1',
-            'user_id'     => '1'
-        ]);
+        // try creates a new customer
 
-        return response()->json(['success' => true, 'message' => 'Agendamento realizado com sucesso'], 200);
+        $customer = Customer::firstOrCreate(
+            ['phone' =>  $request->customerPhone],
+            ['name'  =>   $request->customerName, 'user_id' => '1']
+        );
+
+        if ($customer) {
+
+          $schedule =  DB::table('schedules')->insertGetId([
+                'title'       => $request->customerName,
+                'customer_id' => $customer->id,
+                'start'       => $request->hour,
+                'end'         => $request->hour,
+                'created_at'  => $date,
+                'products'    => json_encode($request->products),
+                'notify'      => '1',
+                'user_id'     => '1'
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Agendamento realizado com sucesso', 'schedule' => $schedule], 200);
+        }
     }
 
     public function getStatus($id)
@@ -122,10 +137,8 @@ class PublicScheduleController extends Controller
             DB::table('schedules')->where('id', $id)->update($requestData);
 
             return response()->json(['success' => true], 200);
-
         } catch (Exception $error) {
             return response()->json(['message' => $error->getMessage()], 400);
-
         }
     }
 
@@ -136,13 +149,34 @@ class PublicScheduleController extends Controller
      * 
      */
 
-     public function getProducts(Request $request)
+    public function getProducts(Request $request)
+    {
+
+        $products = Product::whereIn('id', $request->products)->get()->toArray();
+
+        return response()->json($products);
+    }
+
+        /**
+     * 
+     * Get products by array list
+     * 
+     * 
+     */
+
+     public function notification($id)
      {
  
-        $products = Product::whereIn('id', $request->products)->get()->toArray();
+         $notification = Schedule::where('confirmation','=', '1')->where('id', '=',$id)->get();
+
+         if($notification->count()){
+
+            return response()->json(['success' => true, 'message' => 'Serviço confirmado!']);
+
+         }
  
-        return response()->json($products);
- 
- 
+        return response()->json([ 'success' => false, 'message' => 'Aguardando confirmação...' ]);
      }
+
+
 }

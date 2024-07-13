@@ -4,37 +4,50 @@ let schedule = {
 
     init: function () {
 
+        schedule.notify()
+        schedule.flowControl();
+
+        if (localStorage.getItem('flow') === '4') {
+
+            let id = localStorage.getItem('schedule');
+
+            if (id) {
+                schedule.checkNotification(3000, id);
+            }
+
+        }
+
         jQuery(($) => {
+
+            // free flow control
+
+            $('.flow-control').on('click', function () {
+
+                let flow = $(this).data('flow')
+
+                localStorage.setItem('flow', flow);
+
+                schedule.flowControl();
+
+
+
+            });
+
+            // flow 1
 
             $('#date-form').on('submit', function (event) {
 
                 event.preventDefault();
 
-                let form = new FormData(this);
+                schedule.getScheduling(this);
 
-                schedule.getSchedule(form)
-                schedule.getProducts(form)
+                schedule.getProducts(this);
 
-
-            });
-
-            $('#checkout-form').on('submit', function (event) {
-
-                event.preventDefault();
-
-                schedule.create(this)
 
 
             });
 
-            $('#checkout-form-before').on('click', function () {
-
-                $('#date-form').show();
-
-                $('#available-hours-section').hide()
-
-
-            });
+            // flow 2
 
             $('#hours-form').on('click', function (event) {
 
@@ -45,13 +58,17 @@ let schedule = {
 
             });
 
-            $('#customer-details-before').on('click', function () {
+            // flow 3
 
-                $('#customer-details-section').hide();
-                $('#available-hours-section').show();
+            $('#checkout-form').on('submit', function (event) {
+
+                event.preventDefault();
+
+                schedule.create(this)
 
 
             });
+
 
             $('#products').selectize({
                 sortField: 'text'
@@ -68,80 +85,126 @@ let schedule = {
 
 
     },
-    create: async function (element) {
+    create: function (element) {
+
+        let customerName = $('#customer-name').val();
+        let customerPhone = $('#customer-phone').val();
 
         let commons = new Commons();
 
-        let formData = $(element).serializeArray();
 
-        let data = {};
+        if (!customerName) {
 
-        $.each(formData, function () {
-            data[this.name] = this.value;
-        });
-
-        data['title'] = `Corte de ${$('#customer-name').val()}`;
-        data['hour'] = `${$('#date').val()}T${$('#available-hours').val()}:00`;
-        data['user_id'] = `1`;
-        data['notify'] = `1`;
-        data['customer_id'] = '1';
-        data['products'] = $('#products').val();
-
-        let options = {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'Content-Type': 'application/json;charset=utf-8'
-            }
-        };
-
-        let response = await fetch(`/${schedule.route}`, options);
-        let results = await response.json();
-
-        if (results.success) {
-            $('#customer-details-section').hide()
-            $('#confirmation').show()
-
-            commons.loadFormSpinner($('#confirmation'), true)
+            commons.customAlert("error", 'Ops...', 'Informe o nome completo!')
 
 
+        } else if (!customerPhone) {
 
-        } else if (results.errors) {
+            commons.customAlert("error", 'Ops...', 'Informe seu telefone!')
 
-            let errors = Object.values(results.errors)
-            let reversed = errors.reverse()
 
-            reversed.forEach(function (error) {
-                error.forEach(function (e) {
+        } else {
 
-                    $(".alert").addClass("alert-danger").html(e).show()
+            let commons = new Commons();
 
-                    commons.alertMessage(e, 'error', true)
+            let formData = $(element).serializeArray();
+
+            let data = {};
+
+            $.each(formData, function () {
+                data[this.name] = this.value;
+            });
+
+
+            // data['title'] = `Corte de ${customerName}`;
+            // data['customer_name']  = customerName;
+            // data['customer_phone'] = customerPhone;
+            data['hour'] = `${$('#date').val()}T${$('#available-hours').val()}:00`;
+            data['user_id'] = `1`;
+            data['notify'] = `1`;
+            data['customer_id'] = '1';
+            data['products'] = $('#products').val();
+
+            Swal.fire({
+                title: "Gostaria de confirmar o Agendamento?",
+                // showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Sim, confirmar",
+                cancelButtonText: `Cancelar`
+            }).then((result) => {
+
+
+                let options = {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json;charset=utf-8'
+                    }
+                };
+
+                fetch(`/${schedule.route}`, options).then(async function (response) {
+
+                    let results = await response.json();
+
+                    if (results.success) {
+
+                        localStorage.setItem('flow', '4');
+
+                        schedule.flowControl();
+
+                        localStorage.setItem('schedule', results.schedule);
+
+                        schedule.checkNotification(3000, results.schedule);
+
+                    } else if (results.errors) {
+
+                        let errors = Object.values(results.errors)
+                        let reversed = errors.reverse()
+
+                        reversed.forEach(function (error) {
+                            error.forEach(function (e) {
+
+                                $(".alert").addClass("alert-danger").html(e).show()
+
+                                commons.alertMessage(e, 'error', true)
+
+                            })
+
+
+                        });
+
+                        setTimeout(function () {
+
+                            commons.alertMessage('', 'error', false)
+
+                        }, 3000);
+
+                        commons.loadFormSpinner($(".modal-body"), false);
+
+                    } else {
+
+                        commons.loadFormSpinner($(".modal-body"), false);
+
+
+                    }
+
 
                 })
 
 
+
             });
 
-            setTimeout(function () {
-
-                commons.alertMessage('', 'error', false)
-
-            }, 3000);
-
-            commons.loadFormSpinner($(".modal-body"), false);
-
-        } else {
-
-            commons.loadFormSpinner($(".modal-body"), false);
 
 
         }
 
 
     },
-    getSchedule: async function (form) {
+    getScheduling: async function (dataForm) {
+
+        let form = new FormData(dataForm);
 
         let date = $('#date').val();
 
@@ -178,13 +241,21 @@ let schedule = {
                 results.forEach(function (r) {
 
                     availableHours += `<option value="${r}">${r}</option>`
+                    // availableHours += `<div class="col-sm-6 col-md-6"><input type="checkbox" value="${r}" class="btn-check" id="btn-check" autocomplete="off">
+                    // <label class="btn btn-primary" for="btn-check">${r}</label></div>`
 
                 });
 
 
                 $("#available-hours").html(`<option value="">Escolha</option>${availableHours}`)
-                $('#date-form').hide();
-                $('#available-hours-section').show()
+                // $("#available-hours-test").html(`${availableHours}`)
+                // $('#date-form').hide();
+                // $('#available-hours-section').show()
+
+                localStorage.setItem('flow', '2');
+
+                schedule.flowControl()
+
 
             }
 
@@ -203,22 +274,21 @@ let schedule = {
             commons.customAlert("error", 'Ops...', 'Escolha um horário!')
 
         } else {
-            $('#available-hours-section').hide();
 
-            $('#customer-details-section').show();
+            localStorage.setItem('flow', '3');
+            schedule.flowControl()
 
         }
 
 
-
-
-
     },
-    getProducts: async function (form) {
+    getProducts: async function (dataForm) {
 
         let products = $('#products').val();
 
         let commons = new Commons();
+
+        let form = new FormData(dataForm);
 
         let toReal = new Intl.NumberFormat('pt-BR', {
             style: 'currency',
@@ -248,10 +318,10 @@ let schedule = {
 
                 let scheduledServices = '';
                 let totalPrice = 0;
+                let quantity = 0;
 
-                results.forEach(function (r) {
+                results.forEach(function (r, index) {
 
-                    // availableHours += `<option value="${r}">${r}</option>`
                     scheduledServices += `<li class="list-group-item d-flex justify-content-between lh-sm">
                                         <div>
                                             <h6 class="my-0">${r.description}</h6>
@@ -260,6 +330,7 @@ let schedule = {
                                         </li>`
 
                     totalPrice = totalPrice + parseFloat(r.price)
+                    quantity = quantity + parseInt(index)
 
                 });
 
@@ -269,16 +340,137 @@ let schedule = {
                                       </li>`;
 
 
-
                 $('#service-list').html(scheduledServices);
+                $('#service-quantity').html(quantity)
 
-
-                // $("#available-hours").html(`<option value="">Escolha</option>${availableHours}`)
-                // $('#date-form').hide();
-                // $('#available-hours-section').show()
 
             }
         }
+
+
+
+    },
+    flowControl: function () {
+
+        if (!localStorage.getItem('flow')) {
+            localStorage.setItem('flow', '1')
+        }
+
+        let flow = localStorage.getItem('flow');
+
+        switch (flow) {
+
+            case '1':
+                $('#date-form').show();
+                $('#available-hours-section').hide();
+                $('#customer-details-section').hide();
+
+                break;
+
+            case '2':
+
+                $('#date-form').hide();
+                $('#available-hours-section').show();
+                $('#customer-details-section').hide();
+
+                break;
+
+            case '3':
+
+                $('#date-form').hide();
+                $('#available-hours-section').hide();
+                $('#customer-details-section').show();
+
+                break;
+
+
+            case '4':
+
+                $('#date-form').hide();
+                $('#customer-details-section').hide();
+                $('#confirmation').hide();
+                $('#confirmation-success').show();
+
+                let commons = new Commons();
+
+                commons.loadFormSpinner($('#confirmation'), true)
+
+                break;
+
+            case '5':
+
+                $('#date-form').hide();
+                $('#customer-details-section').hide();
+                $('#confirmation').hide();
+                $('#confirmation-success').show();
+
+
+                break;
+
+
+        }
+
+        return flow;
+
+    },
+    checkNotification: function (interval, id) {
+
+        setInterval(async () => {
+
+            let options = {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    // 'Content-Type': 'application/json;charset=utf-8'
+                }
+            }
+
+            let response = await fetch(`/schedule/notification/${id}`, options);
+            let results = await response.json();
+
+            if (results.success) {
+
+                localStorage.setItem('flow', '4');
+
+                schedule.flowControl();
+
+            }
+
+
+        }, interval);
+
+
+
+    },
+    notify: async function () {
+
+        // console.log(await window.Notification.requestPermission())
+
+        // await window.Notification.requestPermission()
+
+        // if (!("Notification" in window)) {
+        //     // if (!("Notification" in navigator)) {
+        //     console.log('Esse browser não suporta notificações desktop');
+        // } else {
+        //     if (window.Notification.permission !== 'denied') {
+        //         // Pede ao usuário para utilizar a Notificação Desktop
+        //         await window.Notification.requestPermission();
+        //     }
+        // }
+
+
+        // if (window.Notification.permission === 'granted') {
+        //     const notification = new Notification('Título', {
+        //         body: 'Conteúdo da notificação'
+        //     });
+
+        //     notification.onclick = (e) => {
+        //         e.preventDefault();
+        //         window.focus();
+        //         notification.close();
+        //     }
+        // }
+
 
 
 

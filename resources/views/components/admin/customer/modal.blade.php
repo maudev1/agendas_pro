@@ -18,7 +18,17 @@
 
                         <div class="form-group">
                             <label>{{ $field['label'] }} </label>
-                            <input id="{{ $field['field'] }}" class="form-control" name="{{ $field['field'] }}">
+
+
+                            @if($field['field'] == 'phone')
+                                <input id="{{ $field['field'] }}" class="form-control phone" name="{{ $field['field'] }}">
+                            
+                            @else
+
+                                <input id="{{ $field['field'] }}" class="form-control" name="{{ $field['field'] }}">
+
+                            @endif
+
                         </div>
 
                         @endforeach

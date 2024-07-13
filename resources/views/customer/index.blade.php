@@ -2,6 +2,23 @@
 <html lang="pt-BR" class="h-100" data-bs-theme="auto">
 
 <head>
+
+  <link rel="manifest" href="manifest.json">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="AgendasPro">
+  <meta name="apple-mobile-web-app-title" content="AgendasPro">
+  <meta name="theme-color" content="#0d6efd">
+  <meta name="msapplication-navbutton-color" content="#0d6efd">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="msapplication-starturl" content="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="icon" type="img/png" sizes="500x500" href="img/2.png">
+  <link rel="apple-touch-icon" type="img/png" sizes="500x500" href="img/2.png">
+
+
   <script src="{{'js/color-modes.js'}}"></script>
 
   <meta charset="utf-8">
@@ -14,6 +31,13 @@
   <!-- fontawesome -->
   <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
 
+  <!-- Safari ws comp-->
+  <script async src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.8/pwacompat.min.js" integrity="sha384-uONtBTCBzHKF84F6XvyC8S0gL8HTkAPeCyBNvfLfsqHh+Kd6s/kaS4BdmNQ5ktp1" crossorigin="anonymous"></script>
+
+  <!-- main js -->
+
+  <script src="{{ asset('js/main.js') }}"></script>
+
 
   <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/cover/">
 
@@ -22,10 +46,10 @@
   <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('vendor/jquery/jquery.mask.js') }}"></script>
-  
+
   <!-- Custom styles for this template -->
   <link href="{{ asset('css/schedule.css') }}" rel="stylesheet">
-  
+
   <!-- JQuery masks -->
   <script src="{{ asset('js/apply.masks.js') }}"></script>
 
@@ -97,6 +121,10 @@
   </div> -->
 
 
+  <!-- <button onclick="sendMessageToWorker()">Post message to worker</button>
+    <button onclick="askWorkerToPerformRecurringTask()">Launch recurring task</button> -->
+
+
   <!-- <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column"> -->
   <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="mb-3 mt-3 text-center">
@@ -126,17 +154,19 @@
         <div id="products-section" class="row">
           <div class="col-sm-12 col-md-12 col-bg-12">
 
-            <label for="products">O que gostaria de fazer?</label>
+            <div class="form-group text-center mb-3">
+              <h4>O que gostaria de fazer?</h4>
+            </div>
 
-            <div class="form-group mb-3 mt-3">
+            <div class="form-group">
 
               <select class="form-control" name="products[]" id="products" multiple>
-                <option value="">Clique para escolher</option>
+                <option value="">Escolha um serviço</option>
 
                 @foreach($products as $product)
-                  
 
-                  <option value="{{ $product->id }}">{{ $product->description }}</option>
+
+                <option value="{{ $product->id }}">{{ $product->description }}</option>
 
                 @endforeach
 
@@ -146,21 +176,19 @@
             </div>
 
           </div>
-        </div>
 
-        <div id="date-changer-section" class="row">
           <div class="col col-sm-12 col-md-12 col-bg-12">
-            <label for="date">Escolha uma data:</label>
 
-            <div class="form-group mb-3 mt-3">
+            <div class="form-group form-floating">
               <input class="form-control date" type="date" name="date" id="date" />
+              <label for="date">Escolha uma data</label>
 
             </div>
 
-            <div class="from-group mb-3 text-center">
+            <div class="form-group mb-5 mt-5 text-center">
               <button class="btn btn-outline-primary">Próximo
 
-              <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-right"></i>
 
               </button>
             </div>
@@ -186,25 +214,33 @@
 
         </div> -->
 
+
+
         <div class="row" id="available-hours-section" style="display:none">
           <div class="col col-sm-12 col-md-12 col-bg-12">
-            <label for="available-hours">Horários disponíveis:</label>
-            <div class="from-group mb-3 mt-3">
-              <select class="form-control" name="availableHours" id="available-hours"></select>
-
+            <div class="form-group text-center mb-3">
+              <h4>Horários livres em</h4>
+              <h6>05 de Julho de 2024</h6>
+              <h6>Sexta-Feira</h6>
             </div>
 
-            <div class="from-group mb-3 row">
-              <div class="col col-sm-6 col-md-6 col-bg-12 text-center">
-                <button type="button" class="btn btn-outline-primary" id="checkout-form-before">
-                 
-                <i class="fas fa-chevron-left"></i>
+            <div class="form-group form-floating">
+              <select class="form-control" name="availableHours" id="available-hours"></select>
+
+              <label for="available-hours">Horários disponíveis</label>
+            </div>
+
+            <div class="form-group mb-5 mt-5 row">
+              <div class="col col-sm-12 col-bg-12 text-center">
+                <button type="button" class="btn btn-outline-primary flow-control" data-flow="1" id="checkout-form-before">
+
+                  <i class="fas fa-chevron-left"></i>
                   Voltar
                 </button>
 
                 <button type="button" class="btn btn-outline-primary" id="hours-form">Próximo
 
-                <i class="fas fa-chevron-right"></i>
+                  <i class="fas fa-chevron-right"></i>
 
                 </button>
 
@@ -214,7 +250,7 @@
         </div>
 
         <div id="customer-details-section" style="display:none">
-        <!-- <div id="customer-details-section" > -->
+          <!-- <div id="customer-details-section" > -->
 
           <x-checkout></x-checkout>
           <!-- <div class="col col-sm-12 col-md-12 col-bg-12 text-left">
@@ -253,24 +289,76 @@
           </div>
         </div>
 
+        <div class="row" id="confirmation-success" style="display:none">
+          <div class="col col-sm-12 col-md-12 col-bg-12 text-center">
+            <div class="container">
+
+              <p><i class=" fas fa-check"></i> Serviço confirmado!</p>
+
+
+
+              <hr>
+
+            </div>
+          </div>
+        </div>
 
       </form>
 
-
-
     </main>
+
+    <x-notifyButton></x-notifyButton>
 
     <footer class="mt-auto text-white-50">
       <!-- <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p> -->
     </footer>
   </div>
 
-  <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
-  integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import {
+      getAnalytics
+    } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
-  integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+    // import { getMessaging } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-fcm.js'
+    import { getMessaging, getToken } from 'https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.3/firebase-messaging.min.js'
+
+    // import { getMessaging } from "firebase/messaging";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyDF3ghOdYx4bIdb3e1pgUIg0btARNzEoyY",
+      authDomain: "agendas-pro.firebaseapp.com",
+      projectId: "agendas-pro",
+      storageBucket: "agendas-pro.appspot.com",
+      messagingSenderId: "557597627209",
+      appId: "1:557597627209:web:0f0a65d0b215b84cfb8098",
+      measurementId: "G-4MVE0V0KQH"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+
+    const messaging = getMessaging(app);
+
+    getToken(messaging, {vapidKey: "BAIW87td55ASNy__y0qZr693E68v-f-uaBiYoljuFDpMn4Ihep8uOQdd3tQpE9N3tuZc3D4s4019kmcCu_S1nAI"});
+
+ 
+
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 
   <script src="{{ asset('js/commons.js')}}"></script>
   <script src="{{ asset('js/Schedule.js')}}"></script>
