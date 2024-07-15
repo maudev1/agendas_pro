@@ -20,11 +20,36 @@ self.addEventListener("message", function (messageEvent) {
 });
 
 
-function scheduleConfirmationNotify(){
+self.addEventListener("push", event => {
 
-    
+    let notification = event.data.json();
+
+    notify(notification);
+
+    self.clients.matchAll().then(function (clients) {
+
+        clients.forEach(function (client) {
+            client.postMessage({
+                msg: notification,
+                // url: event.request.url
+            });
+
+        })
 
 
+
+    })
+
+
+}, false);
+
+
+function notify(notification) {
+    self.registration.showNotification(
+        notification.title,
+        notification.options
+    ).catch((error) => {
+        console.log(error);
+    });
 }
-
 

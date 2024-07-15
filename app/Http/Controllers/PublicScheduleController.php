@@ -14,6 +14,8 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 use Exception;
+use Minishlink\WebPush\Subscription;
+use Minishlink\WebPush\WebPush;
 
 class PublicScheduleController extends Controller
 {
@@ -36,7 +38,7 @@ class PublicScheduleController extends Controller
 
     public function getDate(Request $request)
     {
-
+        date_default_timezone_set('America/Sao_Paulo');
         $userId  = base64_decode($request->user);
         $user    = User::get()->where('id', $userId);
         $date    = $request->date;
@@ -48,13 +50,15 @@ class PublicScheduleController extends Controller
             $officeHourStart  = new DateTime($store->office_hour_start);
             $officeHourEnd    = new DateTime($store->office_hour_end);
 
-            $start_time    = $officeHourStart->getTimestamp();
-            $end_time      = $officeHourEnd->getTimestamp();
+            $start_time    = $officeHourStart->format('H:i');
+            $end_time      = $officeHourEnd->format('H:i');
+            // $start_time    = $officeHourStart->getTimestamp();
+            // $end_time      = $officeHourEnd->getTimestamp();
 
-            $duration      = 60; // Mock duration
-            $interval      = $duration * 60;
+            // $duration      = 60; 
+            // $interval      = $duration * 60;
 
-            $availableHours = [];
+           
 
             $scheduled = DB::table('schedules')
                 ->where('user_id', '=', $userId)
@@ -70,19 +74,34 @@ class PublicScheduleController extends Controller
 
             }, $scheduled);
 
+            $availableHours = [];
+            $office_start_time = new DateTime($start_time);
+            $office_end_time   = new DateTime($end_time);
+            $duration          = new DateInterval('PT1H');
 
-            while ($start_time <= $end_time) 
-            {
-                $hour = date("h:i", $start_time);
-
-                if(!in_array($hour, $scheduledHours)){
-                    
-                    $availableHours[] = $hour;
-                    
+            for ($time = clone $office_start_time; $time < $office_end_time; $time->add($duration)) {
+                $formatted_time = $time->format('H:i');
+                if (!in_array($formatted_time, $scheduledHours)) {
+                    $availableHours[] = $formatted_time;
                 }
-                
-                $start_time += $interval;
             }
+
+            // while ($start_time <= $end_time) 
+            // {
+                
+            //     date_default_timezone_set('America/Sao_Paulo');
+
+            //     $hour = date("h:i", $start_time);
+                
+
+            //     if(!in_array($hour, $scheduledHours)){
+                    
+            //         $availableHours[] = $hour;
+                    
+            //     }
+                
+            //     $start_time += $interval;
+            // }
 
 
             return response()->json($availableHours);
@@ -115,7 +134,11 @@ class PublicScheduleController extends Controller
                 'user_id'     => '1'
             ]);
 
-            return response()->json(['success' => true, 'message' => 'Agendamento realizado com sucesso', 'schedule' => $schedule], 200);
+            return response()->json([
+                'success' => true, 
+                'message' => 'Agendamento realizado com sucesso', 
+                'schedule' => $schedule, 
+                'customerId' => $customer->id], 200);
         }
     }
 
@@ -135,6 +158,65 @@ class PublicScheduleController extends Controller
         try {
 
             DB::table('schedules')->where('id', $id)->update($requestData);
+
+            if($requestData['confirmation'] == '1'){
+
+                $pushSubscribber = DB::table('push_subscriptions')
+                ->where('subscribable_type', 'App\Models\Schedule')
+                ->where('subscribable_id', $id)
+                ->first();
+
+                $notification = [
+                    // current PushSubscription format (browsers might change this in the future)
+                    // 'payload' => '{"title":"Confirmado!", "options":{"body" : "Agendamento Confirmado com successo"}}',
+                    'payload' => json_encode([
+                       'title'   => 'Confirmado!',
+                        'options' => [
+                            'body'    => 'Agendamento Confirmado com successo',
+                            'icon'    => '/img/1.jpg',
+                            'vibrate' => true,
+                        ]
+                    ]),
+                    'subscription' => Subscription::create([
+                        "endpoint" => $pushSubscribber->endpoint,
+                        "keys" => [
+                            'p256dh' => $pushSubscribber->public_key,
+                            'auth' =>   $pushSubscribber->auth_token
+                        ],
+                    ]),
+                ];
+
+                $auth = [
+                    'VAPID' => [
+                        'subject' => 'mailto:me@website.com', // can be a mailto: or your website address
+                        'publicKey' => env('VAPID_PUBLIC_KEY'),
+                        'privateKey' => env('VAPID_PRIVATE_KEY')
+                    ],
+                ];
+
+
+                $webPush = new WebPush($auth);
+
+                // send multiple notifications with payload
+                // foreach ($notifications as $notification) {
+                $webPush->queueNotification(
+                    $notification['subscription'],
+                    $notification['payload'] // optional (defaults null)
+                );
+
+                foreach ($webPush->flush() as $report) {
+                    $endpoint = $report->getRequest()->getUri()->__toString();
+                
+                    if ($report->isSuccess()) {
+                        echo "[v] Message sent successfully for subscription {$endpoint}.";
+                    } else {
+                        // echo "[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}";
+
+                        dd($report->getReason());
+                    }
+                }
+                // }
+            }
 
             return response()->json(['success' => true], 200);
         } catch (Exception $error) {
@@ -167,14 +249,11 @@ class PublicScheduleController extends Controller
      public function notification($id)
      {
  
-         $notification = Schedule::where('confirmation','=', '1')->where('notification_submitted', '<>', '1')->where('id', '=',$id)->get();
+         $notification = Schedule::where('confirmation','=', '1')->where('id', '=',$id)->get();
 
          if($notification->count()){
 
-            $notification->notification_submitted = '1';
-            $notification->save();
-
-            return response()->json(['success' => true, 'message' => 'Serviço confirmado!']);
+            return response()->json(['success' => true, 'message' => 'Serviço confirmado!', 'data' => $notification]);
 
          }
  

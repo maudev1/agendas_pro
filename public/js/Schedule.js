@@ -4,18 +4,29 @@ let schedule = {
 
     init: function () {
 
-        
+        schedule.requestNotificationPermission();
+
         schedule.flowControl();
 
-        if (localStorage.getItem('flow') === '4') {
+        schedule.schedulingStatus();
+        // schedule.notifyHandler();
 
-            let id = localStorage.getItem('schedule');
+        // if (localStorage.getItem('flow') != '5') {
+        //     if (localStorage.getItem('schedule')) {
 
-            if (id) {
-                schedule.checkNotification(3000, id);
-            }
+        //         setInterval(function () {
 
-        }
+        //             schedule.schedulingStatus(localStorage.getItem('schedule'));
+
+        //         }, 5000)
+
+        //     }
+
+        // } else {
+
+        //     schedule.schedulingStatus(localStorage.getItem('schedule'));
+
+        // }
 
         jQuery(($) => {
 
@@ -149,13 +160,18 @@ let schedule = {
 
                     if (results.success) {
 
+                        console.log(results)
+
                         localStorage.setItem('flow', '4');
 
                         schedule.flowControl();
 
                         localStorage.setItem('schedule', results.schedule);
 
-                        schedule.checkNotification(3000, results.schedule);
+                        let push = new Push();
+                        push.subscribeCustomer({ schedule: results.schedule, customer: results.customerId });
+
+                        // schedule.checkNotification(3000, results.schedule);
 
                     } else if (results.errors) {
 
@@ -364,7 +380,7 @@ let schedule = {
                 $('#date-form').show();
                 $('#available-hours-section').hide();
                 $('#customer-details-section').hide();
-
+                $('#confirmation-success').hide();
                 break;
 
             case '2':
@@ -383,13 +399,12 @@ let schedule = {
 
                 break;
 
-
             case '4':
 
                 $('#date-form').hide();
                 $('#customer-details-section').hide();
-                $('#confirmation').hide();
-                $('#confirmation-success').show();
+                $('#confirmation-success').hide();
+                $('#confirmation').show();
 
                 let commons = new Commons();
 
@@ -413,69 +428,148 @@ let schedule = {
         return flow;
 
     },
-    checkNotification: function (interval, id) {
+    toHome: function () {
+        localStorage.setItem('flow', '1');
+        schedule.flowControl();
+    },
+    schedulingStatus: function () {
 
-        setInterval(async () => {
+        let commons = new Commons();
 
-            let options = {
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    // 'Content-Type': 'application/json;charset=utf-8'
-                }
-            }
+        commons.loadFormSpinner($('#confirmation-success'), true)
 
-            let response = await fetch(`/schedule/notification/${id}`, options);
-            let results = await response.json();
+        if (localStorage.getItem('schedule')) {
+            // if (localStorage.getItem('flow') == '4' || localStorage.getItem('flow') == '5') {
 
-            if (results.success) {
+                let interval = setInterval(async () => {
 
-                localStorage.setItem('flow', '4');
+                    let scheduleId = localStorage.getItem('schedule');
 
-                schedule.flowControl();
-
-                schedule.notify();
-
-            }
+                    let options = {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            // 'Content-Type': 'application/json;charset=utf-8'
+                        }
+                    }
 
 
-        }, interval);
+                    let response = await fetch(`/schedule/notification/${scheduleId}`, options);
+                    let results = await response.json();
 
+                    if (results.success) {
+
+                        moment.locale('pt-BR')
+
+                        let date = moment(results.data[0].start).format('llll');
+
+
+                        localStorage.setItem('flow', '5');
+
+                        schedule.flowControl();
+
+                        $('#confirmation-success').html(`
+                         <div class="col col-sm-12 col-md-12 col-bg-12 text-center">
+                    
+                        <div class="card">
+                             <div class="card-header">
+                               Agendamento confirmado
+                             </div>
+                             <div class="card-body">
+                               <h5 class="card-title mb-3 mt-3">${date}</h5>
+                             </div>
+                            <div class="card-footer">
+                               <a id="new-scheduling" onclick="schedule.toHome()" class="btn btn-primary">Novo Agendamento</a>
+                             </div>
+
+                            </div>
+                        </div>`);
+
+
+                    }
+
+                    if (localStorage.getItem('flow') == '5') {
+
+                        clearInterval(interval)
+
+                    }
+
+
+
+                }, 5000);
+
+            // }
+        }
 
 
     },
-    notify: async function () {
+    // notifyHandler() {
+    //     navigator.serviceWorker.addEventListener('message', function (event) {
+    //         console.log('Mensagem recebida do Service Worker:', event.data);
+    //         // Aqui você pode manipular a DOM com base na mensagem recebida
+    //         const message = event.data.msg;
+
+    //         // Atualizar a DOM conforme necessário
+    //         // const element = document.getElementById('your-element-id');
+    //         // if (element) {
+    //         //   element.textContent = `Mensagem: ${message}, URL: ${url}`;
+    //         // }
+
+    //         localStorage.setItem('flow', '5');
+    //         schedule.flowControl();
+
+    //         if(localStorage.getItem('schedule')){
+    //             schedule.schedulingStatus(localStorage.getItem('schedule'));
+
+    //         }
+    //     });
 
 
-        await window.Notification.requestPermission()
+    // },
+    requestNotificationPermission() {
+        Notification.requestPermission().then(function (permission) {
+            if (permission === 'granted') {
+                console.log('Permissão para notificações concedida.');
+                // Aqui você pode continuar com a lógica para exibir notificações
+            } else if (permission === 'denied') {
+                Swal.fire({
+                    title: "Habilitar notificações?",
+                    text: "As notificações são importantes para lembrar os horários marcado!",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Habilitar",
+                    cancelButtonText: "Não habilitar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-        if (!("Notification" in window)) {
-            // if (!("Notification" in navigator)) {
-            console.log('Esse browser não suporta notificações desktop');
-        } else {
-            if (window.Notification.permission !== 'denied') {
-                // Pede ao usuário para utilizar a Notificação Desktop
-                await window.Notification.requestPermission();
+                        Notification.requestPermission().then(function (permission) {
+
+                            console.log(permission = 'granted')
+
+                            debugger
+
+
+                            // if (permission === 'granted') {
+                            //     new Notification('Obrigado por permitir as notificações!');
+                            // } else {
+                            //     console.log('Permissão de notificações negada.');
+                            // }
+                        });
+                        // F
+
+                    }
+                });
+            } else {
+                console.log('Permissão para notificações fechada pelo usuário.');
             }
-        }
-
-
-        if (window.Notification.permission === 'granted') {
-            const notification = new Notification('Atendimento Confirmado!', {
-                body: 'O seu cabeleireiro acabou de confirmar o seu atendimento'
-            });
-
-            notification.onclick = (e) => {
-                e.preventDefault();
-                window.focus();
-                notification.close();
-            }
-        }
-
-
-
-
+        }).catch(function (error) {
+            console.error('Erro ao solicitar permissão para notificações:', error);
+        });
     }
+
+
 
 };
 

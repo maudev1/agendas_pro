@@ -26,7 +26,7 @@
   <meta name="description" content="">
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Hugo 0.122.0">
-  <title>Bolinho Barber</title>
+  <title>{{ isset($store->name) ? $store->name : 'AgendasPro'  }}</title>
 
   <!-- fontawesome -->
   <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
@@ -36,7 +36,8 @@
 
   <!-- main js -->
 
-  <script src="{{ asset('js/main.js') }}"></script>
+  <script src="{{ asset('js/push.js') }}"></script>
+  <!-- <script src="{{ asset('js/main.js') }}"></script> -->
 
 
   <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/cover/">
@@ -129,7 +130,7 @@
   <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="mb-3 mt-3 text-center">
       <div>
-        <h3>Bolinho barber</h3>
+        <h3>{{ isset($store->name) ? $store->name : 'AgendasPro'  }}</h3>
         <!-- <nav class="nav nav-masthead justify-content-center float-md-end">
           <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="#">Home</a>
           <a class="nav-link fw-bold py-1 px-0" href="#">Features</a>
@@ -279,25 +280,29 @@
         </div>
 
         <div class="row" id="confirmation" style="display:none">
-          <div class="col col-sm-12 col-md-12 col-bg-12 text-center">
+          <div class="col-sm-12 col-md-12 col-bg-12 text-center">
             <div class="container">
-
+              
               <p>Aguardando confirmação do salão...</p>
-
-
+              
+              
             </div>
           </div>
+          <!-- <div class="col-sm-12 col-md-12 col-bg-12 text-center">
+          <a id="new-scheduling" onclick="schedule.toHome()" class="btn btn-primary">Novo Agendamento</a>
+  
+        </div> -->
         </div>
 
         <div class="row" id="confirmation-success" style="display:none">
           <div class="col col-sm-12 col-md-12 col-bg-12 text-center">
             <div class="container">
 
-              <p><i class=" fas fa-check"></i> Atendimento confirmado!</p>
+              <!-- <p><i class=" fas fa-check"></i> Atendimento confirmado!</p>
 
 
 
-              <hr>
+              <hr> -->
 
             </div>
           </div>
@@ -307,54 +312,14 @@
 
     </main>
 
-    <x-notifyButton></x-notifyButton>
 
     <footer class="mt-auto text-white-50">
       <!-- <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p> -->
     </footer>
   </div>
 
-  <!-- <script type="module">
-    // Import the functions you need from the SDKs you need
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-    import {
-      getAnalytics
-    } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
-
-    // import { getMessaging } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-fcm.js'
-    import { getMessaging, getToken } from 'https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.3/firebase-messaging.min.js'
-
-    // import { getMessaging } from "firebase/messaging";
-
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyDF3ghOdYx4bIdb3e1pgUIg0btARNzEoyY",
-      authDomain: "agendas-pro.firebaseapp.com",
-      projectId: "agendas-pro",
-      storageBucket: "agendas-pro.appspot.com",
-      messagingSenderId: "557597627209",
-      appId: "1:557597627209:web:0f0a65d0b215b84cfb8098",
-      measurementId: "G-4MVE0V0KQH"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-
-
-    const messaging = getMessaging(app);
-
-    getToken(messaging, {vapidKey: "BAIW87td55ASNy__y0qZr693E68v-f-uaBiYoljuFDpMn4Ihep8uOQdd3tQpE9N3tuZc3D4s4019kmcCu_S1nAI"});
-
- 
-
-  </script> -->
+  <!-- <script src="{{asset('js/moment.min.js')}}"></script> -->
+  <script src="{{asset('js/moment-with-locales.js')}}"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
@@ -362,6 +327,7 @@
 
   <script src="{{ asset('js/commons.js')}}"></script>
   <script src="{{ asset('js/Schedule.js')}}"></script>
+
 
 
 </body>

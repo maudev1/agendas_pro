@@ -8,6 +8,7 @@ use App\Http\Controllers\PublicScheduleController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PushController;
 use App\Http\Controllers\StoreController;
 use App\Models\Customer;
 use App\Models\Permission;
@@ -96,7 +97,11 @@ Route::controller(PublicScheduleController::class)->group(function () {
     Route::get('/schedule/status/{id}', 'getStatus');
     Route::get('/schedule/notification/{id}', 'notification');
 
+});
 
+Route::controller(PushController::class)->group(function () {
+    Route::post('/push/register','store');
+    Route::post('/push/notify','push');
 
 });
 
