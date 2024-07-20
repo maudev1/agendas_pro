@@ -366,7 +366,7 @@ let schedule = {
 
 
                 $('#service-list').html(scheduledServices);
-                $('#service-quantity').html(quantity)
+                $('#service-quantity').html(quantity+1)
 
 
             }

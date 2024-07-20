@@ -45,7 +45,11 @@ class PublicScheduleController extends Controller
 
         if ($user) {
 
-            $store    = Store::where('user_id', $userId)->first();
+            // Falta implementar sistema de funcionarios para escolher a agenda individual do profissional
+
+            $store    = Store::where('user_id', '1')->first();
+
+            // dd($store);
 
             $officeHourStart  = new DateTime($store->office_hour_start);
             $officeHourEnd    = new DateTime($store->office_hour_end);
