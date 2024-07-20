@@ -384,6 +384,17 @@ return [
                 ],
             ],
         ],
+        'Custom' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => 'css/admin_custom.css',
+                ]
+
+            ],
+        ],
     ],
 
     /*

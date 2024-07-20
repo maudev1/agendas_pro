@@ -13,7 +13,7 @@ class MenuItemsController extends Controller
     {
 
 
-        $permissions = Permission::all()->toArray();
+        $permissions = Permission::whereNotIn("name",['users','profiles'])->get()->toArray();
 
         $menu = array_map(function ($per) {
 
@@ -31,6 +31,8 @@ class MenuItemsController extends Controller
 
             ];
         }, $permissions);
+
+        // dd($menu);
 
         return $menu;
     }

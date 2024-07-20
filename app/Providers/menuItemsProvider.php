@@ -36,14 +36,12 @@ class menuItemsProvider extends ServiceProvider
 
             $role = $user->roles->first();
             
-
             if(!$role){
                 $user->assignRole('admin');
                 // $role->givePermissionTo('schedules');
 
             }
 
-            
             $userPermissions = $role->permissions->pluck('name')->toArray();
 
             $userMenu = array_map(function($permission) use ($userPermissions){

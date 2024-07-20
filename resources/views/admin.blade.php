@@ -19,4 +19,6 @@
     <script src="{{asset("js/apply.masks.js")}}"></script>
     <script src="{{asset('js/commons.js')}}"></script>
 
+
+
 @stop

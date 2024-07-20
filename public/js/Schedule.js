@@ -254,7 +254,7 @@ let schedule = {
 
                 let availableHours = '';
 
-                results.forEach(function (r) {
+                results.data.availableTime.forEach(function (r) {
 
                     availableHours += `<option value="${r}">${r}</option>`
                     // availableHours += `<div class="col-sm-6 col-md-6"><input type="checkbox" value="${r}" class="btn-check" id="btn-check" autocomplete="off">
@@ -262,8 +262,17 @@ let schedule = {
 
                 });
 
+                console.log(results)
 
-                $("#available-hours").html(`<option value="">Escolha</option>${availableHours}`)
+
+                $("#available-hours").html(`<option value="">Escolha</option>${availableHours}`);
+
+                moment.locale('pt-BR')
+
+                // var dateFormat = moment(results.data.date, 'DD/MM/YYYY');
+                var formattedDate = moment(results.data.date).format('dddd, DD [de] MMMM [de] YYYY');          
+
+                $("#time-reference").html(formattedDate)
                 // $("#available-hours-test").html(`${availableHours}`)
                 // $('#date-form').hide();
                 // $('#available-hours-section').show()
@@ -430,6 +439,7 @@ let schedule = {
     },
     toHome: function () {
         localStorage.setItem('flow', '1');
+        localStorage.removeItem('schedule');
         schedule.flowControl();
     },
     schedulingStatus: function () {
@@ -469,21 +479,42 @@ let schedule = {
                         schedule.flowControl();
 
                         $('#confirmation-success').html(`
-                         <div class="col col-sm-12 col-md-12 col-bg-12 text-center">
-                    
-                        <div class="card">
-                             <div class="card-header">
+                         <div class="p-3 bg-body-tertiary rounded-3">
+                            <div class="check-icon-container"><span class="check-icon"><i class="fas fa-check"></i></span></div>
+                         </div>
+                         <div class="p-3 mb-4 bg-body-tertiary rounded-3">
+                            <div class="mt-3 mb-3 text-center">                    
+                             <h4 class="col-md-8 fs-4 text-center">
                                Agendamento confirmado
-                             </div>
-                             <div class="card-body">
-                               <h5 class="card-title mb-3 mt-3">${date}</h5>
-                             </div>
-                            <div class="card-footer">
-                               <a id="new-scheduling" onclick="schedule.toHome()" class="btn btn-primary">Novo Agendamento</a>
-                             </div>
-
+                             </h4>
+                             
+                             <h5 class="col-md-8 fs-4">${date}</h5>
+                        
+                            
                             </div>
-                        </div>`);
+                            <hr>
+                            <div class="mt-3 text-center">
+                                <a id="new-scheduling" onclick="schedule.toHome()" class="btn btn-lg btn-outline-dark">Novo Agendamento</a>
+                            </div>
+
+                        </div>
+                        <style>
+                            .check-icon-container{
+                                display: flex;
+                                flex-flow: column;
+                                align-items: center;
+                            }
+                            .check-icon{
+                                display:flex;
+                                background-color: #47bd47;
+                                padding: 20px;
+                                border-radius: 30px;
+                                color: white;
+                                }
+                        </style>
+                        
+                        
+                        `);
 
 
                     }

@@ -77,7 +77,7 @@
     <script src="{{ asset('js/commons.js') }}"></script>
     <script src="{{ asset('js/HttpObserver.js') }}"></script>
 
-
+    <link rel="stylesheet" href="{{ asset('css/admin_custom.css') }}">
 
 </head>
 

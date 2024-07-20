@@ -74,7 +74,7 @@ class PublicScheduleController extends Controller
 
             }, $scheduled);
 
-            $availableHours = [];
+            $availableTime = [];
             $office_start_time = new DateTime($start_time);
             $office_end_time   = new DateTime($end_time);
             $duration          = new DateInterval('PT1H');
@@ -82,7 +82,7 @@ class PublicScheduleController extends Controller
             for ($time = clone $office_start_time; $time < $office_end_time; $time->add($duration)) {
                 $formatted_time = $time->format('H:i');
                 if (!in_array($formatted_time, $scheduledHours)) {
-                    $availableHours[] = $formatted_time;
+                    $availableTime[] = $formatted_time;
                 }
             }
 
@@ -96,7 +96,7 @@ class PublicScheduleController extends Controller
 
             //     if(!in_array($hour, $scheduledHours)){
                     
-            //         $availableHours[] = $hour;
+            //         $availableTime[] = $hour;
                     
             //     }
                 
@@ -104,7 +104,7 @@ class PublicScheduleController extends Controller
             // }
 
 
-            return response()->json($availableHours);
+            return response()->json([ "data" => ["availableTime" => $availableTime, "date" => $request->date]]);
         }
     }
 
