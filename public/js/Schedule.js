@@ -86,6 +86,15 @@ let schedule = {
 
             });
 
+            $('#scheduling-cancel').on('click', function (event) {
+
+                event.preventDefault();
+
+                schedule.cancel();
+
+
+            });
+
             const fullDate = new Date();
             const dateAndTime = fullDate.toJSON();
             const date = dateAndTime.split('T');
@@ -160,7 +169,7 @@ let schedule = {
 
                     if (results.success) {
 
-                        console.log(results)
+                        // console.log(results)
 
                         localStorage.setItem('flow', '4');
 
@@ -170,6 +179,8 @@ let schedule = {
 
                         let push = new Push();
                         push.subscribeCustomer({ schedule: results.schedule, customer: results.customerId });
+
+                        // $("#scheduling-cancel").attr("data", results.schedule);
 
                         // schedule.checkNotification(3000, results.schedule);
 
@@ -218,6 +229,93 @@ let schedule = {
 
 
     },
+    cancel: function () {
+
+        let commons    = new Commons();
+        
+        if (localStorage.getItem('schedule')) {
+
+            let scheduling = localStorage.getItem('schedule');
+            
+            Swal.fire({
+                title: "Gostaria de Cancelar o Agendamento?",
+                showCancelButton: true,
+                confirmButtonText: "Sim, cancelar",
+                cancelButtonText: `Cancelar`
+            }).then((result) => {
+
+                let options = {
+                    method: "GET",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Content-Type': 'application/json;charset=utf-8'
+                    }
+                };
+
+                fetch(`/${schedule.route}/cancel/${scheduling}`, options).then(async function (response) {
+
+                    let results = await response.json();
+
+                    if (results.success) {
+
+                        localStorage.setItem('flow', '1');
+                        localStorage.removeItem('schedule');
+
+                        schedule.flowControl();
+
+
+                        // let push = new Push();
+                        // push.subscribeCustomer({ schedule: results.schedule, customer: results.customerId });
+
+                        // $("#scheduling-cancel").attr("data", results.schedule);
+
+                        // schedule.checkNotification(3000, results.schedule);
+
+                    } else if (results.errors) {
+
+                        let errors = Object.values(results.errors)
+                        let reversed = errors.reverse()
+
+                        reversed.forEach(function (error) {
+                            error.forEach(function (e) {
+
+                                $(".alert").addClass("alert-danger").html(e).show()
+
+                                commons.alertMessage(e, 'error', true)
+
+                            })
+
+
+                        });
+
+                        setTimeout(function () {
+
+                            commons.alertMessage('', 'error', false)
+
+                        }, 3000);
+
+                        commons.loadFormSpinner($(".modal-body"), false);
+
+                    } else {
+
+                        commons.loadFormSpinner($(".modal-body"), false);
+
+
+                    }
+
+
+                })
+
+
+
+            });
+
+
+        }
+
+
+    },
+
     getScheduling: async function (dataForm) {
 
         let form = new FormData(dataForm);
@@ -270,7 +368,7 @@ let schedule = {
                 moment.locale('pt-BR')
 
                 // var dateFormat = moment(results.data.date, 'DD/MM/YYYY');
-                var formattedDate = moment(results.data.date).format('dddd, DD [de] MMMM [de] YYYY');          
+                var formattedDate = moment(results.data.date).format('dddd, DD [de] MMMM [de] YYYY');
 
                 $("#time-reference").html(formattedDate)
                 // $("#available-hours-test").html(`${availableHours}`)
@@ -366,7 +464,7 @@ let schedule = {
 
 
                 $('#service-list').html(scheduledServices);
-                $('#service-quantity').html(quantity+1)
+                $('#service-quantity').html(quantity + 1)
 
 
             }
@@ -415,9 +513,14 @@ let schedule = {
                 $('#confirmation-success').hide();
                 $('#confirmation').show();
 
-                let commons = new Commons();
+                let schedule = localStorage.getItem("schedule");
 
-                commons.loadFormSpinner($('#confirmation'), true)
+                $("#scheduling-cancel").attr("data-schedule", schedule);
+
+
+                // let commons = new Commons();
+
+                // commons.loadFormSpinner($('#confirmation'), true)
 
                 break;
 
@@ -451,44 +554,44 @@ let schedule = {
         if (localStorage.getItem('schedule')) {
             // if (localStorage.getItem('flow') == '4' || localStorage.getItem('flow') == '5') {
 
-                let interval = setInterval(async () => {
+            let interval = setInterval(async () => {
 
-                    let scheduleId = localStorage.getItem('schedule');
+                let scheduleId = localStorage.getItem('schedule');
 
-                    let options = {
-                        method: 'GET',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                            // 'Content-Type': 'application/json;charset=utf-8'
-                        }
+                let options = {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        // 'Content-Type': 'application/json;charset=utf-8'
                     }
+                }
 
 
-                    let response = await fetch(`/schedule/notification/${scheduleId}`, options);
-                    let results = await response.json();
+                let response = await fetch(`/schedule/notification/${scheduleId}`, options);
+                let results = await response.json();
 
-                    if (results.success) {
+                if (results.success) {
 
-                        moment.locale('pt-BR')
+                    moment.locale('pt-BR')
 
-                        let date = moment(results.data[0].start).format('llll');
+                    let date = moment(results.data[0].start).format('llll');
 
 
-                        localStorage.setItem('flow', '5');
+                    localStorage.setItem('flow', '5');
 
-                        schedule.flowControl();
+                    schedule.flowControl();
 
-                        $('#confirmation-success').html(`
+                    $('#confirmation-success').html(`
                          <div class="p-3 bg-body-tertiary rounded-3">
                             <div class="check-icon-container"><span class="check-icon"><i class="fas fa-check"></i></span></div>
                          </div>
                          <div class="p-3 mb-4 bg-body-tertiary rounded-3">
                             <div class="mt-3 mb-3 text-center">                    
-                             <h4 class="col-md-8 fs-4 text-center">
+                             <h4>
                                Agendamento confirmado
                              </h4>
                              
-                             <h5 class="col-md-8 fs-4">${date}</h5>
+                             <h5>${date}</h5>
                         
                             
                             </div>
@@ -517,17 +620,17 @@ let schedule = {
                         `);
 
 
-                    }
+                }
 
-                    if (localStorage.getItem('flow') == '5') {
+                if (localStorage.getItem('flow') == '5') {
 
-                        clearInterval(interval)
+                    clearInterval(interval)
 
-                    }
+                }
 
 
 
-                }, 5000);
+            }, 5000);
 
             // }
         }

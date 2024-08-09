@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Constants\Schedule;
 use App\Http\Requests\ScheduleRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
-use App\Models\Schedule;
+use App\Models\Schedule as ScheduleModel;
 use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use DateTime;
@@ -28,7 +29,7 @@ class PublicScheduleController extends Controller
 
         if ($user) {
 
-            $store    = Store::where('user_id', $userId)->first();
+            $store    = Store::where('user_id', '1')->first();
             $products = Product::all();
 
             return view('customer/index', compact("store", "user", "encodedUserId", "products"));
@@ -132,6 +133,7 @@ class PublicScheduleController extends Controller
                 'customer_id' => $customer->id,
                 'start'       => $request->hour,
                 'end'         => $request->hour,
+                'status'      => Schedule::PENDING,
                 'created_at'  => $date,
                 'products'    => json_encode($request->products),
                 'notify'      => '1',
@@ -149,7 +151,7 @@ class PublicScheduleController extends Controller
     public function getStatus($id)
     {
 
-        $schedule = Schedule::find($id)->toArray();
+        $schedule = ScheduleModel::find($id)->toArray();
 
         return response()->json($schedule);
     }
@@ -243,17 +245,17 @@ class PublicScheduleController extends Controller
         return response()->json($products);
     }
 
-        /**
+    /**
      * 
      * Get products by array list
      * 
      * 
      */
 
-     public function notification($id)
+    public function notification($id)
      {
  
-         $notification = Schedule::where('confirmation','=', '1')->where('id', '=',$id)->get();
+         $notification = ScheduleModel::where('confirmation','=', '1')->where('id', '=',$id)->get();
 
          if($notification->count()){
 
@@ -262,7 +264,27 @@ class PublicScheduleController extends Controller
          }
  
         return response()->json([ 'success' => false, 'message' => 'Aguardando confirmação...' ]);
-     }
+    }
+
+    public function cancel($id)
+    {
+
+        $schedule = ScheduleModel::find($id);
+
+        if($schedule){
+
+            $schedule->status = Schedule::CANCELED;
+            $schedule->save();
+
+            return response()->json(["success" => true]);
+        
+        }else{
+            
+            return response()->json(["success" => true]);
+
+        }
+
+    }
 
 
 }

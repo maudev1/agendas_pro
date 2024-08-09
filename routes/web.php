@@ -88,16 +88,32 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
 });
 
 
-Route::controller(PublicScheduleController::class)->group(function () {
-    Route::get('/schedule/{id}/', 'index');
-    Route::post('/schedule/date/', 'getDate');
-    Route::post('/schedule/products', 'getProducts');
-    Route::post('/schedule', 'store');
-    Route::post('/schedule/{id}', 'update');
-    Route::get('/schedule/status/{id}', 'getStatus');
-    Route::get('/schedule/notification/{id}', 'notification');
+Route::prefix("schedule")->group(function () {
 
+    Route::controller(PublicScheduleController::class)->group(function () {
+        Route::get('{id}', 'index');
+        Route::post('date', 'getDate');
+        Route::post('products', 'getProducts');
+        Route::post('/', 'store');
+        Route::post('{id}', 'update');
+        Route::get('status/{id}', 'getStatus');
+        Route::get('notification/{id}', 'notification');
+        Route::get('cancel/{id}', 'cancel');
+    
+    });
+    
 });
+
+// Route::controller(PublicScheduleController::class)->group(function () {
+//     Route::get('/schedule/{id}/', 'index');
+//     Route::post('/schedule/date/', 'getDate');
+//     Route::post('/schedule/products', 'getProducts');
+//     Route::post('/schedule', 'store');
+//     Route::post('/schedule/{id}', 'update');
+//     Route::get('/schedule/status/{id}', 'getStatus');
+//     Route::get('/schedule/notification/{id}', 'notification');
+
+// });
 
 Route::controller(PushController::class)->group(function () {
     Route::post('/push/register','store');

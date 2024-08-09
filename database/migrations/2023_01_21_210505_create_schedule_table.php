@@ -13,18 +13,21 @@ class CreateScheduleTable extends Migration
      */
     public function up()
     {
+
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->text('title');
             $table->integer('customer_id');
             $table->integer('user_id');
-            $table->integer('notify');
             $table->text('start');
-            $table->text('locale');
             $table->text('end');
-            $table->timestamps();
-            $table->integer('confirmation');
+            $table->text('locale');
             $table->text('products');
+            $table->integer('status');
+            $table->integer('confirmation');
+            $table->integer('notify');
+            $table->integer('notification_submitted');
+            $table->timestamps();
         });
     }
 

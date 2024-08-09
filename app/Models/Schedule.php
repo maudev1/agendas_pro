@@ -17,6 +17,7 @@ class Schedule extends Model
         'locale',
         'end',
         'confirmation',
+        'status', // 1 - pendding, 2 - running, 3 - finished, 4 - canceled
         'products',
         'notification_submitted'
     ];

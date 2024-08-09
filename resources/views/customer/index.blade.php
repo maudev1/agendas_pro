@@ -127,15 +127,38 @@
 
         </div>
 
-        <div class="row" id="confirmation" style="display:none">
-          <div class="col-sm-12 col-md-12 col-bg-12 text-center">
-            <div class="container">
+        <div id="confirmation" style="display:none">
 
+          <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+            <div class="form-group mb-3 text-center">
               <p>Aguardando confirmação do salão...</p>
+
+            </div>
+            <div class="form-group mb-3 text-center">
+              <x-spinner></x-spinner>
 
 
             </div>
+            <hr>
+            <div class="form-group mb-3 text-center">
+              <button id="scheduling-cancel" class="btn btn-lg btn-outline-dark">Cancelar</button>
+
+            </div>
           </div>
+          <!-- <div class="row"> -->
+
+          <!-- <div class="col-sm-12 col-md-12 col-bg-12 text-center">
+              <div class="container"> -->
+
+
+          <!-- </div> -->
+
+
+          <!-- <span class="is-loading"></span> -->
+
+          <!-- </div>
+
+          </div> -->
           <!-- <div class="col-sm-12 col-md-12 col-bg-12 text-center">
             <a id="new-scheduling" onclick="schedule.toHome()" class="btn btn-primary">Novo Agendamento</a>
 
