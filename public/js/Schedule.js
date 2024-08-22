@@ -360,9 +360,6 @@ let schedule = {
 
                 });
 
-                console.log(results)
-
-
                 $("#available-hours").html(`<option value="">Escolha</option>${availableHours}`);
 
                 moment.locale('pt-BR')

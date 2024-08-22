@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
-        dragScroll:false,
-        events: `schedules/${$('#userId').val()}`,
+        dragScroll: false,
+        events: `schedules/${$('#userId').val()}/all`,
         eventColor: ' #e6e6e6',
         eventTextColor: 'black',
         eventBorderColor: 'black',
@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
         editable: true,
         displayEventTime: false,
         // eventStartEditable:false,
-        eventResizableFromStart:false,
-        eventDurationEditable:false,
-        snapDuration:'01:00:00',
+        eventResizableFromStart: false,
+        eventDurationEditable: false,
+        snapDuration: '01:00:00',
         // slotDuration:'01:00:00',
         slotMinTime: $('#office-hour-start').val(),
         slotMaxTime: $('#office-hour-end').val(),
@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         dateClick: function (info) {
 
+
             let date = new Date(info.date);
             let Month = date.toLocaleDateString('pt-br', { month: 'long' });
             let WeekDay = date.toLocaleDateString('pt-br', { weekday: 'long' });
@@ -132,33 +133,121 @@ document.addEventListener('DOMContentLoaded', function () {
 
             $('#start').val(info.dateStr)
             $('#title').val('Agendamento Esporádico')
-            $('#preview').html(``);
-            $('#preview').append(`<p>${WeekDay} - ${MonthDay} de ${Month} às ${Hours}</p>`);
-            $('#exampleModal').modal('toggle');
+            // $('.modal-title.preview').html(``);
+            // $('.modal-title.preview').append(`<p>${WeekDay} - ${MonthDay} de ${Month} às ${Hours}</p>`);
+
+                            
+            moment.locale('pt-BR')
+                
+            var formattedDate = moment(date).format('dddd, DD [de] MMMM [de] YYYY [às] hh:mm');
+            
+            $('.modal-title.preview').html(``);
+            $('.modal-title.preview').html("Agenda para " + formattedDate);
+            $('#newScheduling').modal('toggle');
 
         },
-        eventClick: function (info) {
-
-            console.log(info)
-
+        eventClick: async function (info) {
             let eventId = info.event._def.publicId;
-            let title = info.event._def.title;
-            let hour = info.event._def.extendedProps.hour;
-            let customer_id = info.event._def.extendedProps.customer_id;
+            let url = `/admin/schedules/${eventId}/one`;
 
-            $('#delete').show();
-            $('#eventId').val(eventId);
-            $('#title').val(title);
-            $('#hour').val(hour);
-            $('#delete').attr('data-id', eventId);
 
-            document.querySelectorAll('#customer option').forEach((element) => {
-                if (element.value == customer_id) {
-                    $(element).attr('selected', 'selected')
-                }
+            let response = await fetch(url, {
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                method: 'GET'
             })
 
-            $('#exampleModal').modal('toggle');
+            if(response.ok){
+
+
+                
+                
+                // var dateFormat = moment(results.data.date, 'DD/MM/YYYY');
+                let results = await response.json();
+                
+                let schedulingData = $('#scheduling-data'); 
+                
+                moment.locale('pt-BR')
+                
+                var formattedDate = moment(results.schedule.start).format('dddd, DD [de] MMMM [de] YYYY [às] hh:mm');
+
+                $('.modal-title.preview').html("Agenda para " + formattedDate);
+
+                schedulingData.find('.personal-data').html(
+                    `<p>Nome: ${results.customer.name}</p>
+                     <p>Telefone: ${results.customer.phone}</p>
+                `);
+
+                let productTables = ``;
+
+                results.products.forEach(function(i){
+                   
+
+                    const formatter = new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      
+                      });
+
+                    productTables += `<tr><td>${i.description}</td>`;
+                    productTables += `<td>1</td>`;
+                    productTables += `<td>${formatter.format(i.price)}</td></tr>`;
+
+                });
+
+                productTables + ``;
+
+                let servicesData = schedulingData.find('.services-data');
+
+                servicesData.find('table').find('tbody').html(productTables);
+
+                $("#confirm").attr("data-id", results.schedule.id);
+
+
+                if(results.schedule.status == 1){
+
+                    $('#confirm').hide();
+                }
+
+
+                $('#exampleModal').modal('toggle');
+
+            }else{
+                throw new Error('deu nada');
+            }
+
+
+
+
+
+
+            // let eventId = info.event._def.publicId;
+            // let title = info.event._def.title;
+            // let hour = info.event._def.extendedProps.hour;
+            // let customer_id = info.event._def.extendedProps.customer_id;
+
+            // console.log(title)
+            // console.log(hour)
+            // console.log(title)
+            // console.log(customer_id)
+
+            // $('#customer-data').find('.card-body').html(`<p>Nome: ${title}</p>`)
+
+            // $('#delete').show();
+            // $('#eventId').val(eventId);
+            // $('#title').val(title);
+            // $('#hour').val(hour);
+            // $('#delete').attr('data-id', eventId);
+
+            // document.querySelectorAll('#customer option').forEach((element) => {
+            //     if (element.value == customer_id) {
+            //         $(element).attr('selected', 'selected')
+            //     }
+            // })
+
+            // $('#exampleModal').modal('toggle');
 
         },
         eventDrop: function (info) {
@@ -216,6 +305,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
+        data['products'] = $('#products').val()
+
         Request.data = data;
         Request.url = `schedule/${$('#eventId').val()}`;
         Request.method = 'POST'
@@ -223,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const ResponseHandler = {
             notify: function (response) {
-                $('#exampleModal').modal('toggle');
+                $('#newScheduling').modal('toggle');
 
 
             }
@@ -338,4 +429,3 @@ function actionButtons(id, type, el) {
 
 
 }
-

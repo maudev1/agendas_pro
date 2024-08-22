@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\Schedule;
 use App\Models\Store;
 use TheSeer\Tokenizer\Exception;
 use Illuminate\Support\Facades\Auth;
@@ -35,16 +36,35 @@ class ScheduleController extends Controller
         return response()->json($schedules);
     }
 
+    public function getOne($id)
+    {
+
+        $schedule = Schedule::find($id);
+        $products = Product::whereIn('id', json_decode($schedule->products))->get();
+    
+        return response()->json([
+            'schedule' => $schedule,
+            'products' => $products,
+            'customer' => $schedule->customer]);
+
+    }
+
     public function store(ScheduleRequest $request)
     {
 
         $date = new \DateTime;
+
+        $products = json_encode($request->products);
+
 
         DB::table('schedules')->insert([
             'title' => $request->title,
             'customer_id' => $request->customer_id,
             'start' => $request->start,
             'end' => $request->start,
+            'products' => json_encode($request->products),
+            'status' => '1',
+            'confirmation' => '1',
             'created_at' => $date,
             'notify' => (isset($event['notify']) ? 1 : 0),
             'user_id' => Auth::id()

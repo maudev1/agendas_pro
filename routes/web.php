@@ -37,14 +37,14 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
     Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
     Route::get('/admin/home', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
 
-    Route::controller(ScheduleController::class)->group(function () {
-        Route::get('/admin/schedules', 'index');
-        Route::get('/admin/schedules/{id}', 'getAll');
-        Route::post('/admin/schedule', 'store');
-        Route::post('/admin/schedule/{id}', 'update');
-        Route::get('/admin/schedule/delete/{id}', 'delete');
-        Route::get('/admin/urlgenerate/', 'urlGenerate');
-    });
+    // Route::controller(ScheduleController::class)->group(function () {
+    //     Route::get('/admin/schedules', 'index');
+    //     Route::get('/admin/schedules/{id}', 'getAll');
+    //     Route::post('/admin/schedule', 'store');
+    //     Route::post('/admin/schedule/{id}', 'update');
+    //     Route::get('/admin/schedule/delete/{id}', 'delete');
+    //     Route::get('/admin/urlgenerate/', 'urlGenerate');
+    // });
 
     Route::controller(ConfigController::class)->group(function () {
         Route::get('/admin/config/', 'index');
@@ -60,6 +60,18 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
 
 
     Route::prefix("admin")->group(function () {
+
+
+        Route::controller(ScheduleController::class)->group(function () {
+            Route::get('schedules', 'index');
+            Route::get('schedules/{userId}/all', 'getAll');
+            Route::get('schedules/{userId}/one', 'getOne');
+            Route::post('schedule', 'store');
+            Route::post('schedule/{id}', 'update');
+            Route::get('schedule/delete/{id}', 'delete');
+            Route::get('urlgenerate/', 'urlGenerate');
+        });
+    
 
         // Profile Route
         Route::resource("profiles", ProfileController::class)
