@@ -2,9 +2,14 @@ document.addEventListener('DOMContentLoaded', function () {
     let today = moment().format('YYYY-MM-DD');
 
     $('#copy-shareurl').on('click', function () {
+    
+        $(this).text('Copiar');
+
         let shareUrlField = $('#shareurl-field').val()
         navigator.clipboard.writeText(shareUrlField).then(() => {
-            alert('Copiado!');
+
+            $(this).text('Copiado!');
+            
         }).catch(() => {
             alert('err');
         });
@@ -12,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     $("#exampleModal").on('hide.bs.modal', function () {
-        formDefault()
+        formDefault();
     });
 
     const calendarEl = document.getElementById('calendar');
@@ -206,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $("#confirm").attr("data-id", results.schedule.id);
 
 
-                if(results.schedule.status == 1){
+                if(results.schedule.confirmation == 1){
 
                     $('#confirm').hide();
                 }

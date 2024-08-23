@@ -40,31 +40,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            
-                                            <td>Corte de Cabelo Simples</td>
-                                            <td class="text-center">1</td>
-                                            <td>R$ 25,00</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="text-right"  colspan="3">
-                                               <strong>Total:</strong> R$ 25,00
-                                            </td>
-                                        </tr>
+                                       
                                     </tbody>
                                 </table>
                             </div>
-
 
                         </div>
 
 
                     </div>
                 </div>
-
-
-
 
             </div>
             <div class="modal-footer row">
@@ -77,9 +62,8 @@
                 <div class="col text-right">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     <button id="confirm" type="button" data-id="" class="btn btn-success confirmation">Confirmar</button>
-                    <!-- <button type="button" id="save" class="btn btn-primary">Salvar</button> -->
                 </div>
-            </div>
+            </div> 
         </div>
     </div>
 </div>

@@ -15,14 +15,14 @@
         <div class="col col-sm-6 col-bg-6 text-left">
             <button type="button" class="btn btn-lg btn-outline-dark flow-control" data-flow="1">
 
-                <i class="fas fa-chevron-left"></i>
+                <!-- <i class="fas fa-chevron-left"></i> -->
                 voltar
             </button>
         </div>
         <div class="col col-sm-6 col-bg-6 text-right">
             <button type="button" class="btn btn-lg btn-outline-dark" id="hours-form">próximo
 
-                <i class="fas fa-chevron-right"></i>
+                <!-- <i class="fas fa-chevron-right"></i> -->
 
             </button>
         </div>

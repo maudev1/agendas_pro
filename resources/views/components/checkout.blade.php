@@ -57,13 +57,13 @@
 
                 <div class="col col-sm-6 col-bg-6 text-left">
                     <button type="button" class="btn btn-lg btn-outline-dark flow-control" data-flow="2">
-                        <i class="fas fa-chevron-left"></i>
+                        <!-- <i class="fas fa-chevron-left"></i> -->
                         Voltar
                     </button>
                 </div>
 
                 <div class="col col-sm-6 col-bg-6 text-right">
-                    <button class="btn btn-lg btn-outline-dark" type="submit">Confirmar</button>
+                    <button class="btn btn-lg btn-outline-success" type="submit">Confirmar</button>
 
                 </div>
 

@@ -22,7 +22,23 @@ class Schedule extends Model
         'notification_submitted'
     ];
 
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     User::saving(function ($model) {
+    //         if(!User::where("role","=", "admin")->exists())
+    //         {
+    //             $model->role = 'admin';
+    //         } 
+
+    //     });
+    // }
     public function customer(){
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     } 
+
+    public function transaction(){
+        return $this->asOne(Transaction::class, 'id', 'shchedule');
+
+    }
 }

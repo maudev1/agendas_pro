@@ -32,7 +32,7 @@
             <div class="form-group mb-5 mt-5 text-center">
                 <button class="btn btn-lg btn-outline-dark">próximo
 
-                    <i class="fas fa-chevron-right"></i>
+                    <!-- <i class="fas fa-chevron-right"></i> -->
 
                 </button>
             </div>
