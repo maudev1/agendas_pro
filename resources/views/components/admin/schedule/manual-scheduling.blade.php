@@ -17,24 +17,25 @@
 
 
                     <div class="form-group">
-                        <label for="customer">Resumo</label>
+                        <label for="customer">Descrição</label>
                         <input class="form-control" value="Agendamento Esporádico" id="title" name="title">
 
                     </div>
 
                     <!-- <hr> -->
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
 
-                        <label for="">Selecionar Cliente</label>
-                        <div class="form-check form-switch">
+                         <label for="">Selecionar Cliente</label> 
+                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="new-customer-switch">
                             <label class="form-check-label" for="new-customer-switch">Novo Cliente</label>
-                        </div>
+                        </div> 
 
-                    </div>
+                    </div> -->
 
                     <div class="form-group customer">
+                        <label for="">Selecionar Cliente</label>
 
                         <select class="form-control" id="customer">
                             <option value="">Qual é o cliente?</option>
@@ -67,6 +68,19 @@
                             @endforeach
 
                         </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-method">Método de Pagamento</label>
+                        <select class="form-control" name="payment_method" id="payment-method">
+                            <option value="">Escolha</option>
+                            <option value="1">PIX</option>
+                            <option value="2">Cartão</option>
+                            <option value="3">Dinheiro</option>
+                            <option value="4">Cortesia</option>
+                        </select>
+
 
                     </div>
 

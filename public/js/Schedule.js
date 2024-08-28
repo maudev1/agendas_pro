@@ -109,6 +109,7 @@ let schedule = {
 
         let customerName = $('#customer-name').val();
         let customerPhone = $('#customer-phone').val();
+        let paymentMethod = $('#payment-method').val();
 
         let commons = new Commons();
 
@@ -121,6 +122,11 @@ let schedule = {
         } else if (!customerPhone) {
 
             commons.customAlert("error", 'Ops...', 'Informe seu telefone!')
+
+
+        } else if (!paymentMethod) {
+
+            commons.customAlert("error", 'Ops...', 'Informe o meio de pagamento!')
 
 
         } else {
@@ -153,73 +159,75 @@ let schedule = {
                 cancelButtonText: `Cancelar`
             }).then((result) => {
 
+                if (result.isConfirmed) {
 
-                let options = {
-                    method: "POST",
-                    body: JSON.stringify(data),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Content-Type': 'application/json;charset=utf-8'
-                    }
-                };
+                    let options = {
+                        method: "POST",
+                        body: JSON.stringify(data),
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Content-Type': 'application/json;charset=utf-8'
+                        }
+                    };
 
-                fetch(`/${schedule.route}`, options).then(async function (response) {
+                    fetch(`/${schedule.route}`, options).then(async function (response) {
 
-                    let results = await response.json();
+                        let results = await response.json();
 
-                    if (results.success) {
+                        if (results.success) {
 
-                        // console.log(results)
+                            localStorage.setItem('flow', '4');
 
-                        localStorage.setItem('flow', '4');
+                            schedule.flowControl();
 
-                        schedule.flowControl();
+                            localStorage.setItem('schedule', results.schedule);
 
-                        localStorage.setItem('schedule', results.schedule);
+                            let push = new Push();
 
-                        let push = new Push();
-                        push.subscribeCustomer({ schedule: results.schedule, customer: results.customerId });
-
-                        // $("#scheduling-cancel").attr("data", results.schedule);
-
-                        // schedule.checkNotification(3000, results.schedule);
-
-                    } else if (results.errors) {
-
-                        let errors = Object.values(results.errors)
-                        let reversed = errors.reverse()
-
-                        reversed.forEach(function (error) {
-                            error.forEach(function (e) {
-
-                                $(".alert").addClass("alert-danger").html(e).show()
-
-                                commons.alertMessage(e, 'error', true)
-
-                            })
+                            push.subscribeCustomer({ schedule: results.schedule, customer: results.customerId });
 
 
-                        });
+                        } else if (results.errors) {
 
-                        setTimeout(function () {
+                            let errors = Object.values(results.errors)
+                            let reversed = errors.reverse()
 
-                            commons.alertMessage('', 'error', false)
+                            reversed.forEach(function (error) {
+                                error.forEach(function (e) {
 
-                        }, 3000);
+                                    $(".alert").addClass("alert-danger").html(e).show()
 
-                        commons.loadFormSpinner($(".modal-body"), false);
+                                    commons.alertMessage(e, 'error', true)
 
-                    } else {
-
-                        commons.loadFormSpinner($(".modal-body"), false);
-
-
-                    }
+                                })
 
 
-                })
+                            });
+
+                            setTimeout(function () {
+
+                                commons.alertMessage('', 'error', false)
+
+                            }, 3000);
+
+                            commons.loadFormSpinner($(".modal-body"), false);
+
+                        } else {
+
+                            commons.loadFormSpinner($(".modal-body"), false);
 
 
+                        }
+
+
+                    })
+
+
+                    // verificar se esta ok 
+                    
+                    schedule.schedulingStatus();
+
+                }
 
             });
 
@@ -231,12 +239,12 @@ let schedule = {
     },
     cancel: function () {
 
-        let commons    = new Commons();
-        
+        let commons = new Commons();
+
         if (localStorage.getItem('schedule')) {
 
             let scheduling = localStorage.getItem('schedule');
-            
+
             Swal.fire({
                 title: "Gostaria de Cancelar o Agendamento?",
                 showCancelButton: true,
@@ -244,67 +252,69 @@ let schedule = {
                 cancelButtonText: `Cancelar`
             }).then((result) => {
 
-                let options = {
-                    method: "GET",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Content-Type': 'application/json;charset=utf-8'
-                    }
-                };
+                if(result.isConfirmed){
+                    let options = {
+                        method: "GET",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Content-Type': 'application/json;charset=utf-8'
+                        }
+                    };
+    
+                    fetch(`/${schedule.route}/cancel/${scheduling}`, options).then(async function (response) {
+    
+                        let results = await response.json();
+    
+                        if (results.success) {
+    
+                            localStorage.setItem('flow', '1');
+                            localStorage.removeItem('schedule');
 
-                fetch(`/${schedule.route}/cancel/${scheduling}`, options).then(async function (response) {
+                            schedule.flowControl();
 
-                    let results = await response.json();
+                            $('#confirmation').hide();
+                            
+    
+                        } else if (results.errors) {
+    
+                            let errors = Object.values(results.errors)
+                            let reversed = errors.reverse()
+    
+                            reversed.forEach(function (error) {
+                                error.forEach(function (e) {
+    
+                                    $(".alert").addClass("alert-danger").html(e).show()
+    
+                                    commons.alertMessage(e, 'error', true)
+    
+                                })
+    
+    
+                            });
+    
+                            setTimeout(function () {
+    
+                                commons.alertMessage('', 'error', false)
+    
+                            }, 3000);
+    
+                            commons.loadFormSpinner($(".modal-body"), false);
+    
+                        } else {
 
-                    if (results.success) {
+                            
+                            commons.loadFormSpinner($(".modal-body"), false);
+                            
+                            // $('#confirmation').hide();
+    
+                        }
+    
+    
+                    })
+    
+    
 
-                        localStorage.setItem('flow', '1');
-                        localStorage.removeItem('schedule');
-
-                        schedule.flowControl();
-
-
-                        // let push = new Push();
-                        // push.subscribeCustomer({ schedule: results.schedule, customer: results.customerId });
-
-                        // $("#scheduling-cancel").attr("data", results.schedule);
-
-                        // schedule.checkNotification(3000, results.schedule);
-
-                    } else if (results.errors) {
-
-                        let errors = Object.values(results.errors)
-                        let reversed = errors.reverse()
-
-                        reversed.forEach(function (error) {
-                            error.forEach(function (e) {
-
-                                $(".alert").addClass("alert-danger").html(e).show()
-
-                                commons.alertMessage(e, 'error', true)
-
-                            })
-
-
-                        });
-
-                        setTimeout(function () {
-
-                            commons.alertMessage('', 'error', false)
-
-                        }, 3000);
-
-                        commons.loadFormSpinner($(".modal-body"), false);
-
-                    } else {
-
-                        commons.loadFormSpinner($(".modal-body"), false);
-
-
-                    }
-
-
-                })
+                }
 
 
 
@@ -619,11 +629,11 @@ let schedule = {
 
                 }
 
-                if (localStorage.getItem('flow') == '5') {
+                // if (localStorage.getItem('flow') == '5') {
 
-                    clearInterval(interval)
+                //     clearInterval(interval)
 
-                }
+                // }
 
 
 

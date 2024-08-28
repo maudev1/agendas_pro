@@ -10,6 +10,7 @@ use App\Models\Store;
 use App\Models\Product;
 use App\Models\Schedule as ScheduleModel;
 use App\Models\Customer;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 use DateInterval;
@@ -138,6 +139,30 @@ class PublicScheduleController extends Controller
                 'products'    => json_encode($request->products),
                 'notify'      => '1',
                 'user_id'     => '1'
+            ]);
+
+            $total = 0;
+
+            foreach($request->products as $product){
+
+                $productModel = Product::find($product);
+
+                if($productModel){
+
+                    $total += intval($productModel->price);
+
+                }
+
+
+            }
+
+
+            Transaction::create([
+                'schedule'    => $schedule,
+                'products'    => json_encode($request->products),
+                'total_price' => $total,
+                'payment_method' => $request->payment_method,
+    
             ]);
 
             return response()->json([

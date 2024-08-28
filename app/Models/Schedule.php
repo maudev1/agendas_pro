@@ -38,7 +38,7 @@ class Schedule extends Model
     } 
 
     public function transaction(){
-        return $this->asOne(Transaction::class, 'id', 'shchedule');
 
+        return $this->hasOne(Transaction::class,'schedule');
     }
 }

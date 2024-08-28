@@ -37,17 +37,15 @@
             <h4 class="mb-3">Forma de Pagamento</h4>
 
             <div class="my-3">
-                <div class="form-check">
-                    <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
-                    <label class="form-check-label" for="credit">Cartão</label>
-                </div>
-                <div class="form-check">
-                    <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required>
-                    <label class="form-check-label" for="debit">PIX</label>
-                </div>
-                <div class="form-check">
-                    <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
-                    <label class="form-check-label" for="paypal">Dinheiro</label>
+                <div class="form-group">
+                    <select class="form-control" name="payment_method" id="payment-method">
+                        <option value="">Escolha</option>
+                        <option value="1">PIX</option>
+                        <option value="2">Cartão</option>
+                        <option value="3">Dinheiro</option>
+                    </select>
+
+
                 </div>
             </div>
 

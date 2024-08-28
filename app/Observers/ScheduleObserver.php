@@ -17,6 +17,8 @@ class ScheduleObserver
     public function created(Schedule $schedule)
     {
 
+        // dd($schedule);
+
         $productsList = $schedule->products; 
         $products     = Product::whereIn('id', json_encode($schedule->products));
         
@@ -24,11 +26,12 @@ class ScheduleObserver
         // !!! TERMINAR
         
 
-        Transaction::create([
-            'products' => $schedule->products,
-            'total_price'
+        // Transaction::create([
+        //     'products' => $schedule->products,
+        //     'total_price' => '1000',
+        //     'payment_method' => 'pix',
 
-        ]);
+        // ]);
     }
 
     /**

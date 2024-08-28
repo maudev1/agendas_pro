@@ -91,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         }).then((result) => {
                             if (result.isConfirmed) {
 
+                                $(".confirmation").hide()
+
                                 let id = $(this).data('id');
 
                                 let data = {
@@ -166,9 +168,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if(response.ok){
 
-
-                
-                
                 // var dateFormat = moment(results.data.date, 'DD/MM/YYYY');
                 let results = await response.json();
                 
@@ -180,21 +179,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 $('.modal-title.preview').html("Agenda para " + formattedDate);
 
+                let whatsapp = results.customer.phone.replace(/\D/g, '');
+
                 schedulingData.find('.personal-data').html(
                     `<p>Nome: ${results.customer.name}</p>
-                     <p>Telefone: ${results.customer.phone}</p>
+                     <p>Telefone: ${results.customer.phone} | <a href="https://api.whatsapp.com/send?phone=55${whatsapp}" target="_BLANK">
+                     <img width="15px" src="/img/whatsapp.png"> whatsapp</p></p>
+
                 `);
 
                 let productTables = ``;
 
+                const formatter = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                    
+                });
+                
+                let total = 0;
+               
                 results.products.forEach(function(i){
-                   
-
-                    const formatter = new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
-                      
-                      });
+                    
+                    total += parseFloat(i.price)
 
                     productTables += `<tr><td>${i.description}</td>`;
                     productTables += `<td>1</td>`;
@@ -202,7 +208,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 });
 
-                productTables + ``;
+
+                productTables += `<tr>
+                    <td colspan="2"><strong>Meio de pagamento: </strong>${results.paymentMethod}</td>
+                    <td><strong>Total: </strong>${formatter.format(total)}</td>
+                </tr>`;
+
+                
 
                 let servicesData = schedulingData.find('.services-data');
 
@@ -311,6 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         data['products'] = $('#products').val()
+        data['payment_method'] = $('#payment-method').val()
 
         Request.data = data;
         Request.url = `schedule/${$('#eventId').val()}`;

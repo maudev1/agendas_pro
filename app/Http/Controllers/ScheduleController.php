@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Schedule;
 use App\Models\Store;
+use App\Models\Transaction;
 use TheSeer\Tokenizer\Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,11 +42,21 @@ class ScheduleController extends Controller
 
         $schedule = Schedule::find($id);
         $products = Product::whereIn('id', json_decode($schedule->products))->get();
+
+        $paymentMethod = [
+            '1' => 'PIX', 
+            '2' => 'Cartão', 
+            '3' => 'Dinheiro', 
+            '4' => 'Cortesia', 
+
+        ];
     
         return response()->json([
             'schedule' => $schedule,
             'products' => $products,
-            'customer' => $schedule->customer]);
+            'customer' => $schedule->customer,
+            'paymentMethod' =>  $paymentMethod[$schedule->transaction->payment_method]
+        ]);
 
     }
 
@@ -54,10 +65,7 @@ class ScheduleController extends Controller
 
         $date = new \DateTime;
 
-        $products = json_encode($request->products);
-
-
-        DB::table('schedules')->insert([
+       $id = DB::table('schedules')->insertGetId([
             'title' => $request->title,
             'customer_id' => $request->customer_id,
             'start' => $request->start,
@@ -70,8 +78,33 @@ class ScheduleController extends Controller
             'user_id' => Auth::id()
         ]);
 
-        return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
+        if($id){
 
+            $total = 0;
+
+            foreach($request->products as $product){
+
+                $productModel = Product::find($product);
+
+                if($productModel){
+
+                    $total += intval($productModel->price);
+
+                }
+
+
+            }
+
+            Transaction::create([
+                'schedule'    => $id,
+                'products'    => json_encode($request->products),
+                'total_price' => $total,
+                'payment_method' => $request->payment_method,
+    
+            ]);
+
+            return response()->json(['message' => 'Agendamento realizado com sucesso'], 200);
+        }
 
     }
 
