@@ -15,11 +15,15 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        $adminRole = Role::create([
+            'name' => 'super', 
+            'guard_name' => 'web']);
+            
         $adminRole->givePermissionTo(Permission::all()->pluck('name')->toArray());
         $adminRole->syncPermissions(Permission::all()->pluck('name')->toArray());
+
         // $userRole = Role::create(['name'  => 'user' , 'guard_name' => 'web']);
-        $profissionalRole = Role::create(['name'  => 'profissional' , 'guard_name' => 'web']);
+        // $profissionalRole = Role::create(['name'  => 'profissional' , 'guard_name' => 'web']);
 
         // $adminRole->givePermissionTo(Permission::all()->pluck('name')->toArray());
     }

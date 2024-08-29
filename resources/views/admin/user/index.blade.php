@@ -22,15 +22,7 @@
 
 @php
 
-$fields = [
-    ['label' => 'Nome', 'field' => 'name'],
-    ['label' => 'CPF', 'field' => 'document'],
-    ['label' => 'Telefone', 'field' => 'phone'],
-    ['label' => 'E-mail', 'field' => 'email'],
-    ['label' => 'Perfil', 'field' => 'role'],
-    ['label' => 'Senha', 'field' => 'password'],
-    ['label' => 'Confirmação de Senha', 'field' => 're_password'],
-]
+
 
 @endphp
 

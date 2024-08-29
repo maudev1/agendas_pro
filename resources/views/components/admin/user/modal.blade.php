@@ -33,7 +33,7 @@
                             @else
 
                                 <div class="form-group">
-                                    <label>{{ $field['label'] }} </label>
+                                    <label>{{ $field['label'] }} {!! isset($field['required']) ? '<span class="required"> *</span>' : null  !!} </label>
                                     <input id="{{ $field['field'] }}" class="form-control" name="{{ $field['field'] }}">
                                 </div>
 

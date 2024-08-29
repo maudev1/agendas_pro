@@ -129,28 +129,44 @@ let user = {
 
         } else if (results.errors) {
 
-            let errors = Object.values(results.errors)
-            let reverset = errors.reverse()
+            let errors = Object.keys(results.errors);
 
-            reverset.forEach(function (error) {
-                error.forEach(function (e) {
+            errors.forEach(function(err){
 
-                    $(".alert").addClass("alert-danger").html(e).show()
+                $(`#${err}`).addClass('is-invalid')
 
-                    commons.alertMessage(e, 'error', true)
-
-                })
 
 
             });
 
-            setTimeout(function () {
-
-                commons.alertMessage('', 'error', false)
-
-            }, 3000);
-
             commons.loadFormSpinner($(".modal-body"), false);
+
+            // let errors = Object.values(results.errors)
+            // let reverset = errors.reverse();
+
+          
+
+            // reverset.forEach(function (error) {
+            //     error.forEach(function (e) {
+
+            //         $(".alert").addClass("alert-danger").html(e).show();
+
+            //         commons.alertMessage(e, 'error', true);
+
+            //         console.log(error)
+
+            //     })
+
+
+            // });
+
+            // setTimeout(function () {
+
+            //     commons.alertMessage('', 'error', false)
+
+            // }, 3000);
+
+            // commons.loadFormSpinner($(".modal-body"), false);
 
         } else {
 

@@ -6,6 +6,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Classes\Helpers;
+use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -22,7 +23,17 @@ class UsersController extends Controller
 
         $roles = Role::all();
 
-        return view('admin.user.index', compact('roles'));
+        $fields = [
+            ['required' => true, 'label' => 'Nome', 'field' => 'name'],
+            ['required' => true, 'label' => 'CPF', 'field' => 'document'],
+            ['required' => true, 'label' => 'Telefone', 'field' => 'phone'],
+            ['required' => true, 'label' => 'E-mail', 'field' => 'email'],
+            ['required' => true, 'label' => 'Perfil', 'field' => 'role'],
+            ['required' => true, 'label' => 'Senha', 'field' => 'password'],
+            ['required' => true, 'label' => 'Confirmação de Senha', 'field' => 're_password'],
+        ];
+
+        return view('admin.user.index', compact('roles', 'fields'));
     }
 
     public function to_datatables()
@@ -84,7 +95,7 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
 
         $user = new User;

@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Summary of CustomerRequest
  */
-class CustomerRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,12 +26,10 @@ class CustomerRequest extends FormRequest
     public function messages()
     {
 
-
         return [
 
             'name.required' =>  'O :attribute é obrigatório!',
             'phone.unique' =>   'O :attribute ja está cadastrado!',
-            'document.required' => 'O :attribute é obrigatório!',
             'document.unique' =>   'O :attribute ja está cadastrado!',
             'email.unique' =>   'O :attribute ja está cadastrado!',
 
@@ -46,22 +44,30 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'name'     =>  'required',
-            'email'    =>  'required|unique',
-            'password' =>  'required',
-            'profile'  =>  'required',
-
+            'name'     =>   'required',
+            'phone'    =>   ['required', 'unique:users'],
+            'password' =>   'required',
+            'profile'  =>   'required',
         ];
 
         if ($this->checkIsPhone()) {
 
-            $rules['phone'] = 'unique:customers';
+            $rules['phone'] = 'unique:users';
         }
 
 
         if ($this->checkIsDocument()) {
 
-            $rules['document'] = 'unique:customers';
+            $rules['document'] = 'unique:users';
+        }
+
+
+        //! TERMINAR ESSA PORRA
+
+        if($this->passVerify()){
+
+            $rules['password'] = ''
+            
         }
 
         return $rules;
@@ -97,6 +103,17 @@ class CustomerRequest extends FormRequest
         $user = User::where("document", $request["document"])->where("id", "<>", $request["id"])->get()->count();
 
         if ($user > 0) {
+            return true;
+        }
+    }
+
+
+    protected function passVerify()
+    {
+
+        $request  = $this->request->all();
+
+        if ($request['password'] === $request['re_password']) {
             return true;
         }
     }

@@ -13,15 +13,18 @@ class MenuItemsController extends Controller
     {
 
 
-        $permissions = Permission::whereNotIn("name",['users','profiles'])->get()->toArray();
+        // $permissions = Permission::whereNotIn("name",['users','profiles'])->get()->toArray();
+        $permissions = Permission::get()->toArray();
 
         $menu = array_map(function ($per) {
 
             $icon = $this->setItems($per['name'])['icon'];
             $text = $this->setItems($per['name'])['text'];
+            $pos  = $this->setItems($per['name'])['pos'];
 
             return [
 
+                'pos'         =>  $pos,
                 'name'        => $per['name'],
                 'text'        => $text,
                 'url'         => "admin/{$per['name']}",
@@ -32,7 +35,7 @@ class MenuItemsController extends Controller
             ];
         }, $permissions);
 
-        // dd($menu);
+        array_multisort($menu, SORT_ASC, SORT_REGULAR);
 
         return $menu;
     }
@@ -40,12 +43,12 @@ class MenuItemsController extends Controller
     public function setItems($item)
     {
         $items = [
-            'products'   => ['icon' => 'fas fa-cube', 'text' => 'Produtos'],
-            'schedules'  => ['icon' => 'far fa-fw fa-calendar', 'text' => 'Agenda'],
-            'store'      => ['icon' => 'fa fa-store', 'text' => 'Loja'],
-            'customers'  => ['icon' => 'far fa-fw fa-envelope', 'text' => 'Clientes'],
-            'users'      => ['icon' => 'far fa-fw fa-user', 'text' => 'Usuarios'],
-            'profiles'   => ['icon' => 'far fa-fw fa-user', 'text' => 'Perfis'],
+            'schedules'  => ['pos' => '1','icon' => 'far fa-fw fa-calendar', 'text' => 'Agenda'],
+            'customers'  => ['pos' => '2','icon' => 'far fa-fw fa-envelope', 'text' => 'Clientes'],
+            'products'   => ['pos' => '3','icon' => 'fas fa-cube', 'text' => 'Produtos'],
+            'users'      => ['pos' => '4','icon' => 'far fa-fw fa-user', 'text' => 'Usuários'],
+            'profiles'   => ['pos' => '5','icon' => 'far fa-fw fa-user', 'text' => 'Perfis'],
+            'store'      => ['pos' => '6','icon' => 'fa fa-store', 'text' => 'Loja'],
         ];
 
         return $items[$item];

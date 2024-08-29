@@ -80,6 +80,9 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
         Route::get('profiles/to_datatables', [ProfileController::class, 'to_datatables'])->name("profiles.datatables");
 
         // Users Route
+        // Route::resource("users", UsersController::class)
+        // ->middleware('checkPermission:users')->except("show");
+
         Route::resource("users", UsersController::class)
         ->middleware('checkPermission:users')->except("show");
 

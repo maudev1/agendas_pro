@@ -37,9 +37,7 @@ class menuItemsProvider extends ServiceProvider
             $role = $user->roles->first();
             
             if(!$role){
-                $user->assignRole('admin');
-                // $role->givePermissionTo('schedules');
-
+                $user->assignRole('super');
             }
 
             $userPermissions = $role->permissions->pluck('name')->toArray();
