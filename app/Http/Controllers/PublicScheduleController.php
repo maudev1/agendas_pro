@@ -25,9 +25,10 @@ class PublicScheduleController extends Controller
     public function index($id)
     {
         $encodedUserId = $id;
-        $userId = base64_decode($id);
-        $user = User::get()->where('id', $userId);
 
+        $userId = base64_decode($id);
+        $user = User::find($userId);
+        
         if ($user) {
 
             $store    = Store::where('user_id', '1')->first();

@@ -180,9 +180,9 @@ class ScheduleController extends Controller
             $host = $_SERVER['HTTP_HOST'];
             $crypt = base64_encode($user);
 
-            $url_encode = urlencode("schedule/{$crypt}");
+            $url_encode = urlencode("{$crypt}");
 
-            return "http://{$host}/{$url_encode}";
+            return "http://{$host}/schedule/{$url_encode}";
 
 
         }
