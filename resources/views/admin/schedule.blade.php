@@ -41,8 +41,8 @@
 </div>
 
 <input type="hidden" id="userId" value="{{ $userId }}">
-<input type="hidden" id="office-hour-start" value="{{ $store->office_hour_start }}" >
-<input type="hidden" id="office-hour-end"   value="{{ $store->office_hour_end }}" >
+<input type="hidden" id="office-hour-start" value="{{ isset($store->office_hour_start) ? $store->office_hour_start : NULL  }}" >
+<input type="hidden" id="office-hour-end"   value="{{ isset($store->office_hour_end)   ? $store->office_hour_end : NULL }}" >
 
 <div id="app" class="row">
   <div class="col">

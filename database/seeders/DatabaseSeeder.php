@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\Profile;
 use App\Models\Role;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -22,19 +23,41 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        // $profile = new Profile();
 
-        // $profile->insert([
-        //     'description' => 'super'
-        // ]);
+        // ? Store Creation
+        
+        $this->storeCreate();
+        
+        // ? SuperAdmin Creation
+        
+        $this->superAdminCreate();
 
+
+    }
+
+    public function storeCreate(){
+
+        $user =  new Store();
+        $user->insert([
+            'name' => 'Agendaspro BarberShop',
+            'slogan' => 'Agende qualquer coisa aqui',
+            'office_hour_start' => '08:00:00',
+            'office_hour_end'   => '20:00:00',
+            'logo' => '/public/img/logo.jpeg',
+            'user_id' => '1'
+        ]);
+
+    }
+
+    public function superAdminCreate(){
+
+      
         $user =  new User();
         $user->insert([
             'name' => 'admin',
             'email' => 'admin@agendaspro.com',
             'document' => '3333333333',
             'phone' => '11996502162',
-            // 'profile_id' => '1',
             'password' => Hash::make('juniorsk8')
         ]);
 
@@ -51,6 +74,8 @@ class DatabaseSeeder extends Seeder
         // Add Rule to User admin
 
         $user->assignRole('super');
+
+
 
     }
 
