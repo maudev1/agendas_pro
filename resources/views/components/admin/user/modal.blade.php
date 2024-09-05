@@ -16,7 +16,7 @@
 
                         @foreach($fields as $field)
 
-                            @if($field['field'] == 'role')
+                            @if($field['field'] == 'profile')
 
                                 <div class="form-group">
                                     <label>{{ $field['label'] }}</label>
@@ -34,7 +34,7 @@
 
                                 <div class="form-group">
                                     <label>{{ $field['label'] }} {!! isset($field['required']) ? '<span class="required"> *</span>' : null  !!} </label>
-                                    <input id="{{ $field['field'] }}" class="form-control" name="{{ $field['field'] }}">
+                                    <input {{ in_array($field['field'], ['password', 're_password']) ? 'type=password' : null   }}  id="{{ $field['field'] }}" class="form-control" name="{{ $field['field'] }}">
                                 </div>
 
 

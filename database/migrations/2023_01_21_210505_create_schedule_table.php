@@ -21,7 +21,6 @@ class CreateScheduleTable extends Migration
             $table->integer('user_id');
             $table->text('start');
             $table->text('end');
-            $table->text('locale');
             $table->text('products');
             $table->integer('status');
             $table->integer('confirmation');

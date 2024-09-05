@@ -29,10 +29,11 @@ class UserRequest extends FormRequest
         return [
 
             'name.required' =>  'O :attribute é obrigatório!',
-            'phone.unique' =>   'O :attribute ja está cadastrado!',
-            'document.unique' =>   'O :attribute ja está cadastrado!',
-            'email.unique' =>   'O :attribute ja está cadastrado!',
-
+            'phone.unique' =>   'O :attribute já está cadastrado!',
+            'document.unique' =>   'O :attribute já está cadastrado!',
+            'email.unique' =>   'O :attribute já está cadastrado!',
+            'email.required' =>   'O :attribute é obrigatório!',
+            'password.required' =>   'O :attribute é obrigatória!',
         ];
     }
 
@@ -44,10 +45,11 @@ class UserRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'name'     =>   'required',
-            'phone'    =>   ['required', 'unique:users'],
-            'password' =>   'required',
-            'profile'  =>   'required',
+            'name'         =>   'required',
+            'email'        =>   ['required', 'unique:users'],
+            'profile'     =>    'required',
+            'password'    =>    'required',
+            're_password' =>    ['required', 'same:password'],
         ];
 
         if ($this->checkIsPhone()) {
@@ -62,15 +64,22 @@ class UserRequest extends FormRequest
         }
 
 
-        //! TERMINAR ESSA PORRA
-
-        if($this->passVerify()){
-
-            $rules['password'] = ''
-            
-        }
-
         return $rules;
+    }
+
+
+    public function attributes()
+    {
+        return [
+            'name'        => 'Nome',
+            'phone'       => 'Telefone',
+            'email'       => 'E-mail',
+            'password'    => 'Senha',
+            're_password' => 'Confirmação de senha',
+            'profile'  => 'Perfil',
+            'document' => 'Documento',
+
+        ];
     }
 
     protected function failedValidation(Validator $validator)
@@ -107,15 +116,22 @@ class UserRequest extends FormRequest
         }
     }
 
-
-    protected function passVerify()
+    public function withValidator($validator)
     {
+        $validator->sometimes('phone', 'unique:users,phone', function($input){
 
-        $request  = $this->request->all();
+            return !empty($input->phone);
 
-        if ($request['password'] === $request['re_password']) {
-            return true;
-        }
+        });
+
+        $validator->sometimes('document', 'unique:users,document', function($input){
+
+            return !empty($input->phone);
+
+        });
+
     }
-    
+
+
+
 }

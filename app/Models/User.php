@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Profile;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 
@@ -61,40 +62,10 @@ class User extends Authenticatable
 
     }
 
-    public static function boot()
-    {
+    public function setPasswordAttribute($value){
 
-        parent::boot();
-
-        
-        self::created(function($model){
-            
-
-
-
-
-        });
-
-
-        self::updated(function($model){
-
-
-
-        });
-
-
+        $this->attributes['password'] = Hash::make($value);
 
     }
 
-    // public function roles()
-    // {
-
-    //     return $this->belongsToMany(Role::class);
-
-    // }
-
-    // public function permissions()
-    // {
-    //     return $this->belongsToMany(Permission::class);
-    // }
 }

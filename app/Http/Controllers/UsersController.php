@@ -25,10 +25,10 @@ class UsersController extends Controller
 
         $fields = [
             ['required' => true, 'label' => 'Nome', 'field' => 'name'],
-            ['required' => true, 'label' => 'CPF', 'field' => 'document'],
-            ['required' => true, 'label' => 'Telefone', 'field' => 'phone'],
+            ['label' => 'CPF', 'field' => 'document'],
+            ['label' => 'Telefone', 'field' => 'phone'],
             ['required' => true, 'label' => 'E-mail', 'field' => 'email'],
-            ['required' => true, 'label' => 'Perfil', 'field' => 'role'],
+            ['required' => true, 'label' => 'Perfil', 'field' => 'profile'],
             ['required' => true, 'label' => 'Senha', 'field' => 'password'],
             ['required' => true, 'label' => 'Confirmação de Senha', 'field' => 're_password'],
         ];
@@ -102,7 +102,7 @@ class UsersController extends Controller
 
         $data = $request->only(["name", "document", "email", "password", "phone"]);
 
-        $role = Role::find($request->role);
+        $role = Role::find($request->profile);
        
         
         if ($user->create($data)->syncRoles($role->name)) {

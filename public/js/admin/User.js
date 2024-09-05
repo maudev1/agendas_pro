@@ -31,7 +31,9 @@ let user = {
 
                 $(e).val("")
 
-            })
+            });
+
+            user.clearFormAlerts();
 
         })
 
@@ -40,6 +42,8 @@ let user = {
             e.preventDefault();
 
             let userId = $('#id').val();
+
+            user.clearFormAlerts();
 
             if (userId) {
                 user.update(this);
@@ -59,6 +63,8 @@ let user = {
 
             $("#user-id").val(userId);
 
+            user.clearFormAlerts();
+
 
         });
 
@@ -74,7 +80,8 @@ let user = {
             }
 
 
-        })
+        });
+
 
     },
     datatables: function () {
@@ -135,11 +142,14 @@ let user = {
 
                 $(`#${err}`).addClass('is-invalid')
 
-
-
             });
 
+            
             commons.loadFormSpinner($(".modal-body"), false);
+
+            
+
+            commons.alertMessage(results.errors[errors[0]][0], 'error', true);
 
             // let errors = Object.values(results.errors)
             // let reverset = errors.reverse();
@@ -240,7 +250,7 @@ let user = {
         let id = $('#id').val();
 
         let response = await fetch(`/${user.route}/${id}`, options);
-        let results = await response.json();
+        let results  = await response.json();
 
         if (results.success) {
 
@@ -251,21 +261,26 @@ let user = {
             ReloadDatatable();
 
         } else if (results.errors) {
-
             let errors = Object.values(results.errors)
-            let reverset = errors.reverse()
+            let reversed = errors.reverse();
 
-            reverset.forEach(function (error) {
+            
+            reversed.forEach(function (error) {
                 error.forEach(function (e) {
-
+                    
                     $(".alert").addClass("alert-danger").html(e).show()
 
-                    commons.alertMessage(e, 'error', true)
+                    commons.alertMessage(e, 'error', true);
+
+                    console.log(error)
+
 
                 })
 
 
             });
+
+           
 
             setTimeout(function () {
 
@@ -303,6 +318,22 @@ let user = {
             $(user.deleteModalId).modal("toggle");
             ReloadDatatable();
         }
+
+    },
+
+    clearFormAlerts: function (){
+
+        let modalBody = $('#modal-form').find('.modal-body');
+        
+        modalBody.find('input').each(function(i, e){ 
+            $(e).removeClass('is-invalid');
+        });
+
+        modalBody.find('select').removeClass('is-invalid');
+
+        modalBody.find('alert').html('');
+
+
 
     }
 
