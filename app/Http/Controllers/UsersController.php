@@ -101,28 +101,13 @@ class UsersController extends Controller
         $user = new User;
 
         $data = $request->only(["name", "document", "email", "password", "phone"]);
-
-        $role = Role::find($request->profile);
        
-        
-        if ($user->create($data)->syncRoles($role->name)) {
+        if ($user->create($data)->syncRoles($request->profile)) {
             
-
             $results = ['message' => 'Usuário cadastrado com sucesso!', 'code' => 200, 'success' => true];
 
-            // if($role){
-
-            //     $user->assignRole($role->name);
-
-                if($user->hasRole($role->name)){
-
-                    dd('deu certo vei');
-
-                }
-
-            // }
-        
             return response()->json($results);
+
         } else {
 
             return response()->json(["success" => false]);
@@ -137,7 +122,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        //
+        return false;
     }
 
     /**
@@ -148,7 +133,10 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        return response(User::findOrfail($id), 200)
+        $user  = User::findOrfail($id);
+        $roles = $user->getRoleNames();
+
+        return response(['user' => User::findOrfail($id), 'roles' => $roles], 200)
             ->header('Content-type', 'text/json');
     }
 
@@ -159,27 +147,15 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
 
-        $data =             [
-            'name'      => $request->name,
-            'document'  => $request->document,
-            'phone'     => $request->phone,
-            'email'     => $request->email,
-            'profile'   => $request->profile,
-        ];
-
-        if(isset($request->password)){
-
-            $data["password"] = $request->password;
-
-        }
+        $data = $request->only(["name", "document", "phone", "password", "re_password"]);
 
         User::updateOrCreate(
             ['id' => $id],
             $data
-        );
+        )->syncRoles($request->profile);
 
         return Response()->json(['success' => true]);
     }
@@ -192,6 +168,12 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        
+        if($user->delete()){
+
+            return response()->json(['success' => true]);
+
+        }
     }
 }

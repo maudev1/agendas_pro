@@ -19,13 +19,6 @@
     </div>
 </div>
 
-
-@php
-
-
-
-@endphp
-
 <x-admin.user.modal :fields="$fields" :roles="$roles"></x-admin.user.modal>
 
 @stop
@@ -36,11 +29,8 @@
 @stop
 
 @section('js')
-
 <script type="text/javascript" src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>
-<script src="{{asset('js/datatables.config.js')}}"></script>
-<script src="{{asset('js/admin/User.js')}}"></script>
-
-
+<script src="{{ asset('js/datatables.config.js') }}"></script>
+<script src="{{ asset('js/admin/User.js') }}"></script>
 @stop

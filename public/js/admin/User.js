@@ -205,15 +205,17 @@ let user = {
 
         if (response.status == 200) {
             let data = await response.json();
-
+            let {id, name, document, email, phone } = data.user;
+             
             setTimeout(function () {
 
-                $('#id').val(data.id)
-                $('#name').val(data.name)
-                $('#document').val(data.document)
-                $('#email').val(data.email)
-                $('#phone').val(data.phone)
-                $('#profile').val(data.profile)
+                $('#id').val(id)
+                $('#name').val(name)
+                $('#document').val(document)
+                $('#email').attr('readonly', 'readonly').val(email)
+                $('#phone').val(phone)
+                // $('#profile').val(data.profile).trigger('change')
+                $('#profile option').val(data.roles[0]).trigger('change')
 
                 commons.loadFormSpinner($(".modal-body"), false)
             }, 500)
@@ -331,7 +333,7 @@ let user = {
 
         modalBody.find('select').removeClass('is-invalid');
 
-        modalBody.find('alert').html('');
+        modalBody.find('.alert').html(``).hide();
 
 
 

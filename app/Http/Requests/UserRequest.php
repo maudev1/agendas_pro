@@ -44,24 +44,33 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        $rules =  [
-            'name'         =>   'required',
-            'email'        =>   ['required', 'unique:users'],
-            'profile'     =>    'required',
-            'password'    =>    'required',
-            're_password' =>    ['required', 'same:password'],
-        ];
 
-        if ($this->checkIsPhone()) {
+        if ($this->isMethod('post')) {
 
-            $rules['phone'] = 'unique:users';
+
+            $rules =  [
+                'name'         =>   'required',
+                'email'        =>   ['required', 'unique:users'],
+                'profile'     =>    'required',
+                'password'    =>    'required',
+                're_password' =>    ['required', 'same:password'],
+            ];
+
+
+
         }
 
+        if($this->isMethod('put')){
 
-        if ($this->checkIsDocument()) {
+            $rules =  [
+                'name'         =>    'required',
+                'profile'      =>    'required',
+            ];
 
-            $rules['document'] = 'unique:users';
+
+
         }
+
 
 
         return $rules;
@@ -92,46 +101,50 @@ class UserRequest extends FormRequest
         throw new ValidationException($validator, $response);
     }
 
-    protected function checkIsPhone()
-    {
-
-        $request  = $this->request->all();
-
-        $user = User::where("phone", $request["phone"])->where("id", "<>", $request["id"])->get()->count();
-
-        if ($user > 0) {
-            return true;
-        }
-    }
-
-    protected function checkIsDocument()
-    {
-
-        $request  = $this->request->all();
-
-        $user = User::where("document", $request["document"])->where("id", "<>", $request["id"])->get()->count();
-
-        if ($user > 0) {
-            return true;
-        }
-    }
 
     public function withValidator($validator)
     {
-        $validator->sometimes('phone', 'unique:users,phone', function($input){
 
-            return !empty($input->phone);
+        if($this->isMethod('post')){
 
-        });
+            $validator->sometimes('phone', 'unique:users,phone', function ($input) {
+                
+                return !empty($input->phone);
 
-        $validator->sometimes('document', 'unique:users,document', function($input){
+            });
+            
+            $validator->sometimes('document', 'unique:users,document', function ($input) {
+                
+                return !empty($input->phone);
 
-            return !empty($input->phone);
+            });
+            
+        }
 
-        });
 
+        if($this->isMethod('put')){
+
+            $validator->sometimes('password', 'required', function ($input) {
+
+                return !empty($input->password);
+            });
+
+            $validator->sometimes('re_password', 'required', function ($input) {
+
+                return !empty($input->password);
+            });
+
+            $validator->sometimes('password', 'required', function ($input) {
+
+                return !empty($input->re_password);
+            });
+
+            $validator->sometimes('re_password', 'required', function ($input) {
+
+                return !empty($input->password);
+            });
+
+
+        }
     }
-
-
-
 }

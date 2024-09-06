@@ -9,13 +9,14 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Profile;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPushSubscriptions;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPushSubscriptions, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
