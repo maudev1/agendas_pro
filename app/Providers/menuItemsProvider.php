@@ -34,11 +34,12 @@ class menuItemsProvider extends ServiceProvider
 
             $user = $event->user;
 
-            $role = $user->roles->first();
-            
-            if(!$role){
+            if(!$user->roles->first()){
                 $user->assignRole('super');
+
             }
+            
+            $role = $user->roles->first();
 
             $userPermissions = $role->permissions->pluck('name')->toArray();
 

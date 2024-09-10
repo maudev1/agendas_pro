@@ -99,6 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                     confirmation: '1'
                                 }
 
+                                console.log(data)
+
                                 let options = {
                                     method: "POST",
                                     body: JSON.stringify(data),
@@ -188,7 +190,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 `);
 
-                let productTables = ``;
+                let servicesTables = ``;
+                let productsTables = ``;
 
                 const formatter = new Intl.NumberFormat('pt-BR', {
                     style: 'currency',
@@ -197,28 +200,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 
                 let total = 0;
-               
-                results.products.forEach(function(i){
+
+                if(results.products){
+
+                    results.products.forEach(function(i){
                     
-                    total += parseFloat(i.price)
+                        total += parseFloat(i.price)
+    
+                        productsTables += `<tr><td>${i.description}</td>`;
+                        productsTables += `<td>1</td>`;
+                        productsTables += `<td>${formatter.format(i.price)}</td></tr>`;
+    
+                    });
+    
 
-                    productTables += `<tr><td>${i.description}</td>`;
-                    productTables += `<td>1</td>`;
-                    productTables += `<td>${formatter.format(i.price)}</td></tr>`;
+                }
+               
+                if(results.services){
 
-                });
+                    results.services.forEach(function(i){
+                    
+                        total += parseFloat(i.price)
+    
+                        servicesTables += `<tr><td>${i.description}</td>`;
+                        servicesTables += `<td>1</td>`;
+                        servicesTables += `<td>${formatter.format(i.price)}</td></tr>`;
+    
+                    });
+    
+    
+   
+                }
+
+                let summary = `<tr>
+                        <td colspan="2"><strong>Meio de pagamento: </strong>${results.paymentMethod}</td>
+                        <td><strong>Total: </strong>${formatter.format(total)}</td>
+                    </tr>`;
 
 
-                productTables += `<tr>
-                    <td colspan="2"><strong>Meio de pagamento: </strong>${results.paymentMethod}</td>
-                    <td><strong>Total: </strong>${formatter.format(total)}</td>
-                </tr>`;
+                let summaryData = schedulingData.find('.services-data');
 
-                
-
-                let servicesData = schedulingData.find('.services-data');
-
-                servicesData.find('table').find('tbody').html(productTables);
+                summaryData.find('table').find('tbody').html(productsTables + servicesTables + summary);
 
                 $("#confirm").attr("data-id", results.schedule.id);
 

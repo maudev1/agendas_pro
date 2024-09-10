@@ -46,9 +46,10 @@ class MenuItemsController extends Controller
             'schedules'  => ['pos' => '1','icon' => 'far fa-fw fa-calendar', 'text' => 'Agenda'],
             'customers'  => ['pos' => '2','icon' => 'far fa-fw fa-envelope', 'text' => 'Clientes'],
             'products'   => ['pos' => '3','icon' => 'fas fa-cube', 'text' => 'Produtos'],
-            'users'      => ['pos' => '4','icon' => 'far fa-fw fa-user', 'text' => 'Usuários'],
-            'profiles'   => ['pos' => '5','icon' => 'far fa-fw fa-user', 'text' => 'Perfis'],
-            'store'      => ['pos' => '6','icon' => 'fa fa-store', 'text' => 'Loja'],
+            'services'   => ['pos' => '4','icon' => 'fas fa-cube', 'text' => 'Serviços'],
+            'users'      => ['pos' => '5','icon' => 'far fa-fw fa-user', 'text' => 'Usuários'],
+            'profiles'   => ['pos' => '6','icon' => 'far fa-fw fa-user', 'text' => 'Perfis'],
+            'store'      => ['pos' => '7','icon' => 'fa fa-store', 'text' => 'Loja'],
         ];
 
         return $items[$item];

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Product;
+use App\Models\Service;
 use App\Models\Schedule as ScheduleModel;
 use App\Models\Customer;
 use App\Models\Transaction;
@@ -16,6 +17,7 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 use Exception;
+use Illuminate\Support\Arr;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
 
@@ -32,9 +34,9 @@ class PublicScheduleController extends Controller
         if ($user) {
 
             $store    = Store::where('user_id', '1')->first();
-            $products = Product::all();
+            $services = Service::all();
 
-            return view('customer/index', compact("store", "user", "encodedUserId", "products"));
+            return view('customer/index', compact("store", "user", "encodedUserId", "services"));
         }
     }
 
@@ -93,23 +95,6 @@ class PublicScheduleController extends Controller
                 }
             }
 
-            // while ($start_time <= $end_time) 
-            // {
-                
-            //     date_default_timezone_set('America/Sao_Paulo');
-
-            //     $hour = date("h:i", $start_time);
-                
-
-            //     if(!in_array($hour, $scheduledHours)){
-                    
-            //         $availableTime[] = $hour;
-                    
-            //     }
-                
-            //     $start_time += $interval;
-            // }
-
 
             return response()->json([ "data" => ["availableTime" => $availableTime, "date" => $request->date]]);
         }
@@ -137,20 +122,19 @@ class PublicScheduleController extends Controller
                 'end'         => $request->hour,
                 'status'      => Schedule::PENDING,
                 'created_at'  => $date,
-                'products'    => json_encode($request->products),
                 'notify'      => '1',
                 'user_id'     => '1'
             ]);
 
             $total = 0;
 
-            foreach($request->products as $product){
+            foreach($request->services as $service){
 
-                $productModel = Product::find($product);
+                $serviceModel = Service::find($service);
 
-                if($productModel){
+                if($serviceModel){
 
-                    $total += intval($productModel->price);
+                    $total += intval($serviceModel->price);
 
                 }
 
@@ -160,7 +144,7 @@ class PublicScheduleController extends Controller
 
             Transaction::create([
                 'schedule'    => $schedule,
-                'products'    => json_encode($request->products),
+                'services'    => json_encode($request->services),
                 'total_price' => $total,
                 'payment_method' => $request->payment_method,
     
@@ -186,6 +170,7 @@ class PublicScheduleController extends Controller
     {
 
         $requestData = $request->json()->all();
+        $requestData = Arr::except($requestData, ['locale']);
 
         try {
 
@@ -270,6 +255,22 @@ class PublicScheduleController extends Controller
 
         return response()->json($products);
     }
+
+        /**
+     * 
+     * Get services by array list
+     * 
+     * 
+     */
+
+     public function getServices(Request $request)
+     {
+ 
+         $service = Service::whereIn('id', $request->services)->get()->toArray();
+ 
+         return response()->json($service);
+     }
+ 
 
     /**
      * 

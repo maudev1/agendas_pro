@@ -52,7 +52,7 @@ let schedule = {
 
                 schedule.getScheduling(this);
 
-                schedule.getServices(this);
+                schedule.getProducts(this);
 
 
 
@@ -81,7 +81,7 @@ let schedule = {
             });
 
 
-            $('#services').selectize({
+            $('#products').selectize({
                 sortField: 'text'
 
             });
@@ -149,7 +149,7 @@ let schedule = {
             data['user_id'] = `1`;
             data['notify'] = `1`;
             data['customer_id'] = '1';
-            data['services'] = $('#services').val();
+            data['products'] = $('#products').val();
 
             Swal.fire({
                 title: "Gostaria de confirmar o Agendamento?",
@@ -334,7 +334,7 @@ let schedule = {
 
         let commons = new Commons();
 
-        if (!services || services == '') {
+        if (!products || products == '') {
 
             commons.customAlert("error", 'Ops...', 'Escolha algum serviço!')
 
@@ -412,9 +412,9 @@ let schedule = {
 
 
     },
-    getServices: async function (dataForm) {
+    getProducts: async function (dataForm) {
 
-        let services = $('#services').val();
+        let products = $('#products').val();
 
         let commons = new Commons();
 
@@ -425,7 +425,7 @@ let schedule = {
             currency: 'BRL',
         });
 
-        if (!services || services == '') {
+        if (!products || products == '') {
 
             commons.customAlert("error", 'Ops...', 'Escolha algum serviço!')
 
@@ -441,7 +441,7 @@ let schedule = {
                 body: form
             }
 
-            let response = await fetch('/schedule/services', options);
+            let response = await fetch('/schedule/products', options);
             let results = await response.json();
 
             if (results) {
@@ -689,11 +689,14 @@ let schedule = {
 
                             console.log(permission = 'granted')
 
-                            if (permission === 'granted') {
-                                new Notification('Obrigado por permitir as notificações!');
-                            } else {
-                                console.log('Permissão de notificações negada.');
-                            }
+                            debugger
+
+
+                            // if (permission === 'granted') {
+                            //     new Notification('Obrigado por permitir as notificações!');
+                            // } else {
+                            //     console.log('Permissão de notificações negada.');
+                            // }
                         });
                         // F
 

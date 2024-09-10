@@ -21,11 +21,10 @@ class CreateScheduleTable extends Migration
             $table->integer('user_id');
             $table->text('start');
             $table->text('end');
-            $table->text('products');
             $table->integer('status');
-            $table->integer('confirmation');
+            $table->integer('confirmation')->default(0);
             $table->integer('notify');
-            $table->integer('notification_submitted');
+            $table->integer('notification_submitted')->default(0);
             $table->timestamps();
         });
     }

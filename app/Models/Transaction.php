@@ -11,6 +11,7 @@ class Transaction extends Model
     protected $fillable = [
         'schedule',
         'products',
+        'services',
         'total_price',
         'payment_method'
 

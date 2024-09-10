@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Schedule;
+use App\Models\Service;
 use App\Models\Store;
 use App\Models\Transaction;
 use TheSeer\Tokenizer\Exception;
@@ -40,8 +41,18 @@ class ScheduleController extends Controller
     public function getOne($id)
     {
 
+        
         $schedule = Schedule::find($id);
-        $products = Product::whereIn('id', json_decode($schedule->products))->get();
+        $services = $schedule->transaction->services;
+        $products = $schedule->transaction->products;
+
+        if($services){
+            $serviceList = Service::whereIn('id', json_decode($services))->get();
+        }
+
+        if($products){
+            $productList = Product::whereIn('id', json_decode($products))->get();
+        }
 
         $paymentMethod = [
             '1' => 'PIX', 
@@ -53,7 +64,8 @@ class ScheduleController extends Controller
     
         return response()->json([
             'schedule' => $schedule,
-            'products' => $products,
+            'products' => isset($productList) ? $productList : null,
+            'services' => isset($serviceList) ? $serviceList : null,
             'customer' => $schedule->customer,
             'paymentMethod' =>  $paymentMethod[$schedule->transaction->payment_method]
         ]);

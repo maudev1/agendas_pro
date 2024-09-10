@@ -15,6 +15,7 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         Permission::create(['name' => 'products'  , 'guard_name' => 'web']);
+        Permission::create(['name' => 'services'  , 'guard_name' => 'web']);
         Permission::create(['name' => 'schedules' , 'guard_name' => 'web']);
         Permission::create(['name' => 'profiles'  , 'guard_name' => 'web']);
         Permission::create(['name' => 'store'     , 'guard_name' => 'web']);

@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Service extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        "description",
+        "price"
+    ];
+
+    public static function boot(){
+
+        parent::boot();
+
+        self::creating(function($model){
+
+            $price = str_replace('.', '', $model->price);
+            $price = str_replace(',', '.', $price);
+            
+            $price = (float) $price;
+
+            $model->price = $price;
+
+        });
+
+
+        self::updating(function($model){
+
+            $price = str_replace('.', '', $model->price);
+            $price = str_replace(',', '.', $price);
+            
+            $price = (float) $price;
+
+            $model->price = $price;
+
+        });
+
+    }
+}

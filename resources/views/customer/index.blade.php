@@ -41,7 +41,7 @@
   <link rel="apple-touch-icon" type="img/png" sizes="500x500" href="img/2.png">
 
 
-  <script src="{{'js/color-modes.js'}}"></script>
+  <script src="{{asset('js/color-modes.js')}}"></script>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -107,7 +107,7 @@
 
         <input type="hidden" name="user" value="{{ $encodedUserId }}">
 
-        <x-products :products="$products"></x-products>
+        <x-services :services="$services"></x-services>
 
       </form>
 

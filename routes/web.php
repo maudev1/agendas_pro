@@ -9,6 +9,7 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PushController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StoreController;
 use App\Models\Customer;
 use App\Models\Permission;
@@ -55,7 +56,6 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
         Route::post('/admin/store/', 'store');
         Route::post('/admin/store/{id}', 'update');
         Route::get('/admin/store/workdays', 'workDays');
-
     });
 
 
@@ -66,16 +66,18 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
             Route::get('schedules', 'index');
             Route::get('schedules/{userId}/all', 'getAll');
             Route::get('schedules/{userId}/one', 'getOne');
+            
             Route::post('schedule', 'store');
+
             Route::post('schedule/{id}', 'update');
             Route::get('schedule/delete/{id}', 'delete');
             Route::get('urlgenerate/', 'urlGenerate');
         });
-    
+
 
         // Profile Route
         Route::resource("profiles", ProfileController::class)
-        ->middleware('checkPermission:profiles')->except("show");
+            ->middleware('checkPermission:profiles')->except("show");
 
         Route::get('profiles/to_datatables', [ProfileController::class, 'to_datatables'])->name("profiles.datatables");
 
@@ -84,21 +86,27 @@ Route::middleware(['auth', 'auth.basic'])->group(function () {
         // ->middleware('checkPermission:users')->except("show");
 
         Route::resource("users", UsersController::class)
-        ->middleware('checkPermission:users')->except("show");
+            ->middleware('checkPermission:users')->except("show");
 
         Route::get('users/to_datatables', [UsersController::class, 'to_datatables'])->name("users.datatables");
 
         // Customer Route
         Route::resource("customers", CustomerController::class)
-        ->middleware('checkPermission:customers')->except("show");
+            ->middleware('checkPermission:customers')->except("show");
 
         Route::get('customers/to_datatables', [CustomerController::class, 'to_datatables'])->name("customers.datatables");
 
         // Products Route 
         Route::resource("products", ProductController::class)
-        ->middleware('checkPermission:products')->except("show");
+            ->middleware('checkPermission:products')->except("show");
 
         Route::get('products/to_datatables', [ProductController::class, 'to_datatables'])->name("products.datatables");
+
+        // Services Route 
+        Route::resource("services", ServiceController::class)
+            ->middleware('checkPermission:services')->except("show");
+
+        Route::get('services/to_datatables', [ServiceController::class, 'to_datatables'])->name("services.datatables");
     });
 });
 
@@ -109,14 +117,13 @@ Route::prefix("schedule")->group(function () {
         Route::get('{id}', 'index');
         Route::post('date', 'getDate');
         Route::post('products', 'getProducts');
+        Route::post('services', 'getServices');
         Route::post('/', 'store');
         Route::post('{id}', 'update');
         Route::get('status/{id}', 'getStatus');
         Route::get('notification/{id}', 'notification');
         Route::get('cancel/{id}', 'cancel');
-    
     });
-    
 });
 
 // Route::controller(PublicScheduleController::class)->group(function () {
@@ -131,8 +138,6 @@ Route::prefix("schedule")->group(function () {
 // });
 
 Route::controller(PushController::class)->group(function () {
-    Route::post('/push/register','store');
-    Route::post('/push/notify','push');
-
+    Route::post('/push/register', 'store');
+    Route::post('/push/notify', 'push');
 });
-
