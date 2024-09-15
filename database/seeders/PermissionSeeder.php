@@ -25,7 +25,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'services', 'label'  => 'serviços', 'icon' => 'fas fa-cube', 'position' => '3'],
             ['name' => 'users', 'label' => 'usuários', 'icon' => 'far fa-fw fa-user', 'position' => '4'],
             ['name' => 'profiles', 'label' => 'perfis', 'icon' => 'far fa-fw fa-user', 'position' => '5'],
-            ['name' => 'store', 'label' => 'loja', 'icon' => 'far fa-store', 'position' => '6']
+            ['name' => 'store', 'label' => 'loja', 'icon' => 'fas fa-store', 'position' => '6']
         ];
 
         foreach ($permissions as $permission) {
