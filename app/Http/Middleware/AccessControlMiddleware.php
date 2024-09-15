@@ -25,7 +25,7 @@ class AccessControlMiddleware
         $user = Auth::user();
 
         foreach($permissions as $permission){
-            if(!$user->hasPrmission($permission)){
+            if(!$user->hasPermission($permission)){
                 return response('Acesso negado', 403);
             }
         }

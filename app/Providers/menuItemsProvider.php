@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use App\Http\Controllers\MenuItemsController;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Auth\Events\Authenticated;
 
 class menuItemsProvider extends ServiceProvider
@@ -42,7 +43,7 @@ class menuItemsProvider extends ServiceProvider
             $role = $user->roles->first();
 
             $userPermissions = $role->permissions->pluck('name')->toArray();
-
+            // dd($role->getPermissionNames());            
             $userMenu = array_map(function($permission) use ($userPermissions){
                 
                  if(in_array($permission['name'], $userPermissions)){
@@ -51,11 +52,7 @@ class menuItemsProvider extends ServiceProvider
 
             }, $menu->items());
 
-            
-        
             Config::set("adminlte.menu", $userMenu );
-
-
 
         });
 

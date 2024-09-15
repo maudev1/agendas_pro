@@ -7,7 +7,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Classes\Helpers;
 use App\Http\Requests\UserRequest;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
 use App\Models\User;
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Spatie\Permission\Models\Role;
-use App\Models\Permission;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Auth;
 
 class MenuItemsController extends Controller
@@ -19,7 +19,7 @@ class MenuItemsController extends Controller
 
                 'pos'         =>  $per['attributes']['position'],
                 'name'        =>  $per['name'],
-                'text'        =>  ucfirst($per['attributes']['label']),
+                'text'        =>  $per['attributes']['label'],
                 'url'         =>  "admin/{$per['name']}",
                 'icon'        =>  $per['attributes']['icon'],
                 'label'       => 0,

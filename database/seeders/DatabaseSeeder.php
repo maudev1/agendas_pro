@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
+use Spatie\Permission\Models\Role;
 use App\Models\Profile;
-use App\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Seeder;

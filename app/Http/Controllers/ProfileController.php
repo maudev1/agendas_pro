@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Classes\Helpers;
 use App\Http\Requests\ProfileRequest;
-use App\Models\Role;
+use App\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -18,8 +19,8 @@ class ProfileController extends Controller
     {
 
         $roles = Role::all();
-
-        return response()->view('admin.profile.index', compact('roles'));
+        $permissions = Permission::all();
+        return response()->view('admin.profile.index', compact('roles', 'permissions'));
     }
 
     public function to_datatables()
@@ -42,8 +43,7 @@ class ProfileController extends Controller
             $deleteButton = $helper->button_template('<i  class="fas fa-trash"></i>', 'button', [
                 'class'       => 'btn btn-danger delete',
                 'data-id'     => $role->id,
-                'data-target' => '#confirmModal',
-                'data-toggle' => 'modal'
+                'onclick'     => 'profile.delete("' . $role->id . '")'
             ]);
 
 
@@ -78,21 +78,19 @@ class ProfileController extends Controller
      */
     public function store(ProfileRequest $request)
     {
-        
+
         $role = new Role;
 
         $data = $request->only(["name"]);
 
-        if($role->create(array_merge($data, ['guard_name' => 'web']))){
+        if ($role->create(array_merge($data, ['guard_name' => 'web']))) {
 
             $results = ['message' => 'Perfil cadastrado com sucesso!', 'code' => 200, 'success' => true];
 
             return response()->json($results);
-            
-        }else{
-            
-            return response()->json(["success" => false]);
+        } else {
 
+            return response()->json(["success" => false]);
         }
     }
 
@@ -115,8 +113,16 @@ class ProfileController extends Controller
      */
     public function edit($id)
     {
-        return response(Role::findOrfail($id), 200)
-        ->header('Content-type', 'text/json');
+
+
+        $role = Role::findOrfail($id);
+        $permissions = $role->getPermissionNames();
+
+        return response([
+            'role' => $role,
+            'permissions' => $permissions
+        ], 200)
+            ->header('Content-type', 'text/json');
     }
 
     /**
@@ -128,12 +134,16 @@ class ProfileController extends Controller
      */
     public function update(ProfileRequest $request, $id)
     {
-        Role::updateOrCreate(
-            ['id' => $id],
-            [
-                'name'  => $request->name
-            ]
-        );
+
+        $permissions = $request->except('locale', 'name',  'id');
+
+        $role = Role::findOrFail($id);
+        $role->givePermissionTo($permissions);
+        $role->syncPermissions($permissions);
+
+        $userPermissions = $role->getPermissionNames();
+
+        $role->update(['name'  => $request->name]);
 
         return Response()->json(['success' => true]);
     }
@@ -152,5 +162,4 @@ class ProfileController extends Controller
             return Response()->json(['success' => true]);
         };
     }
-
 }

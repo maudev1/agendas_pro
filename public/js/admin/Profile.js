@@ -28,7 +28,7 @@ let profile = {
 
             elements.each(function (i, e) {
 
-                $(e).val("")
+                $(e).val(null).attr('checked', false);
 
             })
 
@@ -50,24 +50,24 @@ let profile = {
 
         });
 
-        $(profile.deleteModalId).on('shown.bs.modal', function(e){
-            
+        $(profile.deleteModalId).on('shown.bs.modal', function (e) {
+
             e.preventDefault();
 
             let profileId = $(e.relatedTarget).data("id");
 
             $("#profile-id").val(profileId);
 
- 
+
         });
 
-        $("#confirm-form").on('submit', function(e){
+        $("#confirm-form").on('submit', function (e) {
 
             e.preventDefault();
 
             let profileId = $('#profile-id').val();
-            
-            if(profileId){
+
+            if (profileId) {
                 profile.delete(profileId);
 
             }
@@ -124,13 +124,13 @@ let profile = {
 
             ReloadDatatable();
 
-        } else if(results.errors){
+        } else if (results.errors) {
 
             let errors = Object.values(results.errors)
             let reverset = errors.reverse()
 
-            reverset.forEach(function(error){
-                error.forEach(function(e){
+            reverset.forEach(function (error) {
+                error.forEach(function (e) {
 
                     $(".alert").addClass("alert-danger").html(e).show()
 
@@ -141,15 +141,15 @@ let profile = {
 
             });
 
-            setTimeout(function(){
+            setTimeout(function () {
 
                 commons.alertMessage('', 'error', false)
 
-            },3000);
+            }, 3000);
 
             commons.loadFormSpinner($(".modal-body"), false);
 
-        }else{
+        } else {
 
             commons.loadFormSpinner($(".modal-body"), false);
 
@@ -179,9 +179,19 @@ let profile = {
 
             setTimeout(function () {
 
-                $('#id').val(data.id)
-                $('#name').val(data.name)
-                
+                $('#id').val(data.role.id);
+                $('#name').val(data.role.name);
+
+                let permissions = data.permissions;
+
+                permissions.forEach(function(p){
+
+                    let input = $('#modal-form').find(`[name=${p}]`);
+                    
+                    input.attr('checked',true);
+
+                });
+
                 commons.loadFormSpinner($(".modal-body"), false)
             }, 500)
 
@@ -227,13 +237,13 @@ let profile = {
 
             ReloadDatatable();
 
-        } else if(results.errors){
+        } else if (results.errors) {
 
             let errors = Object.values(results.errors)
             let reverset = errors.reverse()
 
-            reverset.forEach(function(error){
-                error.forEach(function(e){
+            reverset.forEach(function (error) {
+                error.forEach(function (e) {
 
                     $(".alert").addClass("alert-danger").html(e).show()
 
@@ -244,15 +254,15 @@ let profile = {
 
             });
 
-            setTimeout(function(){
+            setTimeout(function () {
 
                 commons.alertMessage('', 'error', false)
 
-            },3000);
+            }, 3000);
 
             commons.loadFormSpinner($(".modal-body"), false);
 
-        }else{
+        } else {
 
             commons.loadFormSpinner($(".modal-body"), false);
 
@@ -261,25 +271,66 @@ let profile = {
 
 
     },
-    delete: async function (profileId) {
+    delete: function (profileId) {
+
+        Swal.fire({
+            title: "Você tem certeza?",
+            text: "essa ação e irreversivel!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, excluir!",
+            cancelButtonText: "cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                (async () => {
+
+                    let options = {
+                        method: "DELETE",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Content-Type': 'application/json;charset=utf-8'
+                        }
+                    };
+
+                    try {
+                        let response = await fetch(`/${profile.route}/${profileId}`, options);
+
+                        if (!response.ok) {
+
+                            throw new Error('Erro na requisição.');
+                        }
+
+                        let results = await response.json();
+
+                        if (results.success) {
+                            ReloadDatatable();
+
+                            Swal.fire({
+                                title: "Excluido!",
+                                text: "Perfil excluído",
+                                icon: "success"
+                            });
+                        }
+
+                    } catch (err) {
+
+                        console.error(`Erro ${err}`)
+
+                    }
 
 
-        let options = {
-            method: "DELETE",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'Content-Type': 'application/json;charset=utf-8'
+
+                })(profileId);
+
             }
-        };
+        });
 
 
-        let response = await fetch(`/${profile.route}/${profileId}`, options)
-        let results  = await response.json();
 
-        if(results.success){
-            $(profile.deleteModalId).modal("toggle");
-            ReloadDatatable();
-        }
+
+
 
     }
 

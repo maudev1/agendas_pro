@@ -2,7 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,19 +20,16 @@ class CheckPermission
      */
     public function handle(Request $request, Closure $next, $name)
     {
-
+        
         $permission = Permission::where("name",$name)->first();
 
-
-        
         if($permission){
             
             $user = Auth::user();
             
             $role = $user->roles->first();
-
             $userPermissions = $role->permissions->pluck('name')->toArray();
-            
+
             if(in_array($permission->name, $userPermissions)){
 
                 return $next($request);

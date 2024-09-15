@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\PermissionAttribute;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
+// use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
@@ -14,12 +16,34 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        Permission::create(['name' => 'products'  , 'guard_name' => 'web']);
-        Permission::create(['name' => 'services'  , 'guard_name' => 'web']);
-        Permission::create(['name' => 'schedules' , 'guard_name' => 'web']);
-        Permission::create(['name' => 'profiles'  , 'guard_name' => 'web']);
-        Permission::create(['name' => 'store'     , 'guard_name' => 'web']);
-        Permission::create(['name' => 'customers' , 'guard_name' => 'web']);
-        Permission::create(['name' => 'users'     , 'guard_name' => 'web']);
+
+
+        $permissions = [
+            ['name' => 'schedules', 'label'  => 'agenda', 'icon' => 'far fa-fw fa-calendar', 'position' => '0'],
+            ['name' => 'customers', 'label' => 'clientes', 'icon' => 'far fa-fw fa-envelope', 'position' => '1'],
+            ['name' => 'products', 'label'  => 'produtos', 'icon' => 'fas fa-cube', 'position' => '2'],
+            ['name' => 'services', 'label'  => 'serviços', 'icon' => 'fas fa-cube', 'position' => '3'],
+            ['name' => 'users', 'label' => 'usuários', 'icon' => 'far fa-fw fa-user', 'position' => '4'],
+            ['name' => 'profiles', 'label' => 'perfis', 'icon' => 'far fa-fw fa-user', 'position' => '5'],
+            ['name' => 'store', 'label' => 'loja', 'icon' => 'far fa-store', 'position' => '6']
+        ];
+
+        foreach ($permissions as $permission) {
+
+            $permissionCreated = Permission::create(['name' => $permission['name'], 'guard_name' => 'web']);
+
+            // PermissionAttribute::create([
+            //     'permission_id' => $permissionCreated->id,
+            //     'label'         => $permission['label'],
+            //     'icon'          => $permission['icon'],
+            //     'position'      => $permission['position']
+            // ]);
+
+            $permissionCreated->attributes()->create([
+                'label'         => $permission['label'],
+                'icon'          => $permission['icon'],
+                'position'      => $permission['position']
+            ]);
+        }
     }
 }

@@ -28,7 +28,7 @@ $fields = [
 
 @endphp
 
-<x-admin.profile.modal :fields="$fields"></x-admin.profile.modal>
+<x-admin.profile.modal :fields="$fields" :permissions="$permissions" ></x-admin.profile.modal>
 
 @stop
 
@@ -38,6 +38,8 @@ $fields = [
 @stop
 
 @section('js')
+
+<script src="{{ asset('js/app.js') }}"></script>
 
 <script type="text/javascript" src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>

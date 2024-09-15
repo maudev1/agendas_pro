@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Models\Permission as SpatiePermission;
 
-class Permission extends Model
+class Permission extends SpatiePermission
 {
-    use HasFactory, HasPermissions;
-
-    protected $fillable = ['name', 'guard_name'];
+    public function attributes()
+    {
+        return $this->hasOne(PermissionAttribute::class, 'permission_id', 'id');
+    }
 }
