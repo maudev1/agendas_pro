@@ -30,7 +30,7 @@ class PublicScheduleController extends Controller
 
         $userId = base64_decode($id);
         $user = User::find($userId);
-        
+
         if ($user) {
 
             $store    = Store::where('user_id', '1')->first();
@@ -67,7 +67,7 @@ class PublicScheduleController extends Controller
             // $duration      = 60; 
             // $interval      = $duration * 60;
 
-           
+
 
             $scheduled = DB::table('schedules')
                 ->where('user_id', '=', $userId)
@@ -80,7 +80,6 @@ class PublicScheduleController extends Controller
                 $hours = new DateTime($s->start);
 
                 return $hours->format("H:i");
-
             }, $scheduled);
 
             $availableTime = [];
@@ -96,7 +95,7 @@ class PublicScheduleController extends Controller
             }
 
 
-            return response()->json([ "data" => ["availableTime" => $availableTime, "date" => $request->date]]);
+            return response()->json(["data" => ["availableTime" => $availableTime, "date" => $request->date]]);
         }
     }
 
@@ -115,7 +114,7 @@ class PublicScheduleController extends Controller
 
         if ($customer) {
 
-          $schedule =  DB::table('schedules')->insertGetId([
+            $schedule =  DB::table('schedules')->insertGetId([
                 'title'       => $request->customerName,
                 'customer_id' => $customer->id,
                 'start'       => $request->hour,
@@ -128,17 +127,14 @@ class PublicScheduleController extends Controller
 
             $total = 0;
 
-            foreach($request->services as $service){
+            foreach ($request->services as $service) {
 
                 $serviceModel = Service::find($service);
 
-                if($serviceModel){
+                if ($serviceModel) {
 
                     $total += intval($serviceModel->price);
-
                 }
-
-
             }
 
 
@@ -147,14 +143,15 @@ class PublicScheduleController extends Controller
                 'services'    => json_encode($request->services),
                 'total_price' => $total,
                 'payment_method' => $request->payment_method,
-    
+
             ]);
 
             return response()->json([
-                'success' => true, 
-                'message' => 'Agendamento realizado com sucesso', 
-                'schedule' => $schedule, 
-                'customerId' => $customer->id], 200);
+                'success' => true,
+                'message' => 'Agendamento realizado com sucesso',
+                'schedule' => $schedule,
+                'customerId' => $customer->id
+            ], 200);
         }
     }
 
@@ -172,72 +169,18 @@ class PublicScheduleController extends Controller
         $requestData = $request->json()->all();
         $requestData = Arr::except($requestData, ['locale']);
 
-        try {
+        if ($requestData['confirmation'] == '1') {
+            $schedule = ScheduleModel::find($id);
+            
 
-            DB::table('schedules')->where('id', $id)->update($requestData);
+            if ($schedule) {
+                $schedule->confirmation = 1;
+                $schedule->save();
 
-            if($requestData['confirmation'] == '1'){
+                $this->sendPush($id);
 
-                $pushSubscribber = DB::table('push_subscriptions')
-                ->where('subscribable_type', 'App\Models\Schedule')
-                ->where('subscribable_id', $id)
-                ->first();
-
-                $notification = [
-                    // current PushSubscription format (browsers might change this in the future)
-                    // 'payload' => '{"title":"Confirmado!", "options":{"body" : "Agendamento Confirmado com successo"}}',
-                    'payload' => json_encode([
-                       'title'   => 'Confirmado!',
-                        'options' => [
-                            'body'    => 'Agendamento Confirmado com successo',
-                            'icon'    => '/img/1.jpg',
-                            'vibrate' => true,
-                        ]
-                    ]),
-                    'subscription' => Subscription::create([
-                        "endpoint" => $pushSubscribber->endpoint,
-                        "keys" => [
-                            'p256dh' => $pushSubscribber->public_key,
-                            'auth' =>   $pushSubscribber->auth_token
-                        ],
-                    ]),
-                ];
-
-                $auth = [
-                    'VAPID' => [
-                        'subject' => 'mailto:me@website.com', // can be a mailto: or your website address
-                        'publicKey' => env('VAPID_PUBLIC_KEY'),
-                        'privateKey' => env('VAPID_PRIVATE_KEY')
-                    ],
-                ];
-
-
-                $webPush = new WebPush($auth);
-
-                // send multiple notifications with payload
-                // foreach ($notifications as $notification) {
-                $webPush->queueNotification(
-                    $notification['subscription'],
-                    $notification['payload'] // optional (defaults null)
-                );
-
-                foreach ($webPush->flush() as $report) {
-                    $endpoint = $report->getRequest()->getUri()->__toString();
-                
-                    if ($report->isSuccess()) {
-                        echo "[v] Message sent successfully for subscription {$endpoint}.";
-                    } else {
-                        // echo "[x] Message failed to sent for subscription {$endpoint}: {$report->getReason()}";
-
-                        dd($report->getReason());
-                    }
-                }
-                // }
+                return response()->json(['success' => true], 200);
             }
-
-            return response()->json(['success' => true], 200);
-        } catch (Exception $error) {
-            return response()->json(['message' => $error->getMessage()], 400);
         }
     }
 
@@ -256,21 +199,21 @@ class PublicScheduleController extends Controller
         return response()->json($products);
     }
 
-        /**
+    /**
      * 
      * Get services by array list
      * 
      * 
      */
 
-     public function getServices(Request $request)
-     {
- 
-         $service = Service::whereIn('id', $request->services)->get()->toArray();
- 
-         return response()->json($service);
-     }
- 
+    public function getServices(Request $request)
+    {
+
+        $service = Service::whereIn('id', $request->services)->get()->toArray();
+
+        return response()->json($service);
+    }
+
 
     /**
      * 
@@ -280,17 +223,79 @@ class PublicScheduleController extends Controller
      */
 
     public function notification($id)
-     {
- 
-         $notification = ScheduleModel::where('confirmation','=', '1')->where('id', '=',$id)->get();
+    {
 
-         if($notification->count()){
+        $notification = ScheduleModel::where('confirmation', '=', '1')->where('id', '=', $id)->get();
+
+        if ($notification->count()) {
 
             return response()->json(['success' => true, 'message' => 'Serviço confirmado!', 'data' => $notification]);
+        }
 
-         }
- 
-        return response()->json([ 'success' => false, 'message' => 'Aguardando confirmação...' ]);
+        return response()->json(['success' => false, 'message' => 'Aguardando confirmação...']);
+    }
+
+    public function sendPush($id)
+    {
+
+        try {
+
+
+            $pushSubscribber = DB::table('push_subscriptions')
+                ->where('subscribable_type', 'App\Models\Schedule')
+                ->where('subscribable_id', $id)
+                ->first();
+
+            $notification = [
+                // current PushSubscription format (browsers might change this in the future)
+                // 'payload' => '{"title":"Confirmado!", "options":{"body" : "Agendamento Confirmado com successo"}}',
+                'payload' => json_encode([
+                    'title'   => 'Confirmado!',
+                    'options' => [
+                        'body'    => 'Agendamento Confirmado com successo',
+                        'icon'    => '/img/1.jpg',
+                        'vibrate' => true,
+                    ]
+                ]),
+                'subscription' => Subscription::create([
+                    "endpoint" => $pushSubscribber->endpoint,
+                    "keys" => [
+                        'p256dh' => $pushSubscribber->public_key,
+                        'auth' =>   $pushSubscribber->auth_token
+                    ],
+                ]),
+            ];
+
+            $auth = [
+                'VAPID' => [
+                    'subject' => 'mailto:me@website.com', // can be a mailto: or your website address
+                    'publicKey' => env('VAPID_PUBLIC_KEY'),
+                    'privateKey' => env('VAPID_PRIVATE_KEY')
+                ],
+            ];
+
+
+            $webPush = new WebPush($auth);
+
+            // send multiple notifications with payload
+            // foreach ($notifications as $notification) {
+            $webPush->queueNotification(
+                $notification['subscription'],
+                $notification['payload'] // optional (defaults null)
+            );
+
+            foreach ($webPush->flush() as $report) {
+                $endpoint = $report->getRequest()->getUri()->__toString();
+
+                if ($report->isSuccess()) {
+                    echo "[v] Message sent successfully for subscription {$endpoint}.";
+                }
+            }
+            // }
+
+        } catch (Exception $error) {
+            return response()->json(['message' => $error->getMessage()], 400);
+        }
     }
 
     public function cancel($id)
@@ -298,20 +303,15 @@ class PublicScheduleController extends Controller
 
         $schedule = ScheduleModel::find($id);
 
-        if($schedule){
+        if ($schedule) {
 
             $schedule->status = Schedule::CANCELED;
             $schedule->save();
 
             return response()->json(["success" => true]);
-        
-        }else{
-            
+        } else {
+
             return response()->json(["success" => true]);
-
         }
-
     }
-
-
 }

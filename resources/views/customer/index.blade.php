@@ -196,6 +196,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 
+  
+  <!-- <script src="{{ asset('js/public_area/schedule.js') }}"></script> -->
+
   <script src="{{ asset('js/commons.js')}}"></script>
   <script src="{{ asset('js/Schedule.js')}}"></script>
 
