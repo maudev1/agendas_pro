@@ -107,7 +107,7 @@
 
         <input type="hidden" name="user" value="{{ $encodedUserId }}">
 
-        <x-services :services="$services"></x-services>
+        <x-services :users="$users" :services="$services"></x-services>
 
       </form>
 

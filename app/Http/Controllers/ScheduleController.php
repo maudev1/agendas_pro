@@ -187,10 +187,9 @@ class ScheduleController extends Controller
     {
 
         if (Auth::check()) {
-
-            $user = Auth::user()->id;
+            $store = Auth::user()->store;
             $host = $_SERVER['HTTP_HOST'];
-            $crypt = base64_encode($user);
+            $crypt = base64_encode($store);
 
             $url_encode = urlencode("{$crypt}");
 

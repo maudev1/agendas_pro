@@ -28,34 +28,35 @@ class PublicScheduleController extends Controller
     {
         $encodedUserId = $id;
 
-        $userId = base64_decode($id);
-        $user = User::find($userId);
+        $storeId = base64_decode($id);
+        $store    = Store::find($storeId);
+        
+        if ($store) {
 
-        if ($user) {
+            $services = Service::all(); 
 
-            $store    = Store::where('user_id', '1')->first();
-            $services = Service::all();
+            $users = User::where('store', $storeId)->get();
 
-            return view('customer/index', compact("store", "user", "encodedUserId", "services"));
+            return view('customer/index', compact("store", "users" , "encodedUserId", "services"));
         }
     }
 
 
     public function getDate(Request $request)
     {
+
         date_default_timezone_set('America/Sao_Paulo');
-        $userId  = base64_decode($request->user);
-        $user    = User::get()->where('id', $userId);
+        // $userId  = base64_decode($request->user);
+        $userId  = $request->professional;
+        $user    = User::find($userId);
         $date    = $request->date;
 
         if ($user) {
 
             // Falta implementar sistema de funcionarios para escolher a agenda individual do profissional
 
-            $store    = Store::where('user_id', '1')->first();
-
-            // dd($store);
-
+            $store    = Store::where('user_id', $user->store)->first();
+            
             $officeHourStart  = new DateTime($store->office_hour_start);
             $officeHourEnd    = new DateTime($store->office_hour_end);
 

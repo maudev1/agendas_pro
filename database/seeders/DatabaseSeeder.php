@@ -58,6 +58,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@agendaspro.com',
             'document' => '3333333333',
             'phone' => '11996502162',
+            'store' => '1',
             'password' => Hash::make('juniorsk8')
         ]);
 

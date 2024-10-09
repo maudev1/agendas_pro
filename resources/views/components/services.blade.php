@@ -8,11 +8,10 @@
 
             <div class="form-group mt-3">
 
-                <select class="form-control form-control-lg" name="services[]" id="services" multiple>
+                <select class="form-control form-control-lg selectize" name="services[]" id="services" multiple>
                     <option value="">Escolha um serviço</option>
 
                     @foreach($services as $service)
-
 
                     <option value="{{ $service->id }}">{{ $service->description }}</option>
 
@@ -22,6 +21,28 @@
 
 
             </div>
+
+
+            @if(count($users) > 1)
+
+            <div class="form-group">
+                <select class="form-control form-control-lg selectize" name="professional" id="professional">
+                    <option value="">Escolha o profissional</option>
+
+                    @foreach($users as $user)
+                    
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+
+                    @endforeach
+                </select>
+
+            </div>
+
+            @else
+
+            <input type="hidden"  name="professional" id="professional" value="{{ $users[0]->id }}">
+
+            @endif
 
             <div class="form-group form-floating">
                 <input class="form-control date form-control-lg" type="date" name="date" id="date" />

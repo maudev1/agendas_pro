@@ -72,21 +72,16 @@
 @section('css')
 
 <link rel="stylesheet" href="{{ asset('css/schedule.css') }}">
-<link rel="stylesheet" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" href="{{ asset('css/selectize.css') }}">
 
-<link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
-  integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 @endsection
 
+<link rel="stylesheet" href="{{ asset('css/selectize.bootstrap3.min.css') }}" />
 
 @section('js')
 <script src="{{ asset('js/moment.min.js') }}"></script>
 <script src="{{ asset('js/moment-with-locales.js') }}"></script>
 <!-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script> -->
-<link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
-  integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+
 <script src="{{ asset('vendor/fullcalendar-6.0.1/dist/index.global.min.js') }}"></script>
 <script src="{{ asset('vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ asset('vendor/bootstrap-datetimepicker/js/demo.js') }}"></script>

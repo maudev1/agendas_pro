@@ -81,7 +81,13 @@ let schedule = {
             });
 
 
-            $('#services').selectize({
+            // $('#services').selectize({
+            //     sortField: 'text'
+
+            // });
+
+
+            $('.selectize').selectize({
                 sortField: 'text'
 
             });
@@ -92,6 +98,16 @@ let schedule = {
 
                 schedule.cancel();
 
+
+            });
+
+            // get professional 
+
+            $('#professional').on('change', function(){
+
+                let proffessionalId = $(this).data('professional');
+
+                schedule.getFreeHours(proffessionalId);
 
             });
 
@@ -325,7 +341,6 @@ let schedule = {
 
 
     },
-
     getScheduling: async function (dataForm) {
 
         let form = new FormData(dataForm);
@@ -637,7 +652,7 @@ let schedule = {
 
 
 
-            }, 5000);
+            }, 3000);
 
             // }
         }
@@ -695,7 +710,6 @@ let schedule = {
                                 console.log('Permissão de notificações negada.');
                             }
                         });
-                        // F
 
                     }
                 });
@@ -705,6 +719,11 @@ let schedule = {
         }).catch(function (error) {
             console.error('Erro ao solicitar permissão para notificações:', error);
         });
+    },
+    getFreeHours(proffessionalId){
+
+        console.log(`Escolher horas do profissional: ${proffessionalId}`)
+
     }
 
 
