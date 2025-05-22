@@ -16,7 +16,7 @@ Após clonar o repositório, siga os passos abaixo para rodar o projeto na sua m
 
 1. Acesse a pasta do projeto:
    ```bash
-   cd agendas-pro
+   cd agendas_pro
    ```
 
 2. Instale as dependências do PHP com o Composer:
@@ -39,6 +39,11 @@ Após clonar o repositório, siga os passos abaixo para rodar o projeto na sua m
 6. Execute as migrations para criar as tabelas do banco de dados:
    ```bash
    php artisan migrate
+   ```
+
+7. Rode os seeders para popular o banco de dados:
+   ```bash
+   php artisan db:seed
    ```
    
 Agora é só acessar:  
