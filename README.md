@@ -10,11 +10,37 @@ Agendas PRO é um sistema de agendamentos desenvolvido para auxiliar empresas e 
 - Gerenciamento de calendário
 - Histórico de agendamentos
 
-## Como usar
+## 🚀 Como iniciar o projeto
 
-Para começar a usar Agendas PRO, basta criar uma conta e fazer login. Em seguida, você pode começar a agendar seus compromissos e gerenciar seu calendário. Você também pode personalizar as configurações do sistema para atender às suas necessidades específicas.
+Após clonar o repositório, siga os passos abaixo para rodar o projeto na sua máquina:
 
-## Requisitos
+1. Acesse a pasta do projeto:
+   ```bash
+   cd agendas-pro
+   ```
 
-Agendas PRO é um sistema web baseado em navegador, o que significa que não é necessário instalar nenhum software adicional. Para usá-lo, basta ter um computador ou dispositivo móvel com acesso à internet e um navegador web moderno, como Google Chrome, Mozilla Firefox ou Microsoft Edge.
+2. Instale as dependências do PHP com o Composer:
+   ```bash
+   composer install
+   ```
+
+3. Copie o arquivo de exemplo `.env` e crie o seu:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Gere a chave da aplicação:
+   ```bash
+   php artisan key:generate
+   ```
+
+5. Configure as variáveis de ambiente no arquivo `.env` conforme seu ambiente (banco de dados, cache, etc.).
+
+6. Execute as migrations para criar as tabelas do banco de dados:
+   ```bash
+   php artisan migrate
+   ```
+   
+Agora é só acessar:  
+[http://localhost:8000](http://localhost:8000) 🚀
 
